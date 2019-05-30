@@ -2,6 +2,23 @@
   .chart-header {
     display: none;
   }
+    p {
+    font-size: medium;
+  }
+    BR {
+    clear: right
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  a:hover,
+  a:active,
+  a:focus {
+    color: darkred;
+    text-decoration: underline;
+  }
 </style>
 <script>
   // Pull in the Data Group Name for displaying in the title tag
@@ -31,7 +48,10 @@
       <mode-chart id="chart_82dca96c0c8f" dataset="dataset" options="chart_options"></mode-chart>
     </div>
   </div>
-
+<p> ▶ Provide 'Date Range' and 'DPID' to see historical agent share activity at the dealer/agent level </p>
+<p> ▶ Share activity is counted based on date initially sent. Opened/Clicked status is based on current tracking information </p>
+<p> ▶ Agent share tracking provides a view of volume vs effectivenss by time series and per agent</p>
+<p> ▶ Please see <a href="https://roadsterteam.atlassian.net/wiki/spaces/AN/pages/325386285/Agent+Share+Tracking+Feedback" target="_blank">Confluence page</a> to provide any feedback on report</p>
 </div>
 <script>
   setTimeout(function() {
