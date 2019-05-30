@@ -1,0 +1,302 @@
+<link rel="stylesheet" href="https://mode.github.io/alamode/alamode.min.css">
+<script src="https://mode.github.io/alamode/alamode.min.js"></script>
+<style>
+a {
+text-decoration: underline;
+}
+
+a:hover,
+a:active,
+a:focus {
+color: darkred;
+text-decoration: underline;
+}
+  #gauge1,
+  #gauge2 {
+    display: inline-block;
+    width: 45%;
+  }
+
+  #gaugeDemo {
+    width: 100%;
+    text-align: center;
+  }
+  #chart_0642d16cebb3  .fb-content{
+  color: #8a1a23;
+}
+
+#chart_8df03cf9694b .fb-content{
+  color: #8a1a23;
+}
+  p {
+    font-size: medium;
+  }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.7/css/dx.common.css">
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.7/css/dx.light.css">
+<script type="text/javascript" src="https://cdn3.devexpress.com/jslib/18.2.7/js/dx.all.js"></script>
+<div class="mode-header embed-hidden">
+  <h1>{{ title }}</h1>
+  <p>{{ description }}</p>
+</div>
+<div class="mode-grid container">
+  <div class="row">
+    <div class="col-md-12">
+  <p> <i> Metrics reflect updates made in Salesforce by EOD yesterday</i> </p>
+      <div class="dx-viewport demo-container">
+        <div class="gaugeDemo">
+          <div id="gauge1"></div>
+          <div id="gauge2"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" data-row-height="small">
+    <div class="col-md-6">
+      <mode-chart id="chart_0642d16cebb3" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-6">
+      <mode-chart id="chart_8df03cf9694b" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+
+
+  <div class="row" data-row-height="medium">
+    <div class="col-md-6">
+      <mode-chart id="chart_1ddecee73c20" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-6">
+      <mode-chart id="chart_8a3057a3aa38" dataset="dataset" options="chart_options"></mode-chart> 
+    </div>
+  </div>
+   
+      <div class="row">
+        <div class="col-md-12">
+      <p> ▶ Data is refreshed nightly. Click <a href="https://roadster.lightning.force.com/lightning/r/Dashboard/01Z2M0000019eWBUAY/view?queryScope=userFolders" >HERE</a> here to see live Salesforce Data</p>  
+      <p> ▶ Current Open Check-Ins </p>
+      <p> ▶ DSMs can click on their name to see latest Check-In Data per account</p>
+    </div>
+  </div>
+    </div>
+
+<script>
+  
+    alamode.addLinkToBigNumber(
+    {
+      "chart_id":"chart_0642d16cebb3",
+      "url": "https://modeanalytics.com/roadster/reports/c9d6605b353e"
+    }
+  )
+  
+    alamode.addLinkToBigNumber(
+    {
+      "chart_id":"chart_8df03cf9694b",
+      "url": "https://modeanalytics.com/roadster/reports/539d1c1e22d2"
+    }
+  )
+</script>
+<script>
+setTimeout(function() {  
+  
+      var data = datasets.filter(function(d) {
+      return d.queryName == "DSMs by Check-In Status - West";
+    })[0].content;
+
+    var data2 = datasets.filter(function(d) {
+      return d.queryName == "DSMs by Check-In Status - East";
+    })[0].content;
+  var key_value = {};
+  var key_value2 = {};
+    var URL = '<a href="https://modeanalytics.com/roadster/reports/afe5952690b8?max_age=3600&param_dsm=';
+    // {{team}}
+    var index;
+    // Get the Dealer Partners data for sending our data elsewhere
+    for (index = 0; index < data.length; ++index) {
+      key_value[data[index][
+        ['DSM Display']
+      ]] = URL.concat("", data[index][
+        ['DSM']
+      ], "\">");
+    }
+    for (index = 0; index < data2.length; ++index) {
+      key_value[data2[index][
+        ['DSM Display']
+      ]] = URL.concat("", data2[index][
+        ['DSM']
+      ], "\">");
+    }
+
+console.log(key_value)
+
+ var i;
+    for (i = 0; i < Highcharts.charts.length; i++) {
+
+      var chart = Highcharts.charts[i];
+      if (chart.container.closest("#chart_1ddecee73c20") != null || chart.container.closest("#chart_8a3057a3aa38") != null){
+        chart.update({  
+          xAxis: {
+             labels: {
+              useHTML: true,
+              enabled: true,
+              align: 'left',
+              reserveSpace: true,
+              formatter: function() {
+                // Display Name
+                return key_value[this.value] + this.value /*+ "</a>"*/ ;
+              }
+             },
+            minorTickLength: 0,
+            tickLength: 0,
+          },
+          yAxis: {
+            labels: {
+              enabled: false
+            },
+            gridLineColor: 'transparent'
+          }
+        })
+      }
+    }    
+  
+});
+</script>
+
+
+<script>
+  var data = datasets.filter(function(d) {
+    return d.queryName == "Check-Ins Summary";
+  })[0].content;
+  var WestCoastPerc = data[0]['West Not Overdue Percent']
+  var EastCoastPerc = data[0]['East Not Overdue Percent']
+
+var WestC=''
+switch(true) {
+  case(WestCoastPerc < 50):
+        WestC='#CE2029';
+        break;
+  case(WestCoastPerc < 75):
+        WestC='#FFD700';
+        break;
+  case(WestCoastPerc < 101):
+        WestC='#228B22';
+        break;      
+      
+}
+
+var EastC=''
+switch(true) {
+  case(EastCoastPerc < 50):
+        EastC='#CE2029';
+        break;
+  case(EastCoastPerc < 75):
+        EastC='#FFD700';
+        break;
+  case(EastCoastPerc < 101):
+        EastC='#228B22';
+        break;      
+      
+}
+
+  $(function() {
+    $("#gauge1").dxCircularGauge({
+      scale: {
+        startValue: 0,
+        endValue: 100,
+        tickInterval: 20,
+        label: {
+          customizeText: function(arg) {
+            return arg.valueText + " %";
+          }
+        }
+      },
+      rangeContainer: {
+        ranges: [{
+            startValue: 0,
+            endValue: 50,
+            color: "#CE2029"
+          },
+          {
+            startValue: 50,
+            endValue: 75,
+            color: "#FFD700"
+          },
+          {
+            startValue: 75,
+            endValue: 100,
+            color: "#228B22"
+          }
+        ]
+      },
+    /*  "export": {
+        enabled: true
+      },*/
+      title: {
+        text: "West Coast Check-Ins Not Overdue",
+        font: {
+          size: 24
+        }
+      },
+      value: WestCoastPerc,
+      valueIndicator: {
+            type: "triangleNeedle",
+            color: "#aaabaa"
+        },
+      subvalues: WestCoastPerc,
+      subvalueIndicator: {
+        type: "textCloud",
+        color: WestC
+      }
+    });
+    $("#gauge2").dxCircularGauge({
+      scale: {
+        startValue: 0,
+        endValue: 100,
+        tickInterval: 20,
+        label: {
+          customizeText: function(arg) {
+            return arg.valueText + " %";
+          }
+        }
+      },
+      rangeContainer: {
+        ranges: [{
+            startValue: 0,
+            endValue: 50,
+            color: "#CE2029"
+          },
+          {
+            startValue: 50,
+            endValue: 75,
+            color: "#FFD700"
+          },
+          {
+            startValue: 75,
+            endValue: 100,
+            color: "#228B22"
+          }
+        ]
+      },
+  /*    "export": {
+        enabled: true
+      },*/
+      title: {
+        text: "East Coast Check-Ins Not Overdue",
+        font: {
+          size: 24
+        }
+      },
+      value: EastCoastPerc,
+      valueIndicator: {
+            type: "triangleNeedle",
+            color: "#aaabaa"
+        },
+      subvalues: EastCoastPerc,
+      subvalueIndicator: {
+        type: "textCloud",
+        color: EastC
+      }
+    });
+  });
+</script>

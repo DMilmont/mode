@@ -1,0 +1,6 @@
+---
+report_description: This report allows you to select a start date, and end date and
+  a DPID - then see all key performance indicators day by day.  It's the most detailed
+  report we have for a DPID.
+is_full_width: true
+hide_run_button: false

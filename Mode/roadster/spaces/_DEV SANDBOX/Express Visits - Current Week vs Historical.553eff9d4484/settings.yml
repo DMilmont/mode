@@ -1,0 +1,5 @@
+---
+report_description: This is the beginning of a dashboard for the DSMs that lets you
+  see all of your customers and key warnings.
+is_full_width: true
+hide_run_button: false

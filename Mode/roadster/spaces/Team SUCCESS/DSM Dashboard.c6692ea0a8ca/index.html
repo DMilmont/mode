@@ -1,0 +1,210 @@
+<div class="mode-header embed-hidden">
+  <h1>{{ title }}</h1>
+  <p>{{ description }}</p>
+</div>
+<div class="mode-grid container">
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <mode-chart id="chart_56f0681aba76" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_06681f7e-93be-4bb5-c7a5-039b180d5ca5" dataset="dataset" options="text_options" class="">
+        <p><u>Tips</u></p>
+        <p>▶ Dealers must be live for 6 weeks before appearing in report (necessary to build historical average)</p>
+        <p>▶ DSMs and AEs can see all their dealers by selecting their name and hitting Run on top right.</p>
+        <p>▶ Dealers are ranked by most significant drop to highest increase. (Red = Significant Drop, Gray = Slight Drop, Green = Increase)</p>
+        <p>▶ You can then click on a dealer name to see a graph that shows exactly when the drop or jump happened.</p>
+        <p><br></p>
+        <p><u>How to Interpret:</u></p>
+        <p>Visits are defined as unique daily customers visiting Express store. When aggregating to weekly/monthly levels we sum the unique daily visits over the specified timespan.</p>
+        <p><br></p>
+        <p>We looked back over the past 4 weeks to predict the number of Express Store visitors each of our Dealer Partners should probably have in a given week. We then compared that prediction to what actually happened this past week If the middle bar
+          is red, it's an significant drop.If the middle bar is gray, it's a slight drop. If the middle bar is green, we saw an increase when comparing to historical.</p>
+        <p><br></p>
+        <p><u>What to do next:</u></p>
+        <p>Click on the dealer name to pull up the trend and see exactly when the change happened. If it's a drop, look for broken CTAs. If it's a rise, share it as a case study with the rest of the company.</p>
+        <p><br></p>
+        <p>If you have questions, post it to the anlytx_L2_Support channel.</p>
+        <p>If you have ideas to improve this analytic, post it to anlytx_wants_input.</p>
+      </mode-text>
+    </div>
+  </div>
+</div>
+<style>
+  #chart_56f0681aba76 {
+    z-index: 0;
+    position: relative;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  a:hover,
+  a:active,
+  a:focus {
+    color: darkred;
+    text-decoration: underline;
+  }
+</style>
+<script>
+  setTimeout(function() {
+    var data = datasets.filter(function(d) {
+      return d.queryName == "Express Visitors - Current Week vs Historical";
+    })[0].content;
+
+    var key_value = {};
+    var cat_value = [];
+    var Y_value = [];
+    var URL = '<a href="https://modeanalytics.com/roadster/reports/f0928cc35853?max_age=3600&param_dealer_name=';
+
+
+
+    var index;
+    // Get the Dealer Partners data for sending our data elsewhere
+    for (index = 0; index < data.length; ++index) {
+      key_value[data[index][
+        ['Display String']
+      ]] = URL.concat("", data[index][
+        ['Dealer Partner']
+      ], "\">");
+      /*URL.concat("", data[index][
+        ['Dealer Partner']
+      ], "\" title= \"" + data[index][
+        ['Dealer Partner']
+      ] + " - Details\"  target=\"self\">");*/
+      // Modified to add tooltip when hovering and open link on a new tab.
+    }
+
+    for (index = 0; index < data.length; ++index) {
+      cat_value.push(data[index]['color']);
+    }
+
+    for (index = 0; index < data.length; ++index) {
+      Y_value.push(data[index]['Previous Month - Weekly Average']);
+    }
+    var Y_Axis = Math.max.apply(Math, Y_value) * 1.03;
+
+    var chart = Highcharts.charts[0];
+
+    chart.update({
+
+      chart: {
+        type: 'bar'
+      },
+      plotOptions: {
+        bar: {
+          grouping: false,
+          shadow: false,
+          borderWidth: 0
+        },
+
+      },
+
+
+      series: [{
+          pointPadding: 0.35,
+          pointPlacement: -0.0,
+          pointWidth: 10
+        },
+
+        {
+
+          pointPadding: 0.0,
+          pointPlacement: -0.0,
+          pointWidth: 25
+        },
+      ],
+
+      xAxis: {
+        minorTickLength: 0,
+        tickLength: 0,
+        endOnTick: false
+      },
+      yAxis: {
+        labels: {
+          enabled: false
+        },
+        gridLineColor: 'transparent',
+        endOnTick: false
+      }
+    });
+
+    var chart = Highcharts.charts[0];
+    chart.update({
+      chart: {
+        marginRight: 105,
+        marginTop: 25,
+        marginLeft: 190
+      },
+      xAxis: {
+        labels: {
+          useHTML: true,
+          enabled: true,
+          align: 'left',
+          reserveSpace: true,
+          formatter: function() {
+            // Display Name
+            return key_value[this.value] + this.value + "</a>";
+          }
+
+        }
+      },
+
+
+      series: [{
+          //      data: series1_Historical,
+          //     zIndex:0,
+          colorByPoint: true,
+          colors: cat_value,
+          dataLabels: {
+            enabled: true,
+            inside: true,
+            align: 'right',
+            color: 'black'
+          },
+          //shift numbers up and to the left
+
+        },
+        {
+          //        data: series2_Actual ,
+          zIndex: -2,
+          dataLabels: {
+            x: 0,
+            y: 0,
+            align: 'left'
+
+          },
+
+        },
+
+
+      ],
+
+    })
+    var chart = Highcharts.charts[0];
+
+    if (data.length >= 30) {
+      chart.update({
+        xAxis: {
+          min: 0,
+          max: 9,
+          scrollbar: {
+            enabled: true
+          },
+
+
+        },
+        yAxis: {
+          max: Y_Axis,
+          min: 0,
+          endOnTick: false,
+        }
+
+      })
+    }
+
+  }, 100);
+</script>

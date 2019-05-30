@@ -1,0 +1,8 @@
+---
+report_description: 'This is a weekly report to highlight data discrepancies between
+  Salesforce and Admin that are causing reporting problems and need to be fixed.  Please
+  go through this list and fix the problems that are listed next to your name.  If
+  you have questions, reach out to #anlytx_L2_support.  Also, if you find any false-alarms,
+  let us know and we can filter them out in the future.'
+is_full_width: false
+hide_run_button: false

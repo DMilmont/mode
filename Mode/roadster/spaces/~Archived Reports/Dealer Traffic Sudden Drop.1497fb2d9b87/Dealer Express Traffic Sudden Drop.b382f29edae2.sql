@@ -1,0 +1,64 @@
+ WITH past_day as (  --- List of dealers which had views yesterday
+                  SELECT DPID,sum(count) as Yday_Visits
+                  FROM FACT.mode_agg_daily_traffic_and_prospects
+                  WHERE DATE >= (date_trunc('day', now()) - INTERVAL '1 days')
+                        AND type = 'Online Express Traffic'
+                  GROUP BY dpid      
+ ),
+
+ past_week as ( -- Dealers and average count for past week
+SELECT DPID,max(count) AS Max_Visits
+                  FROM FACT.mode_agg_daily_traffic_and_prospects
+                  WHERE DATE >= (date_trunc('day', now()) - INTERVAL '8 days')
+                  AND type = 'Online Express Traffic'
+                  GROUP BY DPID
+ ),
+
+agg_data as (
+SELECT dp.dpid as dpid,
+       dp.name "Dealer Partner w/ Significant Drop", 
+       max_Visits "Max Visits",
+       tabAE.success_manager as "Success Manager", 
+       tabAE.account_executive AS "Account Executive",
+       status,
+       tabAE.health_score,
+       tabAE.off_weeks_since_launch
+FROM (
+    SELECT DISTINCT dpid, name, 0 use_if_missing
+    FROM dealer_partners
+    WHERE status = 'Live'
+         ) dp
+LEFT JOIN past_day ON dp.dpid = past_day.dpid
+LEFT JOIN past_week ON dp.dpid = past_week.dpid
+LEFT JOIN fact.salesforce_dealer_info tabAE ON dp.dpid = tabAE.dpid
+
+WHERE  past_week.max_visits is not null
+  AND status = 'Live'
+  AND off_weeks_since_launch > 6
+  AND past_week.max_visits>=10 -- No views one day - should have a max daily of 10 views in previous week
+  AND COALESCE(past_day.Yday_Visits,0) <2 -- Dealers which had 0-1 views in express store
+  ),
+  
+ date_dpid as (
+select c.date, dp.dpid, dp.name
+from fact.d_cal_date c
+cross join (
+  select distinct dpid, tableau_secret, name from dealer_partners) dp
+
+LEFT JOIN public.custom_dealer_grouping cdg ON dp.dpid = cdg.dpid
+where c.date >= (date_trunc('day', now()) - INTERVAL '61 days')
+AND c.date <=  (date_trunc('day',now()) - INTERVAL '1 days')
+group by 1,2,3
+
+)
+
+SELECT c.date as "Date"
+      ,ad.*
+      ,coalesce(dt.count,0) as "Visitors"
+from date_dpid c
+left JOIN (SELECT * FROM FACT.mode_agg_daily_traffic_and_prospects WHERE type = 'Online Express Traffic')  dt ON c.date=dt.date and c.dpid=dt.dpid
+inner join  agg_data ad ON  c.dpid=ad.dpid
+WHERE c.date >= (date_trunc('day', now()) - INTERVAL '30 days')
+order by c.date
+
+

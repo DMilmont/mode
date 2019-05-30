@@ -1,0 +1,320 @@
+<link rel="stylesheet" href="https://mode.github.io/alamode/alamode.min.css">
+<script src="https://mode.github.io/alamode/alamode.min.js"></script>
+<style>
+  mode-table tr:nth-child(even) {
+    background-color: #f2f2f2
+  }
+
+  mode-table tr:hover {
+    background-color: #ddd;
+  }
+
+  mode-table td {
+    height: 20px !important;
+    color: black !important;
+    text-align: center !important;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: 1px solid #ddd;
+  }
+
+  mode-table th {
+    text-align: center !important;
+  }
+
+  .chart-header {
+    display: none;
+  }
+
+  p {
+    font-size: medium;
+  }
+</style>
+<style type="text/css">
+  BR {
+    clear: right
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  a:hover,
+  a:active,
+  a:focus {
+    color: darkred;
+    text-decoration: underline;
+  }
+</style>
+<div class="mode-header embed-hidden">
+  <h1>{{ title }}</h1>
+  <p>{{ description }}</p>
+</div>
+<div class="mode-grid container">
+  <div class="CriticalProblems">
+    <div class="row">
+      <div class="col-md-12">
+        <h2><u>Critical Problems</u></h2>
+      <mode-table id="table_8b070d86a10a" dataset="dataset" options="table_options"></mode-table>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="WebT">
+        <div class="col-md-6">
+          <h3>Web Traffic</h3>
+          <mode-chart id="chart_0fc947540e3a" dataset="dataset" options="chart_options" options.title.text="WebT"></mode-chart>
+        </div>
+      </div>
+      <div class="ExpressT">
+        <div class="col-md-6">
+          <h3>Express Traffic</h3>
+          <mode-chart id="chart_3ecc7b52da12" dataset="dataset" options="chart_options" options.title.text="ExpT"></mode-chart>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <p> ▶ Dealers listed see a sudden and signifcant drop in Dealer Site / Express Store visits. </p>
+      <p> ▶ DSMs should run diagnostics to ensure GA Tags have not been removed / CTAs are working as expected. </p>
+      <p> ▶ Please see <a href="https://roadsterteam.atlassian.net/wiki/spaces/AN/pages/314114111/Early+Warning+System+Criteria" target="_blank">Confluence page</a> for documentation on how we detect these dealers. Feel free to add any comments.</p>
+    </div>
+  </div>
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <h2><u>Unexpected Drops</u></h2>
+      <mode-chart id="chart_ab32773c17a5" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <h2><u>Impressive Jumps</u></h2>
+      <mode-chart id="chart_549986fb9872" dataset="dataset" options="chart_options" options.title.text="Jumps"></mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <h2><u>Dealers Not Sending Website Traffic by DSM</u></h2>
+      <mode-chart id="chart_24bb77d70133" dataset="dataset" options="chart_options" options.title.text="GAWeb"></mode-chart>
+    </div>
+  </div>
+  <div class="row" data-row-height="medium">
+    <div class="col-md-12">
+      <h3>Dealers Not Sending Website Traffic - Detail</h3>
+      <mode-table id="table_5d8b2393cee3" dataset="dataset" options="table_options"></mode-table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_c8ac335f-5d04-4f60-84b9-1cb48aeda68d" dataset="dataset" options="text_options">
+
+        <base target="_self">
+
+        <p> ▶ These dealers are not sending Roadster their website traffic - please contact them to make sure the Roadster GA tags are implemented on their site. </p>
+        <p> ▶ Without website traffic, many of the key Roadster metrics are going to be 0 or ugly N/As.</p>
+        <p> ▶ This list excludes customers who have 'opted out'. If your customer wants to opt out, please send a slack message to #anlytx_L2_Support.</p>
+        <p><br></p>
+      </mode-text>
+    </div>
+  </div>
+
+</div>
+<script>
+  setTimeout(function() {
+    var data = datasets.filter(function(d) {
+      return d.queryName == "Dealer Web Traffic Sudden Drop";
+    })[0].content;
+
+    var data2 = datasets.filter(function(d) {
+      return d.queryName == "Dealer Express Traffic Sudden Drop";
+    })[0].content;
+
+    if (data.length == 0) {
+      $('.WebT').remove();
+    }
+    if (data2.length == 0) {
+      $('.ExpressT').remove();
+    }
+    if (data.length == 0 && data2.length == 0) {
+      $('.CriticalProblems').remove();
+    }
+  }, 100);
+  //remove portions of chart
+  // $('.WebT').remove();
+</script>
+<script>
+  alamode.addLinksToTables({
+    table_id: "table_8b070d86a10a",
+    query_name: "Critical Problems",
+    link_columns: ["Dealer Site"],
+    link_urls: ["{{Dealer Site}}"]
+  })
+</script>
+<script>
+  setTimeout(function() {
+    var data = datasets.filter(function(d) {
+      return d.queryName == "Unexpected Drops in Express Visits";
+    })[0].content;
+
+    var data2 = datasets.filter(function(d) {
+      return d.queryName == "Unexpected Jumps in Express Visits";
+    })[0].content;
+
+    var key_value = {};
+    var URL = '<a href="https://modeanalytics.com/roadster/reports/f0928cc35853?max_age=3600&param_dealer_name=';
+    // {{team}}
+    var index;
+    // Get the Dealer Partners data for sending our data elsewhere
+    for (index = 0; index < data.length; ++index) {
+      key_value[data[index][
+        ['Display String']
+      ]] = URL.concat("", data[index][
+        ['Dealer Partner']
+      ], "\">");
+    }
+    for (index = 0; index < data2.length; ++index) {
+      key_value[data2[index][
+        ['Display String']
+      ]] = URL.concat("", data2[index][
+        ['Dealer Partner']
+      ], "\">");
+    }
+
+
+
+    console.log(Highcharts.charts.length)
+    console.log(Highcharts.charts[0])
+    console.log($("#chart_24bb77d70133").data('highchartsChart'))
+
+    var i;
+    for (i = 0; i < Highcharts.charts.length; i++) {
+
+      var chart = Highcharts.charts[i];
+      if (chart.container.closest("#chart_ab32773c17a5") != null || chart.container.closest("#chart_549986fb9872") != null || chart.container.closest("#chart_24bb77d70133") != null) {
+        chart.update({
+          chart: {
+            type: 'bar',
+            marginTop: 30
+          },
+          plotOptions: {
+            bar: {
+              grouping: false,
+              shadow: false,
+              borderWidth: 0
+            }
+          },
+
+          series: [{
+              pointPadding: 0.0,
+              pointPlacement: -0.0
+
+            },
+            {
+              pointPadding: 0.35,
+              pointPlacement: -0.0
+            },
+          ],
+
+          xAxis: {
+            minorTickLength: 0,
+            tickLength: 0,
+          },
+          yAxis: {
+            labels: {
+              enabled: false
+            },
+            gridLineColor: 'transparent'
+
+          }
+        });
+      }
+    }
+
+    for (i = 0; i < Highcharts.charts.length; i++) {
+      var chart = Highcharts.charts[i];
+      if (chart.container.closest("#chart_ab32773c17a5") != null) {
+        chart.update({
+          xAxis: {
+            labels: {
+              useHTML: true,
+              enabled: true,
+              align: 'left',
+              reserveSpace: true,
+              formatter: function() {
+                // Display Name
+                return key_value[this.value] + this.value /*+ "</a>"*/ ;
+              }
+
+            }
+          },
+          series: [{
+              dataLabels: {
+                x: 0,
+                y: 0,
+                align: 'left'
+              }, //shift numbers up and to the left
+
+            },
+            {
+              dataLabels: {
+                inside: true,
+                align: 'right',
+                color: "#8a1a23"
+              }, //shift numbers up and to the left
+            },
+          ],
+          tooltip: {
+            style: {
+              pointerEvents: 'all'
+            },
+            shared: true,
+            useHTML: true,
+            shadow: false,
+            hideDelay: 1000,
+            formatter: function() {
+              // Display Name
+              return key_value[this.x];
+            }
+          }
+        })
+      }
+    }
+
+    for (i = 0; i < Highcharts.charts.length; i++) {
+      var chart = Highcharts.charts[i];
+      if (chart.container.closest("#chart_549986fb9872") != null) {
+        chart.update({
+          xAxis: {
+            labels: {
+              useHTML: true,
+              enabled: true,
+
+              align: 'left',
+              reserveSpace: true,
+              formatter: function() {
+                // Display Name
+                return key_value[this.value] + this.value + "</a>";
+              }
+            }
+          },
+          series: [{
+              dataLabels: {
+                x: 0,
+                y: -10,
+                inside: true,
+                align: 'right'
+              }, //shift numbers up and to the left
+
+            },
+            {
+              dataLabels: {
+                align: 'left',
+                color: "#27825c"
+              }, //shift numbers up and to the left
+            },
+          ]
+        })
+      }
+    }
+
+  }, 100);
+</script>

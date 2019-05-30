@@ -1,0 +1,230 @@
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.0.2/pivot.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.0.2/pivot.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.0.2/tips_data.min.js"></script>
+<link rel="stylesheet" href="https://mode.github.io/alamode/alamode.min.css">
+<script src="https://mode.github.io/alamode/alamode.min.js"></script>
+
+
+    <!-- DevExtreme themes -->
+    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.7/css/dx.common.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.7/css/dx.light.css" />
+
+    <!-- DevExtreme library -->
+    <script type="text/javascript" src="https://cdn3.devexpress.com/jslib/18.2.7/js/dx.all.js"></script>
+
+
+
+
+<div class="mode-header embed-hidden">
+  <h1>{{ title }}</h1>
+  <p>{{ description }}</p>
+</div>
+
+<div style="margin:10px 2px; padding: 3px; border: 1px solid black">
+  Other display here
+  <div id="kqPivot"></div>
+  <div id="pivotContainer"></div>
+</div>
+
+
+<div class="mode-grid container">
+</div>
+<script>
+  alamode.pivotTable({
+    query_name: "Kevin_Query",
+    default_columns: ["Date"],
+    default_rows: ["Primary Make"],
+    default_values: "Dealer Visitors",
+    title: "Crappy AlaMode Pivot Table",
+    aggregate_function: "Average",
+    pivot_table_type: "Heatmap",
+    editable: true
+
+    // Options for aggregate_function:
+    //    "Count"
+    //    "Count Unique Values"
+    //    "List Unique Values"
+    //    "Sum"
+    //    "Integer Sum"
+    //    "Average"
+    //    "Minimum"
+    //    "Maximum"
+    //    "Sum over Sum"
+    //    "80% Upper Bound"
+    //    "80% Lower Bound"
+    //    "Sum as Fraction of Tota
+    //    "Sum as Fraction of Rows"
+    //    "Sum as Fraction of Columns"
+    //    "Count as Fraction of Total"
+    //    "Count as Fraction of Rows"
+    //    "Count as Fraction of Columns"
+
+    // Options for pivot_table_type:
+    //    "Table"
+    //    "Table Barchart"
+    //    "Heatmap"
+    //    "Row Heatmap"
+    //    "Col Heatmap"
+  })
+
+var roadsterdx = {
+  version: 1,
+  
+  getDataSource: function(queryName) {
+    // find the right data on the page, by name
+    var ii=0;
+    var theSet = null;
+    for (ii=0; ii<datasets.length; ii++) {
+      if (datasets[ii].queryName == queryName) {
+        theSet = datasets[ii].content;
+        break;
+      }
+    }
+    
+    if (!theSet) {
+      // make an empty data array
+      theSet = [];
+    }
+    
+    return new DevExpress.data.DataSource({
+      // array of data
+      store: theSet,
+
+      // additional configuration options
+      // sort: "name",
+      // pageSize: 10
+    });
+  },
+
+  message: function(msg) {
+    alert(msg);
+  },
+
+  pizzaData: [
+    {kind: 'pepperoni', location: 'oakland', month: 'march', sold: 30},
+    {kind: 'pepperoni', location: 'oakland', month: 'april', sold: 44},
+    {kind: 'pepperoni', location: 'san francisco', month: 'march', sold: 39},
+    {kind: 'pepperoni', location: 'san francisco', month: 'april', sold: 51},
+    {kind: 'pepperoni', location: 'richmond', month: 'march', sold: 75},
+    {kind: 'pepperoni', location: 'richmond', month: 'april', sold: 90},
+    {kind: 'pepperoni', location: 'san jose', month: 'march', sold: 11},
+    {kind: 'pepperoni', location: 'san jose', month: 'april', sold: 38},
+
+    {kind: 'hawaiian', location: 'oakland', month: 'march', sold: 50},
+    {kind: 'hawaiian', location: 'oakland', month: 'april', sold: 87},
+    {kind: 'hawaiian', location: 'san francisco', month: 'march', sold: 16},
+    {kind: 'hawaiian', location: 'san francisco', month: 'april', sold: 46},
+    {kind: 'hawaiian', location: 'richmond', month: 'march', sold: 77},
+    {kind: 'hawaiian', location: 'richmond', month: 'april', sold: 29},
+    {kind: 'hawaiian', location: 'san jose', month: 'march', sold: 58},
+    {kind: 'hawaiian', location: 'san jose', month: 'april', sold: 74},
+
+    {kind: 'mariana', location: 'oakland', month: 'march', sold: 81},
+    {kind: 'mariana', location: 'oakland', month: 'april', sold: 30},
+    {kind: 'mariana', location: 'san francisco', month: 'march', sold: 43},
+    {kind: 'mariana', location: 'san francisco', month: 'april', sold: 77},
+    {kind: 'mariana', location: 'richmond', month: 'march', sold: 13},
+    {kind: 'mariana', location: 'richmond', month: 'april', sold: 47},
+    {kind: 'mariana', location: 'san jose', month: 'march', sold: 36},
+    {kind: 'mariana', location: 'san jose', month: 'april', sold: 24},
+
+    {kind: 'bbq', location: 'oakland', month: 'march', sold: 51},
+    {kind: 'bbq', location: 'oakland', month: 'april', sold: 5},
+    {kind: 'bbq', location: 'san francisco', month: 'march', sold: 80},
+    {kind: 'bbq', location: 'san francisco', month: 'april', sold: 42},
+    {kind: 'bbq', location: 'richmond', month: 'march', sold: 31},
+    {kind: 'bbq', location: 'richmond', month: 'april', sold: 72},
+    {kind: 'bbq', location: 'san jose', month: 'march', sold: 6},
+    {kind: 'bbq', location: 'san jose', month: 'april', sold: 75},
+  ],
+
+};
+$(function () {
+  /*
+  $("#pieChartContainer").dxPieChart({
+    dataSource: roadsterdx.pizzaData,
+    series: {
+      // See details in the "Bind Series to Data" topic
+      argumentField: 'kind',
+      valueField: 'sold'
+    }
+  });
+  */
+  
+  window.console.log("here is a test");
+  console.log('number of data sets: ' + datasets.length);
+  var ii;
+  ii = 7
+  debugger;
+  for (ii=0; ii<datasets.length; ii++) {
+    console.log('dataset id: ' + datasets[ii].queryName);
+  }
+  
+  var dSource = roadsterdx.getDataSource('Kevin_Query');
+  
+  window.setTimeout(function(){
+    var dSource = roadsterdx.getDataSource('Kevin_Query');
+    var zz = 4;
+  }, 5000);
+  
+  
+  /*
+  $('#kqPivot').dxPivotGrid({
+    dataSource: {
+      store: dSource,
+      fields: [
+        {
+          area: 'column',
+          dataField: 'Date',
+          dataType: 'date'
+        },
+        {
+          area: 'row',
+          dataField: 'Primary Make',
+          dataType: 'string'
+        },
+        {
+          area: 'data',
+          dataField: 'sold',
+          dataType: 'number',
+          summaryType: 'sum'
+        },
+      ],
+      retrieveFields: false
+    }
+  });
+  */
+
+  $('#pivotContainer').dxPivotGrid({
+    dataSource: {
+      store: roadsterdx.dSource,
+      // fields: [
+      //   {
+      //     area: 'column',
+      //     dataField: 'kind',
+      //     dataType: 'string'
+      //   },
+      //   {
+      //     area: 'row',
+      //     dataField: 'location',
+      //     dataType: 'string'
+      //   },
+      //   {
+      //     area: 'row',
+      //     dataField: 'month',
+      //     dataType: 'string'
+      //   },
+      //   {
+      //     area: 'data',
+      //     dataField: 'sold',
+      //     dataType: 'number',
+      //     summaryType: 'sum'
+      //   },
+      // ],
+      retrieveFields: true
+    }
+  });
+});
+
+</script>

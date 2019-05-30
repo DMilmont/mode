@@ -1,0 +1,270 @@
+<style>
+  mode-table tr:nth-child(even) {
+    background-color: #f2f2f2
+  }
+
+  mode-table tr:hover {
+    background-color: #ddd;
+  }
+
+  mode-table td {
+    height: 20px !important;
+    color: black !important;
+    text-align: center !important;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: 1px solid #ddd;
+  }
+
+  mode-table th {
+    text-align: center !important;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  a:hover,
+  a:active,
+  a:focus {
+    color: darkred;
+    text-decoration: underline;
+  }
+
+  [href^=http]::after {
+    content: '⤴';
+  }
+</style>
+<style type="text/css">
+  BR {
+    clear: right
+  }
+
+  #chart_a6128eaac731 {
+    z-index: 0;
+    position: relative;
+  }
+
+  img {
+    z-index: 1;
+    position: absolute;
+    margin: 150px 500px 0px 950px;
+  }
+</style>
+<div class="mode-header embed-hidden">
+  <h1>{{ title }}</h1>
+  <p>{{ description }}</p>
+</div><img src="http://i67.tinypic.com/9qvaev.png" style="z-index:1;float:right;width:13%;">
+<div class="mode-grid container">
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_5a1c52e2-9b19-441a-9541-99f821e9c127" dataset="dataset" options="text_options">
+        <p> <a href="https://modeanalytics.com/roadster/reports/c6692ea0a8ca/runs/2762da93a975" target="_blank">View Express traffic for all Dealers by DSM.</a></p>
+      </mode-text>
+    </div>
+  </div>
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <mode-chart id="chart_a6128eaac731" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <mode-chart id="chart_6744e7ef1622" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_c8ac335f-5d04-4f60-84b9-1cb48aeda68d" dataset="dataset" options="text_options">
+        <p><strong><u>Tips</u></strong></p>
+        <p>▶ Click "Explore in Mode" to see more detail.</p>
+        <p>▶ You can then click on a dealer name to see a graph that shows exactly when the drop or jump happened.</p>
+        <p>▶ <em>[Coming Soon] -- Louis is building a report to show DSMs all of their customers. </em></p>
+        <p><br></p>
+        <p><strong><u>How to Interpret:</u></strong></p>
+        <p>We looked back over the past 8 weeks to predict the number of Express Store visitors each of our Dealer Partners should probably have in a given week. We then compared that prediction to what actually happened this past week and surfaced the 16
+          biggest jumps and the 16 biggest drops. The gray bar is our prediction and the middle bar is what actually happened last week. If the middle bar is red, it's an unexpected drop. If the middle bar is green, it's an unexpected jump.</p>
+        <p><br></p>
+        <p><strong><u>What to do next:</u></strong></p>
+        <p>Click on the dealer name to pull up the trend and see exactly when the change happened. If it's a drop, look for broken CTAs. If it's a rise, share it as a case study with the rest of the company.</p>
+        <p><br></p>
+        <p>If you have questions, post it to the anlytx_L2_Support channel.</p>
+        <p>If you have ideas to improve this analytic, post it to anlytx_wants_input.</p>
+        <p><br></p>
+      </mode-text>
+    </div>
+  </div>
+</div>
+<script>
+  setTimeout(function() {
+    var data = datasets.filter(function(d) {
+      return d.queryName == "Unexpected Drops in Express Visits";
+    })[0].content;
+
+    var data2 = datasets.filter(function(d) {
+      return d.queryName == "Unexpected Jumps in Express Visits";
+    })[0].content;
+
+    var key_value = {};
+    var URL = '<a href="https://modeanalytics.com/roadster/reports/f0928cc35853?max_age=3600&param_dealer_name=';
+    // {{team}}
+    var index;
+    // Get the Dealer Partners data for sending our data elsewhere
+    for (index = 0; index < data.length; ++index) {
+      key_value[data[index][
+        ['Display String']
+      ]] = URL.concat("", data[index][
+        ['Dealer Partner']
+      ], "\" title= \"" + data[index][
+        ['Dealer Partner']
+      ] + " - Details\"  target=\"blank\">");;
+    }
+    for (index = 0; index < data2.length; ++index) {
+      key_value[data2[index][
+        ['Display String']
+      ]] = URL.concat("", data[index][
+        ['Dealer Partner']
+      ], "\">");
+    }
+
+    console.log(key_value)
+
+    var i;
+    for (i = 0; i < 2; i++) {
+
+      var chart = Highcharts.charts[i];
+      chart.update({
+        /*  tooltip: {
+          useHTML: true,
+          enabled: true,
+          positioner: function(labelWidth, labelHeight, point) {
+          var tooltipX = point.plotX + (226.50);
+          var tooltipY = point.plotY + 4;
+          return {
+              x: tooltipX,
+              y: tooltipY
+          };  
+          },
+          style: {
+            pointerEvents: 'auto'
+          }, 
+          formatter: function() {
+            // Display Name
+              return 'Visitor Ratios: ' + key_value[this.x];
+            } 
+        },  */
+        chart: {
+          type: 'bar'
+        },
+        plotOptions: {
+          bar: {
+            grouping: false,
+            shadow: false,
+            borderWidth: 0
+          }
+        },
+
+        series: [{
+            pointPadding: 0.0,
+            pointPlacement: -0.0
+
+          },
+          {
+            pointPadding: 0.35,
+            pointPlacement: -0.0
+          },
+        ],
+
+        xAxis: {
+          minorTickLength: 0,
+          tickLength: 0,
+        },
+        yAxis: {
+          labels: {
+            enabled: false
+          },
+          gridLineColor: 'transparent'
+
+        }
+      });
+    }
+
+    var chart = Highcharts.charts[0];
+    chart.update({
+      xAxis: {
+        labels: {
+          useHTML: true,
+          enabled: true,
+          align: 'right',
+          formatter: function() {
+            // Display Name
+            return key_value[this.value] + this.value + "</a>";
+          }
+
+        }
+      },
+      series: [{
+          dataLabels: {
+            x: 0,
+            y: 0,
+            align: 'left'
+          }, //shift numbers up and to the left
+
+        },
+        {
+          dataLabels: {
+            inside: true,
+            align: 'right',
+            color: "#8a1a23"
+          }, //shift numbers up and to the left
+        },
+      ],
+      tooltip: {
+        style: {
+          pointerEvents: 'all'
+        },
+        shared: true,
+        useHTML: true,
+        shadow: false,
+        hideDelay: 1000,
+        formatter: function() {
+          // Display Name
+          return key_value[this.x];
+        }
+      }
+    })
+
+    var chart = Highcharts.charts[1];
+    chart.update({
+      xAxis: {
+        labels: {
+          useHTML: true,
+          enabled: true,
+          align: 'right',
+          formatter: function() {
+            // Display Name
+            return key_value[this.value] + this.value + "</a>";
+          }
+        }
+      },
+      series: [{
+          dataLabels: {
+            x: 0,
+            y: -10,
+            inside: true,
+            align: 'right'
+          }, //shift numbers up and to the left
+
+        },
+        {
+          dataLabels: {
+            align: 'left',
+            color: "#27825c"
+          }, //shift numbers up and to the left
+        },
+      ]
+    })
+
+
+  }, 100);
+</script>

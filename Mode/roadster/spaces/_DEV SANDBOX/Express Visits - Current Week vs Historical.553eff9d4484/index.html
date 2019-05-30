@@ -1,0 +1,172 @@
+<div class="mode-header embed-hidden">
+  <h1>{{ title }}</h1>
+
+</div>
+<div class="mode-grid container">
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <mode-chart id="chart_b6aea33dfcfa" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_06681f7e-93be-4bb5-c7a5-039b180d5ca5" dataset="dataset" options="text_options" class="">
+        <p><u>Tips</u></p>
+        <p>▶ The gray bar is our prediction and the middle bar is what actually happened last week. If the middle bar is red, it's an unexpected drop. If the middle bar is green, it's an unexpected jump.</p>
+        <p>▶ You can then click on a dealer name to see a graph that shows exactly when the drop or jump happened.</p>
+        <p><br></p>
+      </mode-text>
+    </div>
+  </div>
+</div>
+<style>
+  #chart_56f0681aba76 {
+    z-index: 0;
+    position: relative;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  a:hover,
+  a:active,
+  a:focus {
+    color: darkred;
+    text-decoration: underline;
+  }
+</style>
+<script>
+  setTimeout(function() {
+    var data = datasets.filter(function(d) {
+      return d.queryName == "Express Visitors - Current Week vs Historical";
+    })[0].content;
+
+    var key_value = {};
+    var cat_value = [];
+    var Y_value = [];
+    var URL = '<a href="https://modeanalytics.com/roadster/reports/f0928cc35853?max_age=3600&param_dealer_name=';
+
+
+
+    var index;
+    // Get the Dealer Partners data for sending our data elsewhere
+    for (index = 0; index < data.length; ++index) {
+      key_value[data[index][
+        ['DPID']
+      ]] = URL.concat("", data[index][
+        ['Dealer Partner']
+      ], "\">");
+      // Modified to add tooltip when hovering and open link on a new tab.
+    }
+
+    for (index = 0; index < data.length; ++index) {
+      cat_value.push(data[index]['color']);
+    }
+
+    for (index = 0; index < data.length; ++index) {
+      Y_value.push(data[index]['Previous Month - Weekly Average']);
+    }
+    var Y_Axis = Math.max.apply(Math, Y_value) * 1.03;
+
+    var chart = Highcharts.charts[0];
+
+    chart.update({
+
+      chart: {
+        type: 'bar'
+      },
+      plotOptions: {
+        bar: {
+          grouping: false,
+          shadow: false,
+          borderWidth: 0
+        },
+
+      },
+
+
+      series: [{
+          pointPadding: 0.35,
+          pointPlacement: -0.0,
+          pointWidth: 10
+        },
+
+        {
+
+          pointPadding: 0.0,
+          pointPlacement: -0.0,
+          pointWidth: 25
+        },
+      ],
+
+      xAxis: {
+        minorTickLength: 0,
+        tickLength: 0,
+        endOnTick: false
+      },
+      yAxis: {
+        labels: {
+          enabled: false
+        },
+        gridLineColor: 'transparent',
+        endOnTick: false
+      }
+    });
+
+    var chart = Highcharts.charts[0];
+    chart.update({
+      chart: {
+        marginRight: 105,
+        marginTop: 25,
+        marginLeft: 190
+      },
+      xAxis: {
+        labels: {
+          useHTML: true,
+          enabled: true,
+          align: 'left',
+          reserveSpace: true,
+          formatter: function() {
+            // Display Name
+            return key_value[this.value] + this.value + "</a>";
+          }
+
+        }
+      },
+
+
+      series: [{
+          //      data: series1_Historical,
+          //     zIndex:0,
+          colorByPoint: true,
+          colors: cat_value,
+          dataLabels: {
+            enabled: true,
+            inside: true,
+            align: 'right',
+            color: 'black'
+          },
+          //shift numbers up and to the left
+
+        },
+        {
+          //        data: series2_Actual ,
+          zIndex: -2,
+          dataLabels: {
+            x: 0,
+            y: 0,
+            align: 'left'
+
+          },
+
+        },
+
+
+      ],
+
+    })
+    
+
+  }, 100);
+</script>

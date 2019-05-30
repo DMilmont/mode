@@ -1,0 +1,1 @@
+SELECT date_trunc('week', timestamp) as week, count(record_type) from public.all_leads_and_order_steps WHERE item_type = 'In-Store Purchase' AND timestamp >= date_trunc('month', now()) - interval '6 month' and timestamp < date_trunc('month', now()) GROUP by week ORDER BY 1,2

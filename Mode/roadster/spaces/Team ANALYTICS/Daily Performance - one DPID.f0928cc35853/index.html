@@ -1,0 +1,74 @@
+<div class="mode-header embed-hidden">
+  <h1>{{ title }}</h1>
+  <p>{{ description }}</p>
+</div>
+<div class="mode-grid container">
+  <div class="row" data-row-height="medium">
+    <div class="col-md-4">
+      <mode-chart id="chart_53b5daf8783b" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-4">
+      <mode-chart id="chart_3076885b0d07" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-4">
+      <mode-chart id="chart_251ef0bdfe13" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-table id="table_b4f1692da177" dataset="dataset" options="table_options"></mode-table>
+    </div>
+  </div>
+</div>
+<script>
+  setTimeout(function() {
+
+    var i;
+    /// For the First 3 bar charts
+
+    for (i = 0; i < 3; i++) {
+
+      var chart = Highcharts.charts[i];
+      chart.update({
+        xAxis: {
+          minorTickLength: 0,
+          tickLength: 0,
+
+        },
+        yAxis: {
+          labels: {
+            enabled: false
+          },
+          gridLineColor: 'transparent'
+        }
+      });
+    }
+
+
+    /// For ALL charts
+    var i;
+    for (i = 0; i < 5; i++) {
+
+      var chart = Highcharts.charts[i];
+      chart.update({
+        xAxis: {
+
+          type: 'date',
+          labels: {
+            formatter: function() {
+              return Highcharts.dateFormat('%a %e %b', this.value);
+            }
+          }
+
+        },
+        yAxis: {
+
+        }
+      });
+    }
+
+
+
+
+  }, 100);
+</script>

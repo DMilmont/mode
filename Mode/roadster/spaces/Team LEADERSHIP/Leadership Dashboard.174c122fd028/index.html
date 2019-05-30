@@ -1,0 +1,119 @@
+<div class="mode-header embed-hidden">
+  <h1>{{ title }}</h1>
+  <p>{{ description }}</p>
+</div>
+<div class="mode-grid container">
+  <div class="row" data-row-height="small">
+    <div class="col-md-6">
+      <mode-chart id="chart_9f51ebc43f66" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-6">
+      <mode-chart id="chart_8cf40a21e1ac" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-chart id="chart_2add893f64b0" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row" data-row-height="large">
+    <div class="col-md-6">
+      <mode-chart id="chart_a6519a89609d" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-6">
+      <mode-chart id="chart_edf381f74cbd" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row" data-row-height="large">
+    <div class="col-md-6">
+      <mode-chart id="chart_d8cd5376159c" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-6">
+      <mode-chart id="chart_4904c15a54c0" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <mode-chart id="chart_2843b6dc7b54" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+</div>
+<script>
+  setTimeout(function() {
+
+
+    // loop through each of the charts, from #0 through #X .  If you are modifying different types of charts, differently, then repeat this block for each chart type. 
+    var i;
+    for (i = 0; i < 2; i++) {
+
+      /* Focus on Chart # i */
+      var chart = Highcharts.charts[i];
+
+      chart.update({
+
+        xAxis: {
+
+          minorTickLength: 0, //hide the little ticks on the Vertical Axis
+          tickLength: 0, //hide the little ticks on the Vertical Axis
+          lineColor: "#FFFFFF", //make the vertical axis white <<<< DOESN'T Work for some reason
+          lineWidth: 0, //make the vertical axis 0 pixels wide
+        },
+
+        yAxis: {
+
+          labels: {
+            enabled: false
+          },
+          gridLineColor: 'transparent' // hide vertical gridlines
+        }
+
+      });
+    }
+
+
+    var chart = Highcharts.charts[4]; //Primary Make Chart
+
+    chart.update({
+
+      xAxis: {
+
+        minorTickLength: 0, //hide the little ticks on the Vertical Axis
+        tickLength: 0, //hide the little ticks on the Vertical Axis
+        lineColor: "#FFFFFF", //make the vertical axis white <<<< DOESN'T Work for some reason
+        lineWidth: 0, //make the vertical axis 0 pixels wide
+      },
+
+      yAxis: {
+
+        labels: {
+          enabled: false
+        },
+        gridLineColor: 'transparent' // hide vertical gridlines
+      }
+
+    });
+
+
+
+
+  }, 200);
+
+
+
+  setTimeout(function() {
+    for (i = 0; i < 4; i++) {
+      var chart = Highcharts.charts[i];
+      chart.update({
+        xAxis: {
+          type: 'date',
+          labels: {
+            formatter: function() {
+              return Highcharts.dateFormat('%b %y', this.value); // %y=19 %Y=2019
+            }
+          }
+        }
+
+      });
+    }
+  }, 100);
+</script>

@@ -1,0 +1,390 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.7/css/dx.common.css">
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.7/css/dx.light.css">
+<script type="text/javascript" src="https://cdn3.devexpress.com/jslib/18.2.7/js/dx.all.js"></script>
+<style>
+  .fixed-nav-bar {
+    position: fixed;
+    top: 0;
+    z-index: 9999;
+    background-color: white;
+    padding: 0;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  .fixed-nav-bar a {
+    padding: 10px;
+    display: inline-block;
+    font-weight: 500;
+    font-size: 13px;
+    color: rgb(78, 77, 77);
+  }
+
+  .fixed-nav-bar a:hover {
+    background-color: #f27802;
+    text-decoration: none;
+    color: white;
+  }
+
+  .has-nav {
+    padding-top: 3em;
+  }
+
+  @media (max-width: 767px) {
+    .fixed-nav-bar {
+      position: fixed;
+      top: 0;
+      z-index: 9999;
+      background-color: white;
+      padding: 0;
+      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+    }
+  }
+</style>
+<style>
+  mode-table tr:nth-child(even) {
+    background: #F5F5F5 !important;
+  }
+
+  mode-table td {
+    /*height: 40px !important;*/
+    font-family: "Futura", Arial, sans-serif !important;
+    font-size: 1em !important;
+    border: 1px solid grey !important;
+    text-align: center !important;
+  }
+
+  mode-table th {
+    background: #ffffff !important;
+    border: none !important;
+    font-size: 1em !important;
+    font-family: "Futura", Arial, sans-serif !important;
+  }
+</style>
+<div class="row" data-row-height="small">
+  <div class="col-md-4">
+  </div>
+  <div class="col-md-8"></div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <nav class="fixed-nav-bar">
+      <a class="scroll-link" data-id="text_aeeff101-1787-48cc-8b2b-2f9909d4724a">Benchmark Data</a>
+      <a class="scroll-link" data-id="chart_f623b15a9ec9">How have your rooftops changed?</a>
+    </nav>
+  </div>
+</div>
+<script>
+  // Pull in the Data Group Name for displaying in the title tag
+  var data = datasets.filter(function(d) {
+    return d.queryName == "Online Metrics";
+  })[0].content;
+  var title = data[0]['Dealer Group SF']
+  $("#title").text(title)
+</script>
+<div class="mode-header embed-hidden">
+  <h1>
+    <span id="title"></span>
+  </h1>
+  <p>{{ description }}</p>
+</div>
+<div class="mode-grid container">
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_671060b8-69a6-4b24-cb06-cd04bb895058" dataset="dataset" options="text_options">
+        <h4>Online Metrics</h4>
+        <p><em style="font-size: 16px; font-family: Graphik; color: rgb(51, 51, 51);">Monitor your dealers here! How do you compare to Roadster's best over the last 3 months?</em></p>
+        <p><em> </em></p>
+      </mode-text>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_9ce9218b-4932-44af-ebf4-16df4dd67828" dataset="dataset" options="text_options"></mode-text>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_80cbbb9f-4bbe-4736-a716-25e3a33aec10" dataset="dataset" options="text_options">
+        <h4>How have your dealers performed over time? </h4>
+        <p><em>Monitor your dealers here! How do compare to Roadster's best? </em></p>
+        <p>Select a specific dealer from the right to examine those changes</p>
+      </mode-text>
+    </div>
+  </div>
+  <div class="row" data-row-height="medium">
+    <div class="col-md-4">
+      <mode-chart id="chart_f623b15a9ec9" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-4">
+      <mode-chart id="chart_2696e6828982" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-4">
+      <mode-chart id="chart_71f4fbc87667" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <mode-chart id="chart_720755b59d52" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-4">
+      <mode-chart id="chart_70369363bf2f" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-4">
+      <mode-chart id="chart_b73caf80c563" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_ea82726d-3f75-4537-d183-094509322167" dataset="dataset" options="text_options">
+        <h4>What Dealers are showing unusual Changes key Metrics?</h4>
+        <p>Select a specific dealer from the right to examine those changes</p>
+      </mode-text>
+    </div>
+  </div>
+  <div class="row" data-row-height="large">
+    <div class="col-md-6">
+      <mode-chart id="chart_c8a47b36c66d" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-6">
+      <mode-chart id="chart_6b7bebc95c3d" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-chart id="pivotContainer2">
+      </mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-chart id="pivotContainer3">
+      </mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-chart id="chart_85de48e153ae" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-table id="table_96fc148e8f75" dataset="dataset" options="table_options"></mode-table>
+    </div>
+  </div>
+</div>
+<script>
+  var roadsterdx = {
+    version: 1,
+
+    getDataSource: function(queryName) {
+      // find the right data on the page, by name
+      var ii = 0;
+      var theSet = null;
+      for (ii = 0; ii < datasets.length; ii++) {
+        if (datasets[ii].queryName == queryName) {
+          theSet = datasets[ii].content;
+          break;
+        }
+      }
+
+      if (!theSet) {
+        //console.log('did not find data ' + queryName);
+        // make an empty data array
+        theSet = [];
+      }
+
+      //console.log('returning data');
+      return theSet;
+      /*
+      return new DevExpress.data.DataSource({
+        // array of data
+        store: theSet,
+
+        // additional configuration options
+        // sort: "name",
+        // pageSize: 10
+      });
+      */
+    },
+  };
+
+  //debugger;
+  $(function() {
+    var instore = roadsterdx.getDataSource('In-Store Metrics - Daily Data');
+    var online = roadsterdx.getDataSource('Online Metrics - Daily Data');
+    var order_funnel = roadsterdx.getDataSource('Order Funnel');
+    $('#pivotContainer1').dxPivotGrid({
+      dataSource: {
+        store: instore,
+        fields: [{
+            area: 'row',
+            dataField: 'Dealership',
+            dataType: 'text',
+          },
+          {
+            area: 'data',
+            dataField: 'In-Store Prospects',
+            dataType: 'number',
+            summaryType: 'sum'
+          },
+          {
+            area: 'data',
+            dataField: 'In-Store Shares',
+            dataType: 'number',
+            summaryType: 'sum'
+          },
+          {
+            area: 'data',
+            dataField: 'In-Store Orders',
+            dataType: 'number',
+            summaryType: 'sum'
+          },
+          {
+            area: 'data',
+            dataField: 'In-Store Sales',
+            dataType: 'number',
+            summaryType: 'sum'
+          },
+          {
+            area: 'data',
+            dataField: 'Prints',
+            dataType: 'number',
+            summaryType: 'sum'
+          },
+          {
+            area: 'data',
+            dataField: 'Copies',
+            dataType: 'number',
+            summaryType: 'sum'
+          },
+          {
+            area: 'data',
+            dataField: 'Close Rate',
+            dataType: 'number',
+            summaryType: 'sum'
+          },
+        ],
+        retrieveFields: false,
+      }
+    });
+
+    $('#pivotContainer2').dxPivotGrid({
+      dataSource: {
+        store: online,
+        fields: [{
+            area: 'row',
+            dataField: 'Dealership',
+            dataType: 'text',
+          },
+          {
+            area: 'data',
+            dataField: 'Dealer Visitors',
+            dataType: 'number',
+            summaryType: 'sum'
+          },
+          {
+            area: 'data',
+            dataField: 'Express Visitors',
+            dataType: 'number',
+            summaryType: 'sum'
+          },
+          {
+            area: 'data',
+            dataField: 'Online Express Ratio',
+            summaryType: 'max'
+          },
+          {
+            area: 'data',
+            dataField: 'Prospect Conversion',
+            summaryType: 'max'
+          },
+          {
+            area: 'data',
+            dataField: 'Online Shares',
+            dataType: 'number',
+            summaryType: 'sum'
+          },
+          {
+            area: 'data',
+            dataField: 'Online Orders',
+            dataType: 'number',
+            summaryType: 'sum'
+          },
+          {
+            area: 'data',
+            dataField: 'Roadster Matched Sales',
+            dataType: 'number',
+            summaryType: 'sum'
+          },
+        ],
+        retrieveFields: false,
+      }
+    });
+
+    $('#pivotContainer3').dxPivotGrid({
+      dataSource: {
+        store: order_funnel,
+        fields: [{
+            area: 'row',
+            dataField: 'Dealership',
+            dataType: 'text',
+          },
+          {
+            area: 'data',
+            dataField: 'Order Submitted',
+            dataType: 'number',
+            summaryType: 'sum'
+          },
+          {
+            area: 'data',
+            dataField: 'Accessories Attached',
+            dataType: 'number',
+            summaryType: 'sum'
+          },
+          {
+            area: 'data',
+            dataField: 'Accessories Attached Rate',
+            summaryType: 'avg',
+            format: {
+              type: 'percent',
+              precision: 2
+
+            }
+          },
+        ],
+        retrieveFields: false,
+      }
+    });
+  });
+</script>
+<script>
+  $(document).ready(function() {
+    // navigation click actions
+    $('.scroll-link').on('click', function(event) {
+      event.preventDefault();
+      var sectionID = $(this).attr("data-id");
+      scrollToID('#' + sectionID, 750);
+    });
+    // scroll to top action
+    $('.scroll-top').on('click', function(event) {
+      event.preventDefault();
+      $('html, body').animate({
+        scrollTop: 0
+      }, 'slow');
+    });
+    // mobile nav toggle
+    $('#nav-toggle').on('click', function(event) {
+      event.preventDefault();
+      $('#main-nav').toggleClass("open");
+    });
+  });
+  // scroll function
+  function scrollToID(id, speed) {
+    var offSet = 50;
+    var targetOffset = $(id).offset().top - offSet;
+    $('html,body').animate({
+      scrollTop: targetOffset
+    }, speed);
+  }
+</script>

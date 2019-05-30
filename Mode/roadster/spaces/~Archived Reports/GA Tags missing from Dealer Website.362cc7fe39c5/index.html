@@ -1,0 +1,51 @@
+<div class="mode-header embed-hidden">
+  <h1>{{ title }}</h1>
+  <p>{{ description }}</p>
+</div>
+<div class="mode-grid container">
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <mode-chart id="chart_64c3208c20da" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <mode-table id="table_2d45e6239c63" dataset="dataset" options="table_options"></mode-table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-table id="table_463cc6a155a3" dataset="dataset" options="table_options"></mode-table>
+    </div>
+  </div>
+</div>
+<script>
+  setTimeout(function() {
+    // loop through each of the charts, from #0 through #X .  If you are modifying different types of charts, differently, then repeat this block for each chart type.  
+
+    /* Focus on Chart # i */
+    var chart = Highcharts.charts[0];
+
+    chart.update({
+      xAxis: {
+        minorTickLength: 0, //hide the little ticks on the Vertical Axis
+        tickLength: 0, //hide the little ticks on the Vertical Axis
+        lineColor: "#FFFFFF", //make the vertical axis white <<<< DOESN'T Work for some reason
+        lineWidth: 0, //make the vertical axis 0 pixels wide
+      },
+
+      yAxis: {
+        labels: {
+          enabled: false
+        }, // get rid of Horizontal Axis Labels.  
+        style: {
+          "color": "#8a1a23",
+          "fontsize": "18px"
+        }, //***This line has no effect... why? 
+        gridLineColor: 'transparent' // hide vertical gridlines
+      }
+
+    });
+
+  }, 100);
+</script>

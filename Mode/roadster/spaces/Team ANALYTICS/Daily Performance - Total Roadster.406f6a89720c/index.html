@@ -1,0 +1,92 @@
+<div class="mode-header embed-hidden">
+  <h1>{{ title }}</h1>
+
+  <p>{{ description }}</p>
+</div>
+<div class="mode-grid container">
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <mode-chart id="chart_694cacb104bc" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <mode-chart id="chart_0d070fe7f786" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <mode-chart id="chart_53b355686c2a" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <mode-chart id="chart_39cd0edc93e5" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <mode-chart id="chart_20c7511644cf" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <mode-chart id="chart_a0b5b4e7fd15" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+</div>
+<script>
+  setInterval(function() {
+    var dealership_name = dataset.content[0]["Dealership"]; // assign variable 
+    document.getElementById("subtitle_dealership").innerHTML = dealership_name;
+    $("#subtitle_dealership").css("color", "black");
+    $("#subtitle_dealership").css("font-size", "30px");
+  }, 500);
+</script>
+<script>
+  setTimeout(function() {
+    var i;
+    // For the First 3 bar charts
+    for (i = 0; i < 4; i++) {
+      var chart = Highcharts.charts[i];
+      chart.update({
+        xAxis: {
+          minorTickLength: 0,
+          tickLength: 0,
+        },
+        yAxis: {
+          labels: {
+            //enabled: false
+          },
+          // gridLineColor: 'transparent'
+        }
+      });
+    }
+
+
+
+
+    /// For ALL charts
+    //var i;
+    for (i = 0; i < 6; i++) {
+
+      var chart = Highcharts.charts[i];
+      chart.update({
+        xAxis: {
+          type: 'date',
+          labels: {
+            formatter: function() {
+              return Highcharts.dateFormat('%a %b %e', this.value);
+            }
+          }
+        },
+        yAxis: {
+          labels: {
+            // enabled: false
+          },
+          //gridLineColor: 'transparent'
+        }
+      });
+    }
+  }, 750);
+</script>

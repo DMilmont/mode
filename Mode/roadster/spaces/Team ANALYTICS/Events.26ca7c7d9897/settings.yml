@@ -1,0 +1,8 @@
+---
+report_description: These are all the events that have been triggered within the Roadster
+  application, by frequency.  When applicable, we have vehicle information associated
+  with the event - and if the user has identified themselves, we also have the user
+  coded - so we can build the user journey.  All events are time-stamped and coded
+  as in-store or not.
+is_full_width: false
+hide_run_button: false

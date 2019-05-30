@@ -1,0 +1,211 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.7/css/dx.common.css">
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.7/css/dx.light.css">
+<script type="text/javascript" src="https://cdn3.devexpress.com/jslib/18.2.7/js/dx.all.js"></script>
+<script>
+  // Pull in the Data Group Name for displaying in the title tag
+  var data = datasets.filter(function(d) {
+    return d.queryName == "Online Metrics";
+  })[0].content;
+  var title = data[0]['Dealer Group SF']
+  $("#title").text(title)
+</script>
+<div class="mode-header embed-hidden">
+  <h1>
+    <span id="title"></span>
+  </h1>
+  <p>{{ description }}</p>
+</div>
+<div class="mode-grid container">
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_c6c24faf-7d89-406b-9e4c-8f100df5858e" dataset="dataset" options="text_options">
+        <h3>Online Metrics</h3>
+      </mode-text>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <mode-chart id="chart_8598ef0a8644" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-4">
+      <mode-chart id="chart_d5df7d70211f" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-4">
+      <mode-chart id="chart_1d6424a7c797" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <mode-chart id="chart_205482e898d2" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-6">
+      <mode-chart id="chart_0c40b9c0def9" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_0a66b9c2-c1dc-451b-ae55-a36a201811d5" dataset="dataset" options="text_options">
+        <h3><br></h3>
+        <h3>In-Store Metrics</h3>
+      </mode-text>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <mode-chart id="chart_4ab3f3b307d0" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-4">
+      <mode-chart id="chart_fa0fd6f86901" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+</div>
+<div class="mode-grid container">
+  <div class="row" data-row-height="medium">
+    <div class="col-md-12">
+      <mode-chart id="dealerPartnerGrid"></mode-chart>
+    </div>
+  </div>
+</div>
+<script>
+  var roadsterdx = {
+    version: 1,
+
+    getDataSource: function(queryName) {
+      // find the right data on the page, by name
+      var ii = 0;
+      var theSet = null;
+      for (ii = 0; ii < datasets.length; ii++) {
+        if (datasets[ii].queryName == queryName) {
+          theSet = datasets[ii].content;
+          break;
+        }
+      }
+
+      if (!theSet) {
+        //console.log('did not find data ' + queryName);
+        // make an empty data array
+        theSet = [];
+      }
+
+      //console.log('returning data');
+      return theSet;
+      /*
+      return new DevExpress.data.DataSource({
+        // array of data
+        store: theSet,
+
+        // additional configuration options
+        // sort: "name",
+        // pageSize: 10
+      });
+      */
+    },
+  };
+
+  //debugger;
+  $(function() {
+
+    var leadData = roadsterdx.getDataSource('mmy');
+    var dealers = roadsterdx.getDataSource('Online Metrics - Dealer Level');
+
+    // data grid example written by Trey (and simplified somewhat) - see https://modeanalytics.com/editor/roadster/reports/a3abc0d6faf9
+    $('#dealerPartnerGrid').dxDataGrid({
+      dataSource: dealers,
+      remoteOperations: false,
+      selection: {
+        mode: "single"
+      },
+      searchPanel: {
+        visible: true,
+        highlighCaseSensitive: true,
+      },
+      groupPanel: {
+        visible: true
+      },
+      grouping: {
+        autoExpandAll: false
+      },
+      showBorders: true,
+      columns: [{
+          dataField: 'Dealership',
+          dataType: 'string'
+        },
+        {
+          caption: "Online Express Ratio",
+          format: "percent",
+          alignment: "right",
+          cssClass: "bullet",
+          minWidth: 150,
+          cellTemplate: function(container, options) {
+            container.addClass("chart-cell");
+            $("<div />").dxBullet({
+              showTarget: false,
+              showZeroLevel: true,
+              value: options.data.Online_Express_Ratio * 100,
+              startScaleValue: 0,
+              endScaleValue: 100,
+              color: '#03367c',
+              size: {
+                width: 150,
+                height: 20
+              },
+              tooltip: {
+                enabled: false
+              }
+            }).appendTo(container);
+          }
+        },
+
+        {
+          caption: 'Visitors',
+          dataField: 'Dealer_Visitors',
+          dataType: 'number'
+        },
+        {
+          dataField: 'In-Store-Prospects',
+          dataType: 'number'
+        },
+        {
+          dataField: 'In-Store Shares',
+          dataType: 'number'
+        },
+        {
+          dataField: 'Online Orders',
+          dataType: 'number'
+        }
+      ],
+      summary: {
+        totalItems: [{
+            column: 'Dealer_Visitors',
+            summaryType: "sum",
+            customizeText: function(data) {
+              return "Total: " + data.value;
+            }
+          },
+          {
+            column: 'In-Store-Prospects',
+            summaryType: "sum",
+            customizeText: function(data) {
+              return "Total: " + data.value;
+            }
+          },
+          {
+            column: 'In-Store Shares',
+            summaryType: "sum",
+            customizeText: function(data) {
+              return "Total: " + data.value;
+            }
+          },
+          {
+            column: 'Online Orders',
+            summaryType: "sum",
+            customizeText: function(data) {
+              return "Total: " + data.value;
+            }
+          }
+        ]
+      }
+    });
+  });
+</script>

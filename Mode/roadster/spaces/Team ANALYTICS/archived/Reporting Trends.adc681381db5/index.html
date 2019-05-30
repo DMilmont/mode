@@ -1,0 +1,66 @@
+<div class="mode-header embed-hidden">
+  <h1>{{ title }}</h1>
+  <p>{{ description }}</p>
+</div>
+<div class="mode-grid container">
+  <div class="row" data-row-height="large">
+    <div class="col-md-6">
+      <mode-chart id="chart_679d24c809e7" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-6">
+      <mode-chart id="chart_d6aa745900a0" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row" data-row-height="large">
+    <div class="col-md-6">
+    </div>
+    <div class="col-md-6">
+      <mode-chart id="chart_cb30171d26f8" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+</div>
+<script>
+  setTimeout(function() {
+
+
+      var chart = Highcharts.charts[0];
+      chart.update({
+        xAxis: {
+          type: 'date',
+          labels: {
+            formatter: function() {
+              return Highcharts.dateFormat('%a %b %e', this.value);
+            }
+          }
+        }
+      });
+
+
+
+
+
+      var i;
+      for (i = 1; i < 5; i++) {
+
+        var chart = Highcharts.charts[i];
+        chart.update({
+          xAxis: {
+            minorTickLength: 0,
+            tickLength: 0,
+          },
+          yAxis: {
+            labels: {
+              enabled: false
+            },
+            gridLineColor: 'transparent'
+          }
+        });
+      }
+
+
+
+
+    }
+
+    , 100);
+</script>

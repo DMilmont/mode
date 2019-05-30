@@ -1,0 +1,71 @@
+<div class="mode-header embed-hidden">
+  <h1>{{ title }}</h1>
+  <p>{{ description }}</p>
+</div>
+<div class="mode-grid container">
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_b9dd068b-18a6-4102-afa6-6d32e34fbec5" dataset="dataset" options="text_options">
+        <p><br></p>
+        <p>Mismatched DPIDs is the most critical error. <strong> Sales Ops Team </strong>- please go into Salesforce and update the DPID to match the DPID in Dealer Admin - without these being perfect, our reports cannot append any salesforce data. </p>
+      </mode-text>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-table id="table_55b83be318b8" dataset="dataset" options="table_options"></mode-table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_2b382c73-55ae-46ca-9f36-02cad8219c48" dataset="dataset" options="text_options">
+        <p><br></p>
+        <p>This is a list of instances where the status in Dealer Admin doesn't match the status in Salesforce. <strong>Integrations Team</strong> - please go into Dealer Admin and fix the status for these customers, where appropriate. Use your discretion
+          - the most critical issues are when a customer is 'Cancelled' in Salesforce but still 'Live' in Admin. This causes reporting problems because some reports rely on a customer being "Live" in Dealer Admin... while other reports rely on a customer
+          being "Live" in Salesforce... and this causes a lot of confusion when different reports have different customer counts. </p>
+      </mode-text>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-table id="table_e1439739b6de" dataset="dataset" options="table_options"></mode-table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_1beda83c-cf36-482f-d35d-8750af1c5e83" dataset="dataset" options="text_options">
+        <p><br></p>
+        <p>These are instances where the states in Salesforce do not match the state listed in Dealer Admin. Since Salesforce generates invoices, it's usually the best source. <strong> Integrations Team</strong> - please go into Dealer Admin and fix these
+          for your customers. This causes problems since taxes are determined by State. </p>
+      </mode-text>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-table id="table_c2bb3ec91538" dataset="dataset" options="table_options"></mode-table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_4e5ce232-c907-4fae-92c0-c16c180b0a48" dataset="dataset" options="text_options">
+        <p>--- Warnings below this line don't actually break things in reporting - but they do cause instances where some reports show one thing and other reports show something different. And they'll keep showing up until they get fixed... </p>
+        <p><strong>Integrations Team</strong> - these are usually errors in Dealer Admin</p>
+      </mode-text>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-table id="table_7972822cb67b" dataset="dataset" options="table_options"></mode-table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-table id="table_f2faba17b145" dataset="dataset" options="table_options"></mode-table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-table id="table_fb8640def1a7" dataset="dataset" options="table_options"></mode-table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,126 @@
+<style type="text/css">
+  BR {
+    clear: right
+  }
+</style>
+
+<style>
+@import 'https://code.highcharts.com/css/highcharts.css';
+
+
+.highcharts-data-label {
+	font-weight: normal;
+}
+
+.highcharts-data-label-box {
+	fill: red;
+	stroke-width: 2px;
+	stroke: black;
+}
+
+.highcharts-data-label text {
+	font-weight: bold;
+	fill: white;
+}
+
+</style>
+<div class="mode-header embed-hidden">
+  <h1>
+    <span id="title"></span>
+  </h1>
+  <p>{{ description }}</p>
+</div>
+<div id="t1" class="mode-grid container">
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <mode-chart id="chart_2cf21de6ea63" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-chart id="chart_fd659ebf7054" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_c8ac335f-5d04-4f60-84b9-1cb48aeda68d" dataset="dataset" options="text_options">
+        <p><strong><u>Tips</u></strong></p>
+        <p>▶ Click "Explore in Mode" to see more detail.</p>
+        <p>▶ You can then click on a dealer name to see a graph that shows exactly when the drop happened.</p>
+        <p><br></p>
+        <p><strong><u>How to Interpret:</u></strong></p>
+        <p>Green Thumbs means no dealers had a sudden drop in either Web/Express Traffic.</p>
+        <p>Dealers listed have Dealer Site / Express Store visits drop to 0. We then compare the previous week to get an average daily visit.</p>
+        <p><br></p>
+        <p>Visits are defined as unique daily customers visiting Express store. When aggregating to weekly/monthly levels we sum the unique daily visits over the specified timespan.</p>
+        <p><strong><u>What to do next:</u></strong></p>
+        <p>If a dealer's web traffic has a significant drop from daily average, please follow up to see if GA Tags have been removed.</p>
+        <p>If a dealer's express traffic has a significant drop from daily average, please follow up to see if CTAs have been removed.</p>
+        <p><br></p>
+        <p>If you have questions, post it to the anlytx_L2_Support channel.</p>
+        <p>If you have ideas to improve this analytic, post it to anlytx_wants_input.</p>
+        <p><br></p>
+      </mode-text>
+    </div>
+  </div>
+</div>
+<script>
+  setTimeout(function() {
+    var data = datasets.filter(function(d) {
+      return d.queryName == "Dealer Web Traffic Sudden Drop";
+    })[0].content;
+
+    var data2 = datasets.filter(function(d) {
+      return d.queryName == "Dealer Express Traffic Sudden Drop";
+    })[0].content;
+
+    $("#title").text("Dealers with Sudden Drop - Currently All Good");
+
+    //Adjust chart if no data rolls up to it.
+    if (data.length != 0 || data2.length != 0) {
+      $("#title").text("Dealers with Sudden Traffic Drop");
+    }
+
+    if (data.length == 0) {
+      $("#chart_2cf21de6ea63").remove();
+    }
+
+    if (data2.length == 0) {
+      $("#chart_fd659ebf7054").remove();
+    }
+
+    if (data.length == 0 && data2.length == 0) {
+      $('#t1').prepend('<img id="theImg" src="https://alineenergy.com/wp-content/uploads/2018/02/green-thumbs-up.png" />')
+    }
+     var str='< span'               
+        var i;
+    for (i = 0; i < Highcharts.charts.length; i++) {
+    var chart = Highcharts.charts[i];
+            chart.update({
+
+       plotOptions: {
+            series: {
+                dataLabels: {
+                    enabled: true,
+                   color: 'red',
+
+                    shape: 'callout',
+
+                    formatter: function(){
+                      
+                    	var isLast = false;
+                    	if(this.point.x === this.series.data[this.series.data.length -1].x && this.point.y === this.series.data[this.series.data.length -1].y) isLast = true;
+
+                      return isLast ? this.y : '' ;
+            
+                    }
+                }
+            }
+       }
+        
+            })
+      
+    }
+
+  }, 100);
+</script>

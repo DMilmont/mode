@@ -1,0 +1,118 @@
+<div class="mode-header embed-hidden">
+  <h1>{{ title }}</h1>
+  <p>{{ description }}</p>
+</div>
+<div class="mode-grid container">
+  <div class="row" data-row-height="small">
+    <div class="col-md-6">
+      <mode-chart id="chart_415666cef499" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-6">
+      <mode-chart id="chart_17979e2ae55c" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row" data-row-height="large">
+    <div class="col-md-6">
+      <mode-chart id="chart_02be74a4bae2" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-6">
+      <mode-chart id="chart_76fcacbcb632" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row" data-row-height="medium">
+    <div class="col-md-6">
+      <mode-chart id="chart_792538c71a0a" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-6">
+      <mode-chart id="chart_5a3be214c218" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+</div>
+<script>
+  setTimeout(function() {
+
+
+    // loop through each of the charts, from #0 through #X .  If you are modifying different types of charts, differently, then repeat this block for each chart type. 
+    var i;
+    for (i = 0; i < 6; i++) {
+
+      /* Focus on Chart # i */
+      var chart = Highcharts.charts[i];
+
+      chart.update({
+
+        /*   You can change the Chart type here.
+             List of Chart types:  www.highcharts.com/docs/chart-and-series-types/chart-types */
+        // chart: {type: 'bar'},
+
+        /*   Plot Options are next. 
+             Docs are here - find your chart on the left sidebar:  https://api.highcharts.com/highcharts/plotOptions */
+
+        // plotOptions: {
+        //  bar: {grouping: false, shadow: false, borderWidth: 0}
+        //},
+
+
+        /* add xAxis settings here. 
+         List of settings are: https://api.highcharts.com/highcharts/xAxis.type */
+
+        xAxis: {
+
+          // type: 'date',    //this forces the xAxis to be a 'date type'
+          // labels: { formatter: function () {return Highcharts.dateFormat('%a %e %b', this.value);}} . // Make the date format "Sun Mar 6"
+
+          minorTickLength: 0, //hide the little ticks on the Vertical Axis
+          tickLength: 0, //hide the little ticks on the Vertical Axis
+          lineColor: "#FFFFFF", //make the vertical axis white <<<< DOESN'T Work for some reason
+          lineWidth: 0, //make the vertical axis 0 pixels wide
+        },
+
+
+        /* add yAxis settings here. 
+       List of settings are: https://api.highcharts.com/highcharts/yAxis.type . */
+        yAxis: {
+
+          labels: {
+            enabled: false
+          }, // get rid of Horizontal Axis Labels. 
+          // style: {"color": "#8a1a23", "fontsize": "18px"}, //***This line has no effect... why?
+          gridLineColor: 'transparent' // hide vertical gridlines
+        }
+
+        /* add individual settings for each series here. 
+         List of settings are: https://api.highcharts.com/highcharts/series -- select your chart type on the left. */
+        // Padding adjusts bar width.  Placement shifts the bar.
+
+        //series: [     // This is the first series. 
+        //  {
+        //dataLabels: {x: -30, y: -10},   //shift numbers up and to the left
+        //pointPadding: 0.1, pointPlacement: -0.0
+        //},  
+        //  {                                                   // these options for the 2nd series. 
+        //  dataLabels: {x: -30, y: -10, color: "#8a1a23" },   //shift numbers up and to the left - and make them red
+        //  pointPadding: 0.3, pointPlacement: -0.0 },  
+        //  ],
+
+      });
+    }
+  }, 200);
+
+
+
+  setTimeout(function() {
+    for (i = 0; i < 4; i++) {
+      var chart = Highcharts.charts[i];
+      chart.update({
+        xAxis: {
+          type: 'date',
+          labels: {
+            formatter: function() {
+              return Highcharts.dateFormat('%b %y', this.value); // %y=19 %Y=2019
+            }
+          }
+        }
+
+      });
+    }
+  }, 100);
+</script>

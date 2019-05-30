@@ -1,0 +1,1 @@
+data_grouped <- data %>% group_by(name, current_week) %>% summarise(express_visitors = mean(online_express_visitors))
