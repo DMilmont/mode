@@ -1,0 +1,96 @@
+<style>
+  .chart-header {
+    display: none;
+  }
+</style>
+<script>
+  // Pull in the Data Group Name for displaying in the title tag
+  var data = datasets.filter(function(d) {
+    return d.queryName == "Agent Share Summary";
+  })[0].content;
+  var title = data[0]['name']
+  var str1 = 'Agent Shares Tracking - '
+  $("#title").text(str1.concat(title))
+</script>
+<div class="mode-header embed-hidden">
+  <h1>
+    <span id="title"></span>
+  </h1>
+  <p>{{ description }}</p>
+</div>
+<div class="mode-grid container">
+  <h2><u>Dealer Performance</u></h2>
+    <div class="row">
+    <div class="col-md-12" data-row-height="large">
+      <mode-python id="python_a5de5f65d85d" options="python_options"></mode-python>
+    </div>
+  </div>
+  <h2><u>Agent Performance</u></h2>
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <mode-chart id="chart_82dca96c0c8f" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+
+</div>
+<script>
+  setTimeout(function() {
+    var i;
+    for (i = 0; i < Highcharts.charts.length; i++) {
+
+      var chart = Highcharts.charts[i];
+      if (chart.container.closest("#chart_82dca96c0c8f") != null) {
+        chart.update({
+
+
+          xAxis: {
+            minorTickLength: 0,
+            tickLength: 0,
+          },
+          yAxis: {
+            labels: {
+              enabled: false
+            },
+            gridLineColor: 'transparent'
+
+          }
+        });
+      }
+    }
+
+    for (i = 0; i < Highcharts.charts.length; i++) {
+
+      /* Focus on Chart # i */
+      var chart = Highcharts.charts[i];
+      if (chart.container.closest("#chart_ea324bdd7d46") != null) {
+        chart.update({
+
+
+          xAxis: {
+
+            type: 'date', //this forces the xAxis to be a 'date type'
+            labels: {
+              formatter: function() {
+                return Highcharts.dateFormat('%a %e %b', this.value);
+              }
+            }, // Make the date format "Sun Mar 6"
+
+            minorTickLength: 0, //hide the little ticks on the Vertical Axis
+            tickLength: 0, //hide the little ticks on the Vertical Axis
+            lineWidth: 0, //make the vertical axis 0 pixels wide
+          },
+
+          yAxis: {
+
+
+            gridLineColor: 'transparent' // hide vertical gridlines
+          }
+
+        });
+      }
+    }
+
+
+
+  }, 100);
+</script>
