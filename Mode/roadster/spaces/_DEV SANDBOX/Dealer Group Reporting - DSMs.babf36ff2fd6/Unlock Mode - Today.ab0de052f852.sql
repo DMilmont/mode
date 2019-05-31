@@ -74,10 +74,12 @@ SELECT
        properties ->> 'price_unlock_mode' unlock_mode,
        properties ->> 'unlock_count_unvalidated' unlock_ct_unval,
        properties ->> 'unlock_count_validated' unlock_ct_val,
-       properties ->> 'unlock_count_days' unlock_ct_days
+       properties ->> 'unlock_count_days' unlock_ct_days, 
+       actual_live_date
 FROM dealer_partner_properties dpp
 LEFT JOIN dealer_partners dp ON dpp.dealer_partner_id = dp.id
-WHERE dpid IN (SELECT distinct dpid FROM date_dpid)
+LEFT JOIN fact.salesforce_dealer_info sdi ON dp.dpid = sdi.dpid
+WHERE dp.dpid IN (SELECT distinct dpid FROM date_dpid)
 AND date = (SELECT max(date) FROM dealer_partner_properties)
 ORDER BY date desc
 )
@@ -100,5 +102,6 @@ CASE
   WHEN unlock_mode = 'nolock' THEN ''
   WHEN unlock_lead = 'false' THEN 'https://s3.amazonaws.com/expressstoreunlock/base_unlock_resized.png'
   ELSE 'https://s3.amazonaws.com/expressstoreunlock/full_unlock.png'
-  END test_img
+  END test_img, 
+  actual_live_date::date "Go-Live Date"
 FROM almost_final
