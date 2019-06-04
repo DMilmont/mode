@@ -25,6 +25,7 @@ where crm.status = 'Sold'
   and item_type is not null 
   and crm.sold_at < now()
   and crm.sold_at > sf.actual_live_date
+  and crm.sold_at > now() - '13 weeks'::interval
 
 group by 1,2
 
