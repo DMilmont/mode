@@ -32,7 +32,7 @@ SUM("Online Prospects") "Online Prospects",
 SUM("online_shares") "Online Shares",
 SUM("online_orders") "Online Orders", 
 SUM(online_sales) "Roadster Matched Sales", 
-SUM(online_sales) / NULLIF(SUM("Online Express Visitors"), 0) "Close Rate"
+SUM(online_sales) / NULLIF(SUM("Online Prospects"), 0) "Close Rate"
 FROM base_online_data
 GROUP BY 1
 ORDER BY "Dealership"

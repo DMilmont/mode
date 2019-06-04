@@ -11,7 +11,6 @@
     padding: 0;
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
   }
-
   .fixed-nav-bar a {
     padding: 10px;
     display: inline-block;
@@ -19,17 +18,14 @@
     font-size: 13px;
     color: rgb(78, 77, 77);
   }
-
   .fixed-nav-bar a:hover {
     background-color: #f27802;
     text-decoration: none;
     color: white;
   }
-
   .has-nav {
     padding-top: 3em;
   }
-
   @media (max-width: 767px) {
     .fixed-nav-bar {
       position: fixed;
@@ -40,12 +36,10 @@
       box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
     }
   }
-
   .dx-theme-border-color-as-background-color {
     background-color: #fff !important;
     fill: #fff !important;
   }
-
   * {
     /*font-family: 'Helvetica Neue', 'Segoe UI', Helvetica, Verdana, sans-serif !important;*/
     vertical-align: middle !important;
@@ -99,6 +93,19 @@
       </mode-text>
     </div>
   </div>
+    <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_ea82726d-3f75-4537-d183-094509322168" dataset="dataset" options="text_options">
+        <h4>Online Metrics</h4>
+        <p><em>Here you can monitor your dealer's Online metrics</em></p>
+      </mode-text>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-chart id="online_metrics_summ"></mode-chart>
+    </div>
+  </div>
   <div class="row">
     <div class="col-md-12">
       <mode-text id="text_ea82726d-3f75-4537-d183-094509322169" dataset="dataset" options="text_options" ,="" class="text">
@@ -115,19 +122,6 @@
       <div class="col-md-12">
         <mode-chart id="in_store_metrics_summ"></mode-chart>
       </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <mode-text id="text_ea82726d-3f75-4537-d183-094509322168" dataset="dataset" options="text_options">
-        <h4>Online Metrics</h4>
-        <p><em>Here you can monitor your dealer's Online metrics</em></p>
-      </mode-text>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <mode-chart id="online_metrics_summ"></mode-chart>
     </div>
   </div>
   <div class="row">
@@ -174,7 +168,6 @@
 <script>
   var roadsterdx = {
     version: 1,
-
     getDataSource: function(queryName) {
       // find the right data on the page, by name
       var ii = 0;
@@ -185,20 +178,17 @@
           break;
         }
       }
-
       if (!theSet) {
         //console.log('did not find data ' + queryName);
         // make an empty data array
         theSet = [];
       }
-
       //console.log('returning data');
       return theSet;
       /*
       return new DevExpress.data.DataSource({
         // array of data
         store: theSet,
-
         // additional configuration options
         // sort: "name",
         // pageSize: 10
@@ -206,7 +196,6 @@
       */
     },
   };
-
   //debugger;
   $(function() {
     var instore = roadsterdx.getDataSource('In-Store Metrics - Daily Data');
@@ -217,7 +206,7 @@
     var agent_certs = roadsterdx.getDataSource('Agent Cert Profiles');
     var online_metrics_sum = roadsterdx.getDataSource('Online Metrics - Summarized');
     var instore_metrics_sum = roadsterdx.getDataSource('In-Store Metrics - Summarized');
-
+    var order_funnel_bar = roadsterdx.getDataSource('Order Funnel - Bar Chart');
     $('#dealer_properties').dxDataGrid({
       dataSource: dealer_attributes,
       onCellPrepared: function(e) {
@@ -284,7 +273,6 @@
         },
       ],
     });
-
     $('#agent_certification').dxDataGrid({
       dataSource: agent_certs,
       showColumnLines: false,
@@ -331,7 +319,6 @@
         ]
       },
     });
-
     $('#online_metrics_summ').dxDataGrid({
       dataSource: online_metrics_sum,
       showColumnLines: false,
@@ -527,7 +514,6 @@
         },
       ],
     });
-
     // In-Store Data Grid
     $('#in_store_metrics_summ').dxDataGrid({
       dataSource: instore_metrics_sum,
@@ -730,7 +716,6 @@
         },
       ],
     });
-
     // Order Funnel Summarized
     $('#order_funnel_summ').dxDataGrid({
       dataSource: order_funnel_sum,
@@ -744,6 +729,29 @@
         };
         if (e.value == 0) {
           e.cellElement.css('color', 'white')
+        }
+      },
+      masterDetail: {
+        enabled: true,
+        template: function(container, options) {
+          var dlr = options.data['Dealership']
+          $("<div>").dxChart({
+            rotated: true,
+            size: {
+            height: 300,
+            width: 650
+        },
+            dataSource: order_funnel_bar.filter(function(x) {
+              return (x.Dealership == dlr);
+            }),
+            series: {
+              label: {visible: true},
+              argumentField: 'metric',
+              valueField: 'value_order_steps',
+              type: 'bar',
+              name: 'Steps'
+            },
+          }).appendTo(container);
         }
       },
       columns: [{
@@ -826,7 +834,6 @@
         },
       ],
     });
-
     // $("#funnel").dxFunnel({
     //   dataSource: order_funnel_graphic,
     //   title: {
