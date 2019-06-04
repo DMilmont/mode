@@ -27,4 +27,3 @@ order by dp.name asc)
 
 select * from tab1
 where "Dealer Socket sales" > 0 and "CDK sales" >0 
-order by date ASC

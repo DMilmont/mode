@@ -1,8 +1,3 @@
--- Returns first 100 rows from public.crm_records
---SELECT * FROM public.crm_records where  dealer_partner_id ='265944' LIMIT 100;
-
---SELECT * FROM public.crm_records where vin = 'KL4CJASB1JB605272'
-
 SELECT 
  --   ROW_NUMBER() OVER(PARTITION BY crm.vin) vin_count,
     --s.first_lead_id,
@@ -70,6 +65,6 @@ left join fact.f_sale s on  s.crm_record_id = crm.id
 where dp.dpid = '{{ dpid }}'
   and crm_type = 'cdk'
   and crm.status = 'Sold'
-  and item_type = 'Matched Sale'
+  and item_type <> 'Matched Sale'
 
 order by /*s.item_type asc,*/ crm.sold_at desc
