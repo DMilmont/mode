@@ -1,7 +1,3 @@
-
-
-
-
 with traffic as ( select *
 from fact.mode_agg_daily_traffic_and_prospects ft
 where ft.date between current_date-8 and current_date-1
@@ -66,7 +62,7 @@ SELECT sf.status "SF Status",
        dp.state,
        dp.zip,
        dp.timezone
-       --,admin.properties 
+       ,admin.properties 
 
 FROM dealer_partner_properties admin
 
