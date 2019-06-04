@@ -1,11 +1,8 @@
--- Returns first 100 rows from public.crm_records
-SELECT * FROM public.crm_records LIMIT 100;
-
 
 
 SELECT 
     dp.dpid,
-    to_char(crm.sold_at, 'YYYY_MM') "Sale Month",
+    crm.sold_at::date "Sale Day",
     count(distinct dp.dpid) "Distinct DPID",
     count(case when item_type = 'Matched Sale' then 1 else Null end) "Roadster Sale",
     count(case when item_type = 'Sale' then 1 else NULL end) "Non-Roadster Sale",
@@ -29,6 +26,6 @@ where crm.status = 'Sold'
   and crm.sold_at < now()
   and crm.sold_at > sf.actual_live_date
 
-group by dp.dpid,"Sale Month"
+group by 1,2
 
-order by dp.dpid, "Sale Month" 
+order by 1,2
