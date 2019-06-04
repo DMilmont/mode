@@ -1,9 +1,4 @@
 
-
-
-
-
-
 with date_dpid as (
 select c.date, dp.dpid, dp.name, dp.tableau_secret as dpsk
 from fact.d_cal_date as c
