@@ -71,5 +71,6 @@ where dp.dpid = '{{ dpid }}'
   and crm_type = 'cdk'
   and crm.status = 'Sold'
   and item_type = 'Matched Sale'
-
+  and crm.sold_at > now() - '3 months'::interval
+  
 order by /*s.item_type asc,*/ crm.sold_at desc
