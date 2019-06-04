@@ -60,7 +60,7 @@ with date_dpid as (
     ),
 agent_detail as (select agent_name 
                 ,agent_full_name
-                ,job_title
+                ,COALESCE(job_title,'Job Title Missing') as job_title
                 ,dpid
                 ,name
                 ,COUNT(distinct id) as EmailSent
@@ -90,7 +90,7 @@ agent_email as(  SELECT ad.dpid
 
         SELECT ae.dpid
             ,ae.name
-            ,ae.agent as "Agent"
+            ,ae.job_title || ' - ' || ae.agent  as "Agent"
             ,ae.job_title as "Title"
             ,CASE WHEN ae.email_event='Sent' then '1. Invalid Email' 
                   WHEN ae.email_event='Delivered' then '2. Delivered - Not Opened'

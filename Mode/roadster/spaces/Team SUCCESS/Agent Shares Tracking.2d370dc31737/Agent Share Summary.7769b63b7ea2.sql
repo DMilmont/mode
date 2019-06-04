@@ -33,7 +33,6 @@ with date_dpid as (
                     , dd.dpid
                     , dd.name
                     ,a.agent_name
-                    ,a.job_title
                     , ls.id
                     ,ls.crm_record_id
                     ,ls.vin
@@ -58,13 +57,13 @@ with date_dpid as (
 select date
       ,dpid
       ,name
-     ,COUNT(distinct id) as agent_shares
-      ,sum(Deliver_Check) as shares_delivered
-      ,CASE when sum(Deliver_Check) =0 then 0 else round(sum(Deliver_Check)::decimal/count(distinct id),2) END as shares_delivered_perc
-      ,sum(Open_Check) as shares_opened
-      ,CASE when sum(Open_Check) =0 then 0 else round(sum(Open_Check)::decimal/count(distinct id),2) END as shares_opened_perc
-      ,sum(Click_Check)  as shares_clicked
-      ,CASE when sum(Click_Check) =0 then 0 else round(sum(Click_Check)::decimal/count(distinct id),2) END as shares_clicked_perc
+     ,COUNT(distinct id) as "Agent Shares"
+      ,sum(Deliver_Check) as "Shares Delivered"
+      ,CASE when sum(Deliver_Check) =0 then 0 else round(sum(Deliver_Check)::decimal/count(distinct id),2) END as "Shares Delivered %"
+      ,sum(Open_Check) as "Shares Opened"
+      ,CASE when sum(Open_Check) =0 then 0 else round(sum(Open_Check)::decimal/count(distinct id),2) END as "Shares Opened %"
+      ,sum(Click_Check)  as "Shares Clicked"
+      ,CASE when sum(Click_Check) =0 then 0 else round(sum(Click_Check)::decimal/count(distinct id),2) END as "Shares Clicked %"
 from detail
 GROUP BY 1,2,3
 

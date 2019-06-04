@@ -2,10 +2,12 @@
   .chart-header {
     display: none;
   }
-    p {
+
+  p {
     font-size: medium;
   }
-    BR {
+
+  BR {
     clear: right
   }
 
@@ -26,7 +28,11 @@
     return d.queryName == "Agent Share Summary";
   })[0].content;
   var title = data[0]['name']
+  document.getElementById("titleHolder").innerHTML = title.toString();
+  var dpid = data[0]['dpid']
   var str1 = 'Agent Shares Tracking - '
+  var link = "https://dealers.roadster.com/"
+  var link_p= link.concat(dpid,'/users')
   $("#title").text(str1.concat(title))
 </script>
 <div class="mode-header embed-hidden">
@@ -37,9 +43,9 @@
 </div>
 <div class="mode-grid container">
   <h2><u>Dealer Performance</u></h2>
-    <div class="row">
-    <div class="col-md-12" data-row-height="large">
-      <mode-python id="python_a5de5f65d85d" options="python_options"></mode-python>
+    <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <mode-chart id="chart_756374192ece" dataset="dataset" options="chart_options"></mode-chart>
     </div>
   </div>
   <h2><u>Agent Performance</u></h2>
@@ -48,13 +54,16 @@
       <mode-chart id="chart_82dca96c0c8f" dataset="dataset" options="chart_options"></mode-chart>
     </div>
   </div>
-<p> ▶ Provide 'Date Range' and 'DPID' to see historical agent share activity at the dealer/agent level </p>
-<p> ▶ Share activity is counted based on date initially sent. Opened/Clicked status is based on current tracking information </p>
-<p> ▶ Agent share tracking provides a view of volume vs effectivenss by time series and per agent</p>
-<p> ▶ Please see <a href="https://roadsterteam.atlassian.net/wiki/spaces/AN/pages/325386285/Agent+Share+Tracking+Feedback" target="_blank">Confluence page</a> to provide any feedback on report</p>
+  <p> ▶ Please click <a href= "" id="link_p" target="_blank">Here</a> to update the <b>Job Title</b> for agents where it is currently missing for agents at  <span id="titleHolder"></span>. </p>
+  <p> ▶ Provide 'Date Range' and 'DPID' to see historical agent share activity at the dealer/agent level </p>
+  <p> ▶ Share activity is counted based on date initially sent. Opened/Clicked status is based on current tracking information </p>
+  <p> ▶ Agent share tracking provides a view of volume vs effectivenss by time series and per agent</p>
+  <p> ▶ Please see <a href="https://roadsterteam.atlassian.net/wiki/spaces/AN/pages/325386285/Agent+Share+Tracking+Feedback" target="_blank">Confluence page</a> to provide any feedback on report</p>
 </div>
 <script>
+document.getElementById("link_p").href = link_p;
   setTimeout(function() {
+    console.log(link_p)
     var i;
     for (i = 0; i < Highcharts.charts.length; i++) {
 
@@ -82,7 +91,7 @@
 
       /* Focus on Chart # i */
       var chart = Highcharts.charts[i];
-      if (chart.container.closest("#chart_ea324bdd7d46") != null) {
+      if (chart.container.closest("#chart_756374192ece") != null) {
         chart.update({
 
 
@@ -102,14 +111,33 @@
 
           yAxis: {
 
-
             gridLineColor: 'transparent' // hide vertical gridlines
           }
 
         });
       }
     }
+ var Y_value = [];
+  for (index = 0; index < data.length; ++index) {
+      Y_value.push(data[index]['Shares Clicked %']);
+    }
+    console.log(Y_value)
+    
+    for (i = 0; i < Highcharts.charts.length; i++) {
 
+      /* Focus on Chart # i */
+      var chart = Highcharts.charts[i];
+      if (chart.container.closest("#chart_756374192ece") != null) {
+        chart.addSeries(
+              {
+                name: 'Shares Clicked %',
+                data: Y_value,
+                yAxis:1,
+                color:'#27825c',
+              }
+          );
+      }
+    }
 
 
   }, 100);
