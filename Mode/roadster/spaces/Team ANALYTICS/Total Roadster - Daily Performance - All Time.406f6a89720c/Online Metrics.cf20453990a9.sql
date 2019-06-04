@@ -53,6 +53,7 @@ select
   dpids, 
   case when date >= '2018-07-16' and date <= '2018-12-10' then "Express Visitors" / 2 else "Express Visitors" end as "Express Visitors",
   "Prospects",
+  "Prospects" * .02134 "Estimated Roadster Sales",
   case when date >= '2018-07-16' and date <= '2018-12-10' then round("Express Visitors" / dpids / 2,1) else round("Express Visitors" / dpids,2) end as "AVG Express Visitors",
   round("Prospects" / dpids,2) "Prospects per DP"
   
