@@ -1,0 +1,5 @@
+---
+report_description: This is a pop-up report that shows Daily KPIs for the past 60
+  days
+is_full_width: false
+hide_run_button: false
