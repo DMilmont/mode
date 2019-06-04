@@ -1,3 +1,5 @@
+
+
 with cdk_api as (
 SELECT dp.dpid,
        case when properties -> 'cdk_extract_id' <> 'null' then 'CDK API' else '' end AS "cdk_api"
@@ -160,6 +162,7 @@ select
 , COALESCE(et.online_express_visitors, 0) as "Online Express Visitors"
 , COALESCE(online_express_srp_visitors, 0) as "Online Express SRP Visitors"
 , COALESCE(online_express_vdp_visitors, 0) as "Online Express VDP Visitors"
+, dp.price_unlock_mode
 , COALESCE(ROUND((op.online_prospects::numeric/et.online_express_visitors::numeric), 3), 0) as "Conversion to Online Prospect"
 , COALESCE(op.online_prospects, 0) as "Online Prospects"
 , COALESCE(isp.sum_in_store_prospects, 0) as "In-Store Prospects"
@@ -184,6 +187,7 @@ left join (
   GROUP BY dpid, date_trunc('month', date)
   ) dt on dt.dpid = dd.dpid and dt.month_year = dd.month_year
 left join cdk_api ca on ca.dpid = dd.dpid
+LEFT JOIN dealer_partners dp  ON dd.dpid = dp.dpid
 left join online_express_vdp_traffic vdp on vdp.month_year = dd.month_year and vdp.dpid = dd.dpid
 left join online_express_srp_traffic srp on srp.month_year = dd.month_year and srp.dpid = dd.dpid
 left join online_prospects op on op.dpid = dd.dpid and op.month_year = dd.month_year
@@ -191,5 +195,5 @@ LEFT JOIN sale_data_daily sdd ON dd.month_year = sdd.month_year AND dd.dpid = sd
 LEFT JOIN pivot_orders_agg poa ON dd.month_year = poa.month_year AND dd.dpid = poa.dpid
 LEFT JOIN in_store_shares iss ON dd.month_year = iss.month_year AND dd.dpid = iss.dpid
 LEFT JOIN in_store_prospects isp ON dd.month_year = isp.month_year AND dd.dpid = isp.dpid
-group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25, 26, 27, 28
+group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25, 26, 27, 28, 29
 ORDER BY dd.month_year::date desc, COALESCE(sdd."MATCHED SALE", 0) desc
