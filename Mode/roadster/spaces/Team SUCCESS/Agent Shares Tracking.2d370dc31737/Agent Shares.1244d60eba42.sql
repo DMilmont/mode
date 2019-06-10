@@ -22,6 +22,7 @@ with date_dpid as (
               ,a.*
        from agents a
        WHERE  status='Active'
+       and email not like '%roadster%'
      ),
     leads_submitted as (
       select *

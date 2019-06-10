@@ -7,7 +7,7 @@
 
 dpid:
     type: select
-    default: 'toyotawc'
+    default: 'audiomaha'
     label: DPID
     input_type: string
     options:
