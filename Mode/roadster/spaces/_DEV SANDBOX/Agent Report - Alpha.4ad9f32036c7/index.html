@@ -1,0 +1,139 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.common.css">
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.light.css">
+<script type="text/javascript" src="https://cdn3.devexpress.com/jslib/18.2.8/js/dx.all.js"></script>
+<div class="mode-header embed-hidden">
+  <h1>{{ title }}</h1>
+  <p>{{ description }}</p>
+</div>
+<div class="mode-grid container">
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_e5928c50-be3b-40ab-8789-24060b49dbc0" dataset="dataset" options="text_options">
+        <p>Testing Using Mode for the Agent Report</p>
+      </mode-text>
+    </div>
+  </div>
+  <div class="row">
+      <div class="col-md-12">
+        <mode-chart id="agent_reports"></mode-chart>
+      </div>
+    </div>
+</div>
+
+
+<script>
+  var roadsterdx = {
+    version: 1,
+    getDataSource: function(queryName) {
+      // find the right data on the page, by name
+      var ii = 0;
+      var theSet = null;
+      for (ii = 0; ii < datasets.length; ii++) {
+        if (datasets[ii].queryName == queryName) {
+          theSet = datasets[ii].content;
+          break;
+        }
+      }
+      if (!theSet) {
+        //console.log('did not find data ' + queryName);
+        // make an empty data array
+        theSet = [];
+      }
+      //console.log('returning data');
+      return theSet;
+      /*
+      return new DevExpress.data.DataSource({
+        // array of data
+        store: theSet,
+        // additional configuration options
+        // sort: "name",
+        // pageSize: 10
+      });
+      */
+    },
+  };
+
+  // Grab the agent report data
+  $(function() {
+        var agent_report = roadsterdx.getDataSource('Agent Monthly Data');
+        var mth = [];
+        for (i = 0; i < agent_report.length; i++) {
+          mth.push(agent_report[i]['Month & Year'])
+        }
+        var uniqueItems = Array.from(new Set(mth));
+        // var mth_year = 
+
+
+        $('#agent_reports').dxDataGrid({
+          dataSource: agent_report,
+          showColumnLines: false,
+          showRowLines: true,
+          columnAutoWidth: true,
+          wordWrapEnabled: true,
+          onCellPrepared: function(e) {
+            if (e.rowType == "header") {
+              e.cellElement.css('background', 'black')
+            };
+            if (e.value == 0) {
+              e.cellElement.css('color', 'white')
+            }
+          },
+          columns: [
+          {
+            dataField: 'Month & Year',
+            headerCellTemplate: $('<p style="color: white">Month & Year</p>')
+          },
+          {
+            dataField: 'Agent Role',
+            headerCellTemplate: $('<p style="color: white">Role</p>'),
+            sortOrder: 'desc'
+          },
+          {
+            dataField: 'Agent',
+            sortOrder: 'desc',
+            headerCellTemplate: $('<p style="color: white">Agent</p>')
+          },
+          // {
+          //   dataField: 'Certification Flag',
+          //   width: 300,
+          //   headerCellTemplate: $('<p style="color: white">Certification Flag</p>')
+          // },
+          {
+            dataField: 'Agent Prospects',
+            headerCellTemplate: $('<p style="color: white">Prospects</p>')
+          },
+          {
+            dataField: 'Shared Vehicle Details',
+            headerCellTemplate: $('<p style="color: white">Shares</p>')
+          },
+          {
+            dataField: 'Agent Orders',
+            headerCellTemplate: $('<p style="color: white">Orders</p>')
+          },
+          {
+            dataField: 'Print Price Summary',
+            headerCellTemplate: $('<p style="color: white">Print Price Summary</p>')
+          },
+          {
+            dataField: 'Print Share Details',
+            headerCellTemplate: $('<p style="color: white">Print Share Details</p>')
+          },
+          {
+            dataField: 'Copies', 
+            headerCellTemplate: $('<p style="color: white">Copies</p>')
+          },
+          {
+            dataField: 'Roadster Matched Sales',
+            headerCellTemplate: $('<p style="color: white">Roadster Matched Sales</p>')
+          },
+          {
+            dataField: 'Total Sales (if available)',
+            headerCellTemplate: $('<p style="color: white">Total Sales</p>')
+          },
+          
+          ],
+
+        });
+  });
+</script>
