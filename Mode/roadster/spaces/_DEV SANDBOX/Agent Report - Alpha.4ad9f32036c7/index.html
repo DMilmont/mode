@@ -11,17 +11,18 @@
     <div class="col-md-12">
       <mode-text id="text_e5928c50-be3b-40ab-8789-24060b49dbc0" dataset="dataset" options="text_options">
         <p>Testing Using Mode for the Agent Report</p>
+        <p><br></p>
+        <p>Areas for Improvement? - Comment Here: <a href="https://roadsterteam.atlassian.net/wiki/spaces/AN/pages/334626817/Agent+Report+Feedback+Area?atlOrigin=eyJpIjoiOWI1NDk3NzE0NmYxNDU2MTgyMjExN2VkOGY4NTVjOTciLCJwIjoiYyJ9" target="_blank">LINK</a></p>
+        <p><br></p>
       </mode-text>
     </div>
   </div>
   <div class="row">
-      <div class="col-md-12">
-        <mode-chart id="agent_reports"></mode-chart>
-      </div>
+    <div class="col-md-12">
+      <mode-chart id="agent_reports"></mode-chart>
     </div>
+  </div>
 </div>
-
-
 <script>
   var roadsterdx = {
     version: 1,
@@ -56,84 +57,99 @@
 
   // Grab the agent report data
   $(function() {
-        var agent_report = roadsterdx.getDataSource('Agent Monthly Data');
-        var mth = [];
-        for (i = 0; i < agent_report.length; i++) {
-          mth.push(agent_report[i]['Month & Year'])
+    var agent_report = roadsterdx.getDataSource('Agent Monthly Data');
+    var mth = [];
+    for (i = 0; i < agent_report.length; i++) {
+      mth.push(agent_report[i]['Month & Year'])
+    }
+    var uniqueItems = Array.from(new Set(mth));
+    // var mth_year = 
+
+
+    $('#agent_reports').dxDataGrid({
+      dataSource: agent_report,
+      showColumnLines: false,
+      showRowLines: true,
+      columnAutoWidth: true,
+      wordWrapEnabled: true,
+      onCellPrepared: function(e) {
+        if (e.rowType == "header") {
+          e.cellElement.css('background', 'black')
+        };
+        if (e.value == 0) {
+          e.cellElement.css('color', 'white')
         }
-        var uniqueItems = Array.from(new Set(mth));
-        // var mth_year = 
+      },
+      columns: [
+        {
+          dataField: 'Agent Role',
+          width: 180,
+          headerCellTemplate: $('<p style="color: white">Role</p>'),
+          sortOrder: 'desc',
+          alignment: 'center'
+        },
+        {
+          dataField: 'Agent',
+          sortOrder: 'desc',
+          width: 175,
+          headerCellTemplate: $('<p style="color: white">Agent</p>'),
+          alignment: 'center'
+        },
+        {
+          dataField: 'Certification Flag',
+          width: 100,
+          headerCellTemplate: $('<p style="color: white">Certifications</p>'),
+          alignment: 'center'
+        },
+        {
+          dataField: 'check_for_activity',
+          width: 100,
+          headerCellTemplate: $('<p style="color: white">Activity Indicator</p>'),
+          alignment: 'center'
+        },
+        {
+          dataField: 'Agent Prospects',
+          headerCellTemplate: $('<p style="color: white">Prospects</p>'),
+          alignment: 'center'
+        },
+        {
+          dataField: 'Shared Vehicle Details',
+          headerCellTemplate: $('<p style="color: white">Shares</p>'),
+          alignment: 'center'
+        },
+        {
+          dataField: 'Agent Orders',
+          headerCellTemplate: $('<p style="color: white">Orders</p>'),
+          alignment: 'center'
+        },
+        {
+          dataField: 'Print Price Summary',
+          headerCellTemplate: $('<p style="color: white">Print Price Summary</p>'),
+          alignment: 'center'
+        },
+        {
+          dataField: 'Print Share Details',
+          headerCellTemplate: $('<p style="color: white">Print Share Details</p>'),
+          alignment: 'center'
+        },
+        {
+          dataField: 'Copies',
+          headerCellTemplate: $('<p style="color: white">Copies</p>'),
+          alignment: 'center'
+        },
+        {
+          dataField: 'Roadster Matched Sales',
+          headerCellTemplate: $('<p style="color: white">Matched Sales</p>'),
+          alignment: 'center'
+        },
+        {
+          dataField: 'Total Sales (if available)',
+          headerCellTemplate: $('<p style="color: white">Total Sales</p>'),
+          alignment: 'center'
+        },
 
+      ],
 
-        $('#agent_reports').dxDataGrid({
-          dataSource: agent_report,
-          showColumnLines: false,
-          showRowLines: true,
-          columnAutoWidth: true,
-          wordWrapEnabled: true,
-          onCellPrepared: function(e) {
-            if (e.rowType == "header") {
-              e.cellElement.css('background', 'black')
-            };
-            if (e.value == 0) {
-              e.cellElement.css('color', 'white')
-            }
-          },
-          columns: [
-          {
-            dataField: 'Month & Year',
-            headerCellTemplate: $('<p style="color: white">Month & Year</p>')
-          },
-          {
-            dataField: 'Agent Role',
-            headerCellTemplate: $('<p style="color: white">Role</p>'),
-            sortOrder: 'desc'
-          },
-          {
-            dataField: 'Agent',
-            sortOrder: 'desc',
-            headerCellTemplate: $('<p style="color: white">Agent</p>')
-          },
-          // {
-          //   dataField: 'Certification Flag',
-          //   width: 300,
-          //   headerCellTemplate: $('<p style="color: white">Certification Flag</p>')
-          // },
-          {
-            dataField: 'Agent Prospects',
-            headerCellTemplate: $('<p style="color: white">Prospects</p>')
-          },
-          {
-            dataField: 'Shared Vehicle Details',
-            headerCellTemplate: $('<p style="color: white">Shares</p>')
-          },
-          {
-            dataField: 'Agent Orders',
-            headerCellTemplate: $('<p style="color: white">Orders</p>')
-          },
-          {
-            dataField: 'Print Price Summary',
-            headerCellTemplate: $('<p style="color: white">Print Price Summary</p>')
-          },
-          {
-            dataField: 'Print Share Details',
-            headerCellTemplate: $('<p style="color: white">Print Share Details</p>')
-          },
-          {
-            dataField: 'Copies', 
-            headerCellTemplate: $('<p style="color: white">Copies</p>')
-          },
-          {
-            dataField: 'Roadster Matched Sales',
-            headerCellTemplate: $('<p style="color: white">Roadster Matched Sales</p>')
-          },
-          {
-            dataField: 'Total Sales (if available)',
-            headerCellTemplate: $('<p style="color: white">Total Sales</p>')
-          },
-          
-          ],
-
-        });
+    });
   });
 </script>
