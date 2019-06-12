@@ -56,7 +56,7 @@ SELECT "Actual Live Date"
         ,primary_make as "OEM Name"
 FROM key_contact_detail a
 INNER JOIN SF_Account sf on a.sf_account_id=sf.sf_account_id
-where email is null
+
 
 UNION
             
