@@ -1,0 +1,8 @@
+---
+report_description: "This report leverages the Dealer Socket data to group CRM records
+  marked as 'Sold' and groups them by Year, DPID and Lead Source.  Revenue is MSRP...
+  not sure how that works for Used - but there's a number in there.  \n\nYou can split
+  by New/Used by going into the SQL and removing a '--'  you can also split by deal
+  type (finance/cash/lease) by removing a '--'"
+is_full_width: false
+hide_run_button: false
