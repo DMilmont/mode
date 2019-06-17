@@ -2,31 +2,41 @@
 
 -- Grab Pageviews from GA
 WITH tGA AS
-  (SELECT ga_pageviews.id,
-          ga_pageviews.count, (ga_pageviews."timestamp" AT TIME ZONE 'UTC') AT TIME ZONE dp.timezone DealerTime,
-              ga_pageviews.page_path,
-              ga_pageviews.landing_page_path,
-              ga_pageviews.property,
-              ga_pageviews.dpid,
-              ga_pageviews.distinct_id,
-              ga_pageviews.in_store,
-              ga_pageviews.agent_id,
-              ga_pageviews.agent_email,
-              ga_pageviews.full_referrer
+  (
+  SELECT ga2_pageviews.id,
+            (ga2_pageviews."timestamp" AT TIME ZONE 'UTC') AT TIME ZONE dp.timezone DealerTime,
+              ga2_pageviews.page_path,
+              gs.landing_page_path,
+              ga2_pageviews.property,
+              gs.dpid,
+              ga2_pageviews.distinct_id,
+              gs.in_store,
+              a.email, 
+              gs.full_referrer,
+          1 count
    
-   FROM ga_pageviews
+   FROM ga2_pageviews
    
 -- Join dealer_partners to get the Time zone
 -- Filter down to only Dealer Admin pages, and only the past 7 days
-   LEFT JOIN public.dealer_partners dp 
-   ON ga_pageviews.dpid = dp.dpid
-   
+   LEFT JOIN 
+   (
+   SELECT *
+   FROM public.ga2_sessions
+   WHERE agent_dbid ~ '^[0-9]*$'
+   AND timestamp > (date_trunc('day' :: text, now()) - '7 days' :: interval)
+   )
+   gs ON ga2_pageviews.ga2_session_id = gs.id
+   LEFT JOIN public.dealer_partners dp ON gs.dpid = dp.dpid
+   LEFT JOIN agents a ON (gs.agent_dbid)::integer = a.user_dbid
    WHERE Property = 'Dealer Admin'
-     AND ((ga_pageviews."timestamp" AT TIME ZONE 'UTC') AT TIME
+     AND ((ga2_pageviews."timestamp" AT TIME ZONE 'UTC') AT TIME
           ZONE dp.timezone) > (date_trunc('day' :: text, now()) - '7 days' :: interval)
-     AND ((ga_pageviews."timestamp" AT TIME ZONE 'UTC') AT TIME
+     AND ((ga2_pageviews."timestamp" AT TIME ZONE 'UTC') AT TIME
           ZONE dp.timezone) < (date_trunc('day' :: text, now())) 
-     AND dp.status = 'Live'),
+     AND dp.status = 'Live'
+     
+     ),
 
         
 -- Search the page path to figure out which report was pulled 
@@ -35,7 +45,7 @@ WITH tGA AS
   (SELECT Property,
           btrim(regexp_replace(regexp_replace((tGA.page_path) :: text, '\/reports\/' :: text, '' :: text), '-|_' :: text, ' ' :: text, 'g' :: text)) AS page_path_fixed,
           dpid,
-          agent_email,
+          email agent_email,
           date_part('day', DealerTime) day_t,
           date_part('month', DealerTime) month_t,
           date_part('year', DealerTime) year_t,

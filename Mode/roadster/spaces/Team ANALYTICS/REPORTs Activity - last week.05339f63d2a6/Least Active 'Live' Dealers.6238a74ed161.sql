@@ -7,19 +7,28 @@
 
 
 WITH tGA AS
-  (SELECT ga_pageviews.dpid, COUNT(*) Total_Views
-   FROM ga_pageviews
+  (SELECT gs.dpid, COUNT(*) Total_Views
+   FROM ga2_pageviews
+   LEFT join (
+  SELECT *
+   FROM public.ga2_sessions
+   WHERE agent_dbid ~ '^[0-9]*$'
+   AND timestamp > (date_trunc('day' :: text, now()) - '28 days' :: interval)
+   ) gs ON ga2_pageviews.ga2_session_id = gs.id
+   LEFT JOIN agents a ON gs.agent_dbid::integer = a.user_dbid
 
    LEFT JOIN public.dealer_partners dp
-     ON ga_pageviews.dpid = dp.dpid
+     ON gs.dpid = dp.dpid
 
    WHERE Property = 'Dealer Admin'
-     AND ga_pageviews.page_path ~~* '%/reports/%' -- Pull the past 7 days
+     AND ga2_pageviews.page_path ~~* '%/reports/%' -- Pull the past 7 days
 
-     AND ((ga_pageviews."timestamp" AT TIME ZONE 'UTC') AT TIME ZONE dp.timezone) > (date_trunc('day' :: text, now()) - '28 days' :: interval)
-     AND ((ga_pageviews."timestamp" AT TIME ZONE 'UTC') AT TIME ZONE dp.timezone) < (date_trunc('day' :: text, now()))
-     AND ga_pageviews.agent_email !~* '@roadster.com\M'
-   GROUP BY ga_pageviews.dpid),
+     AND ((ga2_pageviews."timestamp" AT TIME ZONE 'UTC') AT TIME ZONE dp.timezone) > (date_trunc('day' :: text, now()) - '28 days' :: interval)
+     AND ((ga2_pageviews."timestamp" AT TIME ZONE 'UTC') AT TIME ZONE dp.timezone) < (date_trunc('day' :: text, now()))
+     AND a.email !~* '@roadster.com\M'
+   GROUP BY gs.dpid
+   
+   ),
 
 tab2 AS
   (SELECT dp.dpid, name, tGA.total_views, status
