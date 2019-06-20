@@ -69,9 +69,9 @@
 <script>
   // Pull in the Data Group Name for displaying in the title tag
   var data = datasets.filter(function(d) {
-    return d.queryName == "Dealer Group Name";
+    return d.queryName == "Primary Make Names";
   })[0].content;
-  var title = data[0]['Dealer Group']
+  var title = data[0]['Primary Make']
   $("#title").text(title)
 </script>
 <div class="mode-header embed-hidden">
@@ -85,15 +85,15 @@
   <div class="row">
     <div class="col-md-12">
       <mode-text id="text_1a38d606-2f60-4f0a-9892-569db3842b15" dataset="dataset" options="text_options">
-        <p><strong>TEST</strong> <strong>REPORT</strong> for Dealer Groups</p>
+        <p><strong>TEST</strong> <strong>REPORT</strong> for Primary Makes</p>
         <p>Quick Facts:</p>
         <p><br></p>
         <p><br></p>
         <ol>
           <li>By selecting a given dpid this report should display all rooftops related to that dealer. We use SalesForce for this record keeping. If you don't see the correct dpids. Please let me know.</li>
           <li>This data should match closely to the benchmark report located <a href="https://tableau.roadster.com/views/BenchmarkMetrics/Benchmark?iframeSizedToWindow=true&amp;:embed=y&amp;:showAppBanner=false&amp;:display_count=no&amp;:showVizHome=no" target="_blank">here</a>.</li>
-          <li>The drop-downs on each row give you more information on how the metrics have moved over time. And match to the data summarized in the tables themselves. </li>
-          <li>Under dealer attributes, I have made a few choices for what you might want to see. If there other things you need to know about those dealers please let me know! </li>
+          <li>The drop-downs on each row give you more information on how the metrics have moved over time. And match to the data summarized in the tables themselves.</li>
+          <li>Under dealer attributes, I have made a few choices for what you might want to see. If there other things you need to know about those dealers please let me know!</li>
         </ol>
         <p><br></p>
       </mode-text>
@@ -479,6 +479,7 @@
           dataField: 'Dealer Visitors',
           alignment: 'center',
           dataType: 'number',
+          sortOrder: 'desc',
           format: {
             precision: 0,
           },

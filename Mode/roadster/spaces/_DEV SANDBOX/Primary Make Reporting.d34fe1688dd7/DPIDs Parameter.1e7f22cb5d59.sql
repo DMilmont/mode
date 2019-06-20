@@ -1,16 +1,16 @@
-SELECT DISTINCT dpid, tableau_secret dpsk
+SELECT DISTINCT primary_make
 FROM public.dealer_partners
-ORDER BY dpid 
+ORDER BY primary_make
   
   
 {% form %}
 
-dpid: 
+primary_make: 
   type: multiselect
-  default: leifjohnsonford
+  default: Toyota
   options: 
-    labels: dpid
-    values: dpid
-  description: Select your Dealer(s)
+    labels: primary_make
+    values: primary_make
+  description: Select your Primary Make(s)
 
 {% endform %}

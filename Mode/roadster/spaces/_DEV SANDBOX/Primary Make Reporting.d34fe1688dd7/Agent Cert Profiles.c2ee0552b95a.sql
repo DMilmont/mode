@@ -1,13 +1,4 @@
-with filter_for_dpids as (
-  -- Generate the Dealer Group associated with the dpid param filter
-  -- Sets up the entire query. Needs the dpsk and the dpid from params to work
-  SELECT DISTINCT CASE WHEN di.dealer_group IS NULL THEN dealer_name ELSE di.dealer_group END dealer_group
-  FROM fact.salesforce_dealer_info di
-  INNER JOIN public.dealer_partners dp on di.dpid = dp.dpid
-  WHERE di.dpid IN ({{ dpid }})
-),
-
-base_percentile_data as (
+with base_percentile_data as (
     SELECT dpid, percent_rank() OVER (ORDER BY score) keep_dpids
     FROM fact.f_benchmark b
     WHERE end_month = (SELECT max(end_month) from fact.f_benchmark)
@@ -47,8 +38,7 @@ filter_for_dealer_group  as (
 SELECT DISTINCT dp.dpid
 FROM fact.salesforce_dealer_info di
 LEFT JOIN public.dealer_partners dp ON di.dpid = dp.dpid
-WHERE CASE WHEN dealer_group IS NULL THEN dealer_name ELSE dealer_group END IN (SELECT * FROM filter_for_dpids)
---and dealer_group <> dp.name
+WHERE primary_make IN ({{ primary_make }})
 ), 
 
 base_agent_data as (
