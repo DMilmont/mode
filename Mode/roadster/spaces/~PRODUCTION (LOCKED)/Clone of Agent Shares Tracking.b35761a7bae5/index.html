@@ -1,0 +1,306 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.common.css">
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.light.css">
+<script type="text/javascript" src="https://cdn3.devexpress.com/jslib/18.2.8/js/dx.all.js"></script>
+<style>
+  .chart-header {
+    display: none;
+  }
+
+  p {
+    font-size: medium;
+  }
+
+  BR {
+    clear: right
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  a:hover,
+  a:active,
+  a:focus {
+    color: darkred;
+    text-decoration: underline;
+  }
+
+
+* {
+ font-size: 100%;
+ font-family: 'Verdana' !important;
+}
+</style>
+<script>
+  // Pull in the Data Group Name for displaying in the title tag
+  var data = datasets.filter(function(d) {
+    return d.queryName == "Agent Share Summary";
+  })[0].content;
+  var title = data[0]['name']
+  document.getElementById("titleHolder").innerHTML = title.toString();
+  var dpid = data[0]['dpid']
+  var str1 = 'Agent Shares Tracking - '
+  var link = "https://dealers.roadster.com/"
+  var link_p = link.concat(dpid, '/users')
+  $("#title").text(str1.concat(title))
+</script>
+<div class="mode-header embed-hidden">
+  <h1>
+    <span id="title"></span>
+  </h1>
+  <p>{{ description }}</p>
+</div>
+<div class="mode-grid container">
+  <h2><u>Summary</u></h2>
+  <div class="row" data-row-height="small">
+    <div class="col-md-12">
+      <mode-chart id="total_summary"></mode-chart>
+    </div>
+  </div>
+  <h2><u>Dealer Performance</u></h2>
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <mode-chart id="chart_148435cbd26e" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <h2><u>Agent Performance</u></h2>
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <mode-chart id="chart_bbeadbd0b5be" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="InvalidE">
+   <h2><u>Invalid Shares</u></h2>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-table id="table_d4a7f7646236" dataset="dataset" options="table_options"></mode-table>
+    </div>
+  </div>
+    </div>
+  <p> ▶ Please click <a href="" id="link_p" target="_blank">Here</a> to update the <b>Job Title</b> for agents where its currently missing for dealer <span id="titleHolder"></span>. </p>
+  <p> ▶ Provide 'Date Range' and 'DPID' to see historical agent share activity at the dealer/agent level </p>
+  <p> ▶ Share activity is counted based on date initially sent. Opened/Clicked status is based on current tracking information </p>
+  <p> ▶ Please see <a href="https://roadsterteam.atlassian.net/wiki/spaces/AN/pages/325386285/Agent+Share+Tracking+Feedback" target="_blank">Confluence page</a> to provide any feedback on report</p>
+  <p> ▶ * Highest Contributing Agent is determined by looking at an agents share contribution, click contribution and click thru rate.
+</div>
+<script>
+  setTimeout(function() {
+    var data = datasets.filter(function(d) {
+      return d.queryName == "Invalid Emails";
+    })[0].content;
+
+
+    if (data.length == 0) {
+      $('.InvalidE').remove();
+    }
+  }, 100);  
+  
+</script>
+
+<script>
+  document.getElementById("link_p").href = link_p;
+  setTimeout(function() {
+    console.log(link_p)
+    var i;
+    for (i = 0; i < Highcharts.charts.length; i++) {
+
+      var chart = Highcharts.charts[i];
+      if (chart.container.closest("#chart_82dca96c0c8f") != null) {
+        chart.update({
+
+
+          xAxis: {
+            minorTickLength: 0,
+            tickLength: 0,
+          },
+          yAxis: {
+            labels: {
+              enabled: false
+            },
+            gridLineColor: 'transparent'
+
+          }
+        });
+      }
+    }
+
+    for (i = 0; i < Highcharts.charts.length; i++) {
+
+      /* Focus on Chart # i */
+      var chart = Highcharts.charts[i];
+      if (chart.container.closest("#chart_756374192ece") != null) {
+        chart.update({
+
+
+          xAxis: {
+
+            type: 'date', //this forces the xAxis to be a 'date type'
+            labels: {
+              formatter: function() {
+                return Highcharts.dateFormat('%a %e %b', this.value);
+              }
+            }, // Make the date format "Sun Mar 6"
+
+            minorTickLength: 0, //hide the little ticks on the Vertical Axis
+            tickLength: 0, //hide the little ticks on the Vertical Axis
+            lineWidth: 0, //make the vertical axis 0 pixels wide
+          },
+
+          yAxis: [{
+
+            gridLineColor: 'transparent' // hide vertical gridlines
+          },{
+            max:1,
+             tickInterval: .2,
+             alignTicks: false // Keeps max at 100% but shifts nuumbr
+          }
+        ]
+        });
+      }
+    }
+    var Y_value = [];
+    for (index = 0; index < data.length; ++index) {
+      Y_value.push(data[index]['Shares Clicked %']);
+    }
+    console.log(Y_value)
+
+var shares_delivered = [];
+for (index = 0; index < data.length; ++index) {
+      shares_delivered.push(data[index]['Shares Delivered']);
+    }
+
+var shares_delivered_max = Math.max.apply(Math,shares_delivered) ;
+
+    for (i = 0; i < Highcharts.charts.length; i++) {
+
+      /* Focus on Chart # i */
+      var chart = Highcharts.charts[i];
+      if (chart.container.closest("#chart_756374192ece") != null) {
+        
+        if (shares_delivered_max <8){
+  chart.update({
+    yAxis: {
+            max:10,
+            min:0
+                }
+          })
+      }
+        
+        chart.addSeries({
+          name: 'Shares Clicked %',
+          data: Y_value,
+          yAxis: 1,
+          color: '#27825c',
+        });
+      }
+    }
+
+
+
+
+
+  }, 100);
+</script>
+<script>
+  var roadsterdx = {
+    version: 1,
+    getDataSource: function(queryName) {
+      // find the right data on the page, by name
+      var ii = 0;
+      var theSet = null;
+      for (ii = 0; ii < datasets.length; ii++) {
+        if (datasets[ii].queryName == queryName) {
+          theSet = datasets[ii].content;
+          break;
+        }
+      }
+      if (!theSet) {
+        //console.log('did not find data ' + queryName);
+        // make an empty data array
+        theSet = [];
+      }
+      //console.log('returning data');
+      return theSet;
+      /*
+      return new DevExpress.data.DataSource({
+        // array of data
+        store: theSet,
+        // additional configuration options
+        // sort: "name",
+        // pageSize: 10
+      });
+      */
+    },
+  };
+
+  $(function() {
+    var summary = roadsterdx.getDataSource('Totals');
+    $('#total_summary').dxDataGrid({
+      dataSource: summary,
+      showColumnLines: false,
+      showRowLines: true,
+      columnAutoWidth: true,
+      wordWrapEnabled: true,
+      onCellPrepared: function(e) {
+        if (e.rowType == "header") {
+          e.cellElement.css('background', 'black')
+        };
+        if (e.value == 0) {
+          e.cellElement.css('color', 'white')
+        }
+      },
+      columns: [{
+          dataField: 'Time Frame',
+
+          headerCellTemplate: $('<p style="color: white">Time Frame</p>'),
+     //     sortOrder: 'asc',
+          alignment: 'center'
+        },
+        {
+          dataField: 'Total Shares',
+          dataType: 'number',
+          headerCellTemplate: $('<p style="color: white">Total Shares</p>'),
+          alignment: 'center'
+        },
+        {
+          dataField: 'Total Opened',
+          dataType: 'number',
+          headerCellTemplate: $('<p style="color: white">Total Opened</p>'),
+          alignment: 'center'
+        },
+        {
+          dataField: 'Open Rate',
+          dataType: 'number',
+          format: {
+            precision: 0,
+            type: 'percent'
+          },
+          headerCellTemplate: $('<p style="color: white">Open Rate</p>'),
+          alignment: 'center'
+        },
+        {
+          dataField: 'Total Clicked',
+          dataType: 'number',
+          headerCellTemplate: $('<p style="color: white">Total Clicked</p>'),
+          alignment: 'center'
+        },
+        {
+          dataField: 'Click Thru Rate',
+          dataType: 'number',
+          format: {
+            precision: 0,
+            type: 'percent'
+          },
+          headerCellTemplate: $('<p style="color: white">Click Thru Rate</p>'),
+          alignment: 'center'
+        },
+        {
+          dataField: 'Most Efficient Agent',
+          headerCellTemplate: $('<p style="color: white">Highest Contributing Agent *</p>'),
+          alignment: 'center'
+        }
+      ],
+    });
+  });
+</script>
