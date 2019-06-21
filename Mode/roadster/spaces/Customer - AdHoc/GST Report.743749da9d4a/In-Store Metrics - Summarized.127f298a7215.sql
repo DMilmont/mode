@@ -9,12 +9,12 @@ WHERE dp.dpid IN ('toyotaofplano','gregleblanctoyota','jimnortontoyota','sanmarc
 SELECT *
 FROM report_layer.dg_in_store_metrics_monthly
 WHERE ("Dealership" IN (SELECT initcap(name) FROM dpids)
-OR "Dealership" IN ('50th Percentile Dealer Groups', '75th Percentile Dealer Groups', '90th Percentile Dealer Groups'))
+OR "Dealership" IN ('50th Percentile Dealer Groups', '75th Percentile Dealer Groups', '90th Percentile Dealer Groups', 'Gst Dealers'))
 AND "Date" IN ({{choose_your_date_range}})
 )
 
 SELECT
-"Dealership", 
+CASE WHEN "Dealership" = 'Gst Dealers' THEN '00 GST Dealers' ELSE "Dealership" END AS "Dealership",
 SUM("In-Store Prospects") "In-Store Prospects",
 SUM("In-Store Shares") "In-Store Shares", 
 SUM("In-Store Orders") "In-Store Orders", 

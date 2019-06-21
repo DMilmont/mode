@@ -9,13 +9,13 @@ base_online_data as (
   SELECT *
   FROM report_layer.dg_online_metrics_monthly
   WHERE ("Dealership" IN (SELECT initcap(name) FROM dpids)
-  OR "Dealership" IN ('50th Percentile Dealer Groups', '75th Percentile Dealer Groups', '90th Percentile Dealer Groups'))
+  OR "Dealership" IN ('50th Percentile Dealer Groups', '75th Percentile Dealer Groups', '90th Percentile Dealer Groups', 'Gst Dealers'))
   AND "Date" IN ({{choose_your_date_range}})
 )
 ----
 
 
-SELECT "Dealership", 
+SELECT CASE WHEN "Dealership" = 'Gst Dealers' THEN '00 GST Dealers' ELSE "Dealership" END AS "Dealership",
 SUM("Dealer Visitors CLEANED") "Dealer Visitors",
 SUM("Express Visitors CLEANED") "Express Visitors", 
 SUM("Online Express Visitors") / NULLIF(SUM("Dealer Visitors"), 0) "Online Express Ratio",
