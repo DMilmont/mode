@@ -38,35 +38,37 @@ group by 1
 )
 
 
-SELECT sf.status "SF Status",
-       dp.status "Dealer.Admin Status",
-       sf.success_manager AS "SF Success Manager",
-       sf.account_executive AS "SF Account Executive",
-       sf.integration_manager as "Integration Manager",
+SELECT 
+
        dp.dpid,
        admin.dealer_partner_id,
        dp.name,
        dp.ga_tracking_id "GA2 Property",
        admin.properties ->> 'ga_accounts' "GA Accounts",
        admin.properties ->> 'gtm_account' "GTM Accounts",
-       to_char(sf.actual_live_date, 'yyyy-mm-dd') "Go Live Date",
        dp.price_unlock_mode,
        admin.properties ->> 'embedded_checkout_frame' "Slide-out",
        admin.properties ->> 'cdk_extract_id' "CDK Sales Match",
+       to_char(sf.actual_live_date, 'yyyy-mm-dd') "Go Live Date",
        dealer_visitors.count "Dealer Visitors past wk",
        online_express_traffic.count "Online ES Visitors past wk",
        instoreP."In Store" + instoreP."Online" "Prospects",
        instoreO."In Store" + instoreO."Online" "Orders",
        round((instoreP."In Store"::decimal / (instoreP."In Store" + instoreP."Online")) * 100,0) as "In Store Prospect %",
        round((instoreO."In Store"::decimal / (instoreO."In Store" + instoreO."Online")) * 100,0) as "In Store Order %",
+       sf.success_manager AS "SF Success Manager",
+       sf.account_executive AS "SF Account Executive",
+       sf.integration_manager as "Integration Manager",
        dp.primary_make,
        dp.inventory_type,
        dp.marketplace_type,
        dp.city,
        dp.state,
        dp.zip,
-       dp.timezone
-       ,admin.properties 
+       dp.timezone,
+       sf.status "SF Status",
+       dp.status "Dealer.Admin Status"
+       --,admin.properties 
 
 FROM dealer_partner_properties admin
 
