@@ -1,5 +1,4 @@
 
-
 with cdk_api as (
 SELECT dp.dpid,
        case when properties -> 'cdk_extract_id' <> 'null' then 'CDK API' else '' end AS "cdk_api"
@@ -25,11 +24,11 @@ group by 1,2,3,4,5,6,7
 ,in_store_shares as (
 SELECT date_trunc('month', cohort_date_utc) month_year,
       dpid,
-      count(DISTINCT f_prospect.customer_email) "In-Store Shares"
+      count( f_prospect.customer_email) "In-Store Shares"
 FROM fact.f_prospect
 WHERE item_type = 'SharedExpressVehicle'
 AND source = 'Lead Type'
-AND is_in_store = True
+--AND is_in_store = True
 GROUP BY date_trunc('month', cohort_date_utc), dpid
 )
 
@@ -153,8 +152,10 @@ select
 , dd.name as "Dealership"
 , dd.status as "SF Status"
 , dd.success_manager
+, dp.primary_make as "Primary Make"
 , to_char(dd.actual_live_date,'yyyy_mm_dd') as "SF Go Live"
 , cdk_api
+, dpp.properties ->> 'crm_vendor' "Dealer Admin CRM"
 , COALESCE(sdd."MATCHED SALE", 0) "Matched Sales w/i 90 Days"
 , COALESCE(sdd."ALL SALES", 0) "All Sales"
 , COALESCE(dt.visitors, 0) as "Dealer Visitors"
@@ -166,7 +167,12 @@ select
 , COALESCE(ROUND((op.online_prospects::numeric/et.online_express_visitors::numeric), 3), 0) as "Conversion to Online Prospect"
 , COALESCE(op.online_prospects, 0) as "Online Prospects"
 , COALESCE(isp.sum_in_store_prospects, 0) as "In-Store Prospects"
-, COALESCE(iss."In-Store Shares", 0) AS "In-Store Shares"
+--, COALESCE(iss."In-Store Shares", 0) AS "In-Store Shares"
+,COALESCE(sor."Agent Shares",0) as "Agent Shares"
+,COALESCE(sor."Shares Opened",0) as "Shares Opened"
+, COALESCE(sor."Shares Opened %",0) as "Shares Open Rate"
+,COALESCE(sor."Shares Clicked",0) as "Shares Clicked"
+, COALESCE(sor."Shares Clicked %",0) as "Shares Click Thru Rate"
 , COALESCE("Order Submitted", 0) AS "Orders"
 , COALESCE("Deal Sheet Accepted", 0) AS "Deal Sheet Accepted"
 , COALESCE("Trade-In Completed", 0) AS "Trade-In Completed"
@@ -179,6 +185,7 @@ select
 , COALESCE("Final Deal Sent", 0) AS "Final Deal Sent"
 , dd.month_year::date as "Date"
 
+
 from date_dpid dd
 left join online_express_traffic et on et.month_year = dd.month_year and et.dpid = dd.dpid
 left join (
@@ -188,6 +195,7 @@ left join (
   ) dt on dt.dpid = dd.dpid and dt.month_year = dd.month_year
 left join cdk_api ca on ca.dpid = dd.dpid
 LEFT JOIN dealer_partners dp  ON dd.dpid = dp.dpid
+left join public.dealer_partner_properties dpp on dpp.dealer_partner_id = dp.id
 left join online_express_vdp_traffic vdp on vdp.month_year = dd.month_year and vdp.dpid = dd.dpid
 left join online_express_srp_traffic srp on srp.month_year = dd.month_year and srp.dpid = dd.dpid
 left join online_prospects op on op.dpid = dd.dpid and op.month_year = dd.month_year
@@ -195,5 +203,6 @@ LEFT JOIN sale_data_daily sdd ON dd.month_year = sdd.month_year AND dd.dpid = sd
 LEFT JOIN pivot_orders_agg poa ON dd.month_year = poa.month_year AND dd.dpid = poa.dpid
 LEFT JOIN in_store_shares iss ON dd.month_year = iss.month_year AND dd.dpid = iss.dpid
 LEFT JOIN in_store_prospects isp ON dd.month_year = isp.month_year AND dd.dpid = isp.dpid
-group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25, 26, 27, 28, 29
+left join report_layer.vw_share_open_rate sor on dd.month_year=sor.month_year and dd.dpid= sor.dpid 
+group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25, 26, 27, 28, 29,30,31,32,33,34,35
 ORDER BY dd.month_year::date desc, COALESCE(sdd."MATCHED SALE", 0) desc
