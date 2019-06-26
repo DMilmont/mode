@@ -20,11 +20,12 @@ SELECT *
 FROM report_layer.dg_in_store_metrics_monthly
 WHERE ("Dealership" IN (SELECT initcap(name) FROM dpids)
 OR "Dealership" IN ('50th Percentile Dealer Groups', '75th Percentile Dealer Groups', '90th Percentile Dealer Groups'))
-AND "Date" IN ({{choose_your_date_range}})
+AND "Date" IN (select generate_series(date_trunc('month', now()) - '6 mons'::interval, date_trunc('month', now()), '1 month'))
 )
 
 SELECT
 "Dealership", 
+"Date"::text,
 SUM("In-Store Prospects") "In-Store Prospects",
 SUM("In-Store Shares") "In-Store Shares", 
 SUM("In-Store Orders") "In-Store Orders", 
@@ -36,4 +37,5 @@ MIN("Active Agents") "Active Agents",
 MIN("Certified Agents") "Certified Agents", 
 MIN("Activity w/n 3 Days") "Activity w/n 3 Days"
 FROM instore_data
-GROUP BY 1
+GROUP BY 1,2
+ORDER BY 1,2

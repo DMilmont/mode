@@ -22,7 +22,7 @@ base_online_data as (
 ----
 SELECT 
 "Dealership",
-"Date",
+"Date"::text,
 "Dealer Visitors CLEANED" "Rooftop Website Visitors",
 "Express Visitors CLEANED" "Express Store Visitors", 
 "Online Prospects" "Prospects",

@@ -22,9 +22,22 @@ base_order_data as (
   WHERE "Dealership" IN (SELECT initcap(name) FROM dpids)
 )
 
-SELECT *
-FROM base_order_data
-WHERE "Date" IN ({{choose_your_date_range}})
+SELECT bod."Dealership", 
+bod."Date"::text,
+bod."Total Orders Submitted",
+bod."Accessories Completed",
+bod."Credit Completed",
+bod."Accessories Attached Rate",
+bod."Accessories Completed Rate",
+bod."Credit Completed Rate",
+bod."Deal Sheet Accepted Rate",
+bod."Final Deal Sent Rate",
+bod."Service Plans Attached Rate", 
+bod."Service Plans Completed Rate",
+bod."Trade-In Attached Rate", 
+bod."Trade-In Completed Rate"
+FROM base_order_data bod
+WHERE "Date" IN (select generate_series(date_trunc('month', now()) - '6 mons'::interval, date_trunc('month', now()), '1 month'))
 
 
 

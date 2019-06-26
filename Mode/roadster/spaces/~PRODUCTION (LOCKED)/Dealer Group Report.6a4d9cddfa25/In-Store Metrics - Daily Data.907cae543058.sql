@@ -15,8 +15,20 @@ WHERE CASE WHEN dealer_group IS NULL THEN dealer_name ELSE dealer_group END IN (
 --and dealer_group <> dp.name
 )
 
-SELECT *
-FROM report_layer.dg_in_store_metrics_monthly
+SELECT 
+im."Dealership",
+im."Date"::text,
+im."In-Store Prospects",
+im."In-Store Shares",
+im."In-Store Orders",
+im."Copies",
+im."Prints",
+im."In-Store Sales",
+im."Active Agents",
+im."Certified Agents",
+im."Activity w/n 3 Days",
+im."sorting"
+FROM report_layer.dg_in_store_metrics_monthly im
 WHERE ("Dealership" IN (SELECT initcap(name) FROM dpids)
 OR "Dealership" IN ('50th Percentile Dealer Groups', '75th Percentile Dealer Groups', '90th Percentile Dealer Groups'))
 
