@@ -79,7 +79,6 @@
   <h1>
     <span id="title"></span>
   </h1>
-  <p>{{ description }}</p>
 </div>
 <div class="mode-grid container">
   <div class="row">
@@ -88,12 +87,10 @@
         <p><strong>TEST</strong> <strong>REPORT</strong> for Dealer Groups</p>
         <p>Quick Facts:</p>
         <p><br></p>
-        <p><br></p>
         <ol>
           <li>By selecting a given dpid this report should display all rooftops related to that dealer. We use SalesForce for this record keeping. If you don't see the correct dpids. Please let me know.</li>
-          <li>This data should match closely to the benchmark report located <a href="https://tableau.roadster.com/views/BenchmarkMetrics/Benchmark?iframeSizedToWindow=true&amp;:embed=y&amp;:showAppBanner=false&amp;:display_count=no&amp;:showVizHome=no" target="_blank">here</a>.</li>
-          <li>The drop-downs on each row give you more information on how the metrics have moved over time. And match to the data summarized in the tables themselves. </li>
-          <li>Under dealer attributes, I have made a few choices for what you might want to see. If there other things you need to know about those dealers please let me know! </li>
+          <li>The drop-downs on each row give you more information on how the metrics have moved over time. And match to the data summarized in the tables themselves.</li>
+          <li>Please select one date at a time on the right. </li>
         </ol>
         <p><br></p>
       </mode-text>
@@ -105,14 +102,6 @@
     </div>
     <div class="col-md-6">
       <mode-chart id="chart_6652a17ed5f5" dataset="dataset" options="chart_options"></mode-chart>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <mode-text id="text_b349214e-9030-49c5-b070-6438779d9aad" dataset="dataset" options="text_options">
-        <h4>When do you see the most page views? </h4>
-        <p><em>Weekly Usage Rates</em></p>
-      </mode-text>
     </div>
   </div>
   <div class="row">

@@ -36,4 +36,4 @@ SUM(online_sales) "Roadster Matched Sales",
 SUM(online_sales) / NULLIF(SUM("Online Prospects"), 0) "Close Rate"
 FROM base_online_data
 GROUP BY 1,2
-ORDER BY "Dealership", "Date"
+ORDER BY "Dealership", "Date"::text
