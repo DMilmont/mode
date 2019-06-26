@@ -1,0 +1,966 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.common.css">
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.light.css">
+<script type="text/javascript" src="https://cdn3.devexpress.com/jslib/18.2.8/js/dx.all.js"></script>
+<style>
+  .fixed-nav-bar {
+    position: fixed;
+    top: 0;
+    z-index: 9999;
+    background-color: white;
+    padding: 0;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  .fixed-nav-bar a {
+    padding: 10px;
+    display: inline-block;
+    font-weight: 500;
+    font-size: 13px;
+    color: rgb(78, 77, 77);
+  }
+
+  .fixed-nav-bar a:hover {
+    background-color: #f27802;
+    text-decoration: none;
+    color: white;
+  }
+
+  .has-nav {
+    padding-top: 3em;
+  }
+
+  @media (max-width: 767px) {
+    .fixed-nav-bar {
+      position: fixed;
+      top: 0;
+      z-index: 9999;
+      background-color: white;
+      padding: 0;
+      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .dx-theme-border-color-as-background-color {
+    background-color: #fff !important;
+    fill: #fff !important;
+  }
+
+  * {
+    /*font-family: 'Helvetica Neue', 'Segoe UI', Helvetica, Verdana, sans-serif !important;*/
+    vertical-align: middle !important;
+  }
+</style>
+<div class="row" data-row-height="small">
+  <div class="col-md-4">
+  </div>
+  <div class="col-md-8"></div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <nav class="fixed-nav-bar">
+      <a class="scroll-link" data-id="text_f55f9ebc-1e3c-4b45-b8d4-4b30d8a9620e">Dealer Attributes</a>
+      <a class="scroll-link" data-id="text_ea82726d-3f75-4537-d183-094509322169">In-Store Metrics</a>
+      <a class="scroll-link" data-id="text_ea82726d-3f75-4537-d183-094509322168">Online Metrics</a>
+      <a class="scroll-link" data-id="text_ea82726d-3f75-4537-d183-094509322170">Order Funnel Information</a>
+    </nav>
+  </div>
+</div>
+<script>
+  // Pull in the Data Group Name for displaying in the title tag
+  var data = datasets.filter(function(d) {
+    return d.queryName == "Dealer Group Name";
+  })[0].content;
+  var title = data[0]['Dealer Group']
+  $("#title").text(title)
+</script>
+<div class="mode-header embed-hidden">
+  <p></p>
+  <h1>
+    <span id="title"></span>
+  </h1>
+  <p>{{ description }}</p>
+</div>
+<div class="mode-grid container">
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_1a38d606-2f60-4f0a-9892-569db3842b15" dataset="dataset" options="text_options">
+        <p><strong>TEST</strong> <strong>REPORT</strong> for Dealer Groups</p>
+        <p>Quick Facts:</p>
+        <p><br></p>
+        <p><br></p>
+        <ol>
+          <li>By selecting a given dpid this report should display all rooftops related to that dealer. We use SalesForce for this record keeping. If you don't see the correct dpids. Please let me know.</li>
+          <li>This data should match closely to the benchmark report located <a href="https://tableau.roadster.com/views/BenchmarkMetrics/Benchmark?iframeSizedToWindow=true&amp;:embed=y&amp;:showAppBanner=false&amp;:display_count=no&amp;:showVizHome=no" target="_blank">here</a>.</li>
+          <li>The drop-downs on each row give you more information on how the metrics have moved over time. And match to the data summarized in the tables themselves. </li>
+          <li>Under dealer attributes, I have made a few choices for what you might want to see. If there other things you need to know about those dealers please let me know! </li>
+        </ol>
+        <p><br></p>
+      </mode-text>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <mode-chart id="chart_7b985d93b6b6" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-6">
+      <mode-chart id="chart_6652a17ed5f5" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_b349214e-9030-49c5-b070-6438779d9aad" dataset="dataset" options="text_options">
+        <h4>When do you see the most page views? </h4>
+        <p><em>Weekly Usage Rates</em></p>
+      </mode-text>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_ea82726d-3f75-4537-d183-094509322168" dataset="dataset" options="text_options">
+        <h4>Online Metrics</h4>
+        <p><em>Here you can monitor your dealer's Online metrics</em></p>
+      </mode-text>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-chart id="online_metrics_summ"></mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_ea82726d-3f75-4537-d183-094509322169" dataset="dataset" options="text_options" ,="" class="text">
+        <h4>In-Store Metrics</h4>
+        <p>Here you can monitor you dealer's In-Store Metrics</p>
+        <p><br></p>
+      </mode-text>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <mode-chart id="in_store_metrics_summ"></mode-chart>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_ea82726d-3f75-4537-d183-094509322170" dataset="dataset" options="text_options">
+        <h4>Order Metrics</h4>
+        <p><em>Here you can understand how customer's are completing order steps</em></p>
+      </mode-text>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <mode-chart id="order_funnel_summ"></mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_b349214e-9030-49c5-b070-6438779d9aad" dataset="dataset" options="text_options">
+        <h4>Agent Certifications Center</h4>
+        <p><em>How well do your agents know the product? </em></p>
+      </mode-text>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-chart id="agent_certification"></mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_f55f9ebc-1e3c-4b45-b8d4-4b30d8a9620e" dataset="dataset" options="text_options">
+        <h4>Dealer Attributes</h4>
+        <p>Find out the specifics about your dealership!</p>
+      </mode-text>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-table id="dealer_properties" dataset="dataset" options="table_options"></mode-table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_c75c763a-02e0-4f43-f7ca-00f71bef64a1" dataset="dataset" options="text_options"></mode-text>
+    </div>
+  </div>
+</div>
+<script>
+  var roadsterdx = {
+    version: 1,
+    getDataSource: function(queryName) {
+      // find the right data on the page, by name
+      var ii = 0;
+      var theSet = null;
+      for (ii = 0; ii < datasets.length; ii++) {
+        if (datasets[ii].queryName == queryName) {
+          theSet = datasets[ii].content;
+          break;
+        }
+      }
+      if (!theSet) {
+        //console.log('did not find data ' + queryName);
+        // make an empty data array
+        theSet = [];
+      }
+      //console.log('returning data');
+      return theSet;
+      /*
+      return new DevExpress.data.DataSource({
+        // array of data
+        store: theSet,
+        // additional configuration options
+        // sort: "name",
+        // pageSize: 10
+      });
+      */
+    },
+  };
+  //debugger;
+  $(function() {
+    var instore = roadsterdx.getDataSource('In-Store Metrics - Daily Data');
+    var online = roadsterdx.getDataSource('Online Metrics - Daily Data');
+    var order_funnel_graphic = roadsterdx.getDataSource('Order Funnel - Graphic');
+    var order_funnel_sum = roadsterdx.getDataSource('Order Funnel - Summarized');
+    var dealer_attributes = roadsterdx.getDataSource('Unlock Mode - Today');
+    var agent_certs = roadsterdx.getDataSource('Agent Cert Profiles');
+    var online_metrics_sum = roadsterdx.getDataSource('Online Metrics - Summarized');
+    var instore_metrics_sum = roadsterdx.getDataSource('In-Store Metrics - Summarized');
+    var order_funnel_bar = roadsterdx.getDataSource('Order Funnel - Bar Chart');
+    var daily_srp = roadsterdx.getDataSource('Online SRP Data');
+    // Generate unique series colors for spline graph
+    var dpids = [];
+    for (var i = 0; i < daily_srp.length; i++) {
+      dpids.push(daily_srp[i]['Dealership']);
+    }
+    var dpids = [...new Set(dpids)];
+    var val_field = []
+    for (var i = 0; i < dpids.length; i++) {
+      val_field.push({
+        valueField: dpids[i]
+      });
+    };
+
+    $('#online_srp').dxChart({
+      palette: 'Harmony Light',
+      dataSource: daily_srp,
+      title: 'Daily Online SRP Visits',
+      commonSeriesSettings: {
+        type: 'date',
+        argumentField: 'date'
+      },
+      series: [
+        val_field
+      ],
+    });
+
+    $('#dealer_properties').dxDataGrid({
+      dataSource: dealer_attributes,
+      onCellPrepared: function(e) {
+        if (e.rowType == "header") {
+          e.cellElement.css('background', 'black')
+        }
+      },
+      masterDetail: {
+        enabled: true,
+        template: function(container, options) {
+          var dlr = options.data['Dealership']
+          $("<div>").dxDataGrid({
+            dataSource: dealer_attributes.filter(function(x) {
+              return (x.Dealership == dlr);
+            }),
+            columns: [{
+              dataField: 'test_img',
+              allowFiltering: false,
+              allowSorting: false,
+              alignment: 'center',
+              caption: 'Unlock Form Type',
+              cellTemplate: function(container, options) {
+                $("<div>")
+                  .append($("<img>", {
+                    "src": options.value
+                  }))
+                  .appendTo(container);
+              },
+            }, ]
+          }).appendTo(container);
+        },
+      },
+      columns: [{
+          dataField: 'Dealership',
+          caption: 'Rooftop',
+          alignment: 'center',
+          dataType: 'string',
+          headerCellTemplate: $('<p style="color: white">Rooftop</p>'),
+          sortOrder: 'desc'
+        },
+        {
+          dataField: 'Price Unlock Mode',
+          alignment: 'center',
+          dataType: 'string',
+          headerCellTemplate: $('<p style="color: white">Price Unlock Mode</p>')
+        },
+        {
+          dataField: 'In-Store Purchase Wizard',
+          alignment: 'center',
+          dataType: 'string',
+          headerCellTemplate: $('<p style="color: white">In-Store Purchase Wizard</p>')
+        },
+        {
+          dataField: 'Lead Type',
+          alignment: 'center',
+          dataType: 'string',
+          headerCellTemplate: $('<p style="color: white">Lead Type</p>')
+        },
+        {
+          dataField: 'Go-Live Date',
+          alignment: 'center',
+          dataType: 'date',
+          headerCellTemplate: $('<p style="color: white">Go-Live Date</p>')
+        },
+        {
+          dataField: 'Marketplace Type',
+          alignment: 'center',
+          dataType: 'date',
+          headerCellTemplate: $('<p style="color: white">Marketplace Type</p>')
+        },
+      ],
+    });
+    $('#agent_certification').dxDataGrid({
+      dataSource: agent_certs,
+      showColumnLines: false,
+      showRowLines: true,
+      showBorders: true,
+      grouping: {
+        autoExpandAll: false
+      },
+      onCellPrepared: function(e) {
+        if (e.rowType == "header") {
+          e.cellElement.css('background', 'black')
+          e.cellElement.css('color', 'white')
+        }
+      },
+      columns: [{
+          dataField: 'Rooftop',
+          caption: 'Rooftop',
+          alignment: 'center',
+          dataType: 'string',
+          groupIndex: 0,
+          sortOrder: 'desc'
+        },
+        {
+          dataField: 'Agent Name',
+          alignment: 'center',
+          height: 100,
+        },
+        {
+          dataField: 'Roadster Certifications',
+          alignment: 'center'
+        },
+      ],
+      summary: {
+        groupItems: [{
+            column: 'Agent Name',
+            summaryType: 'count',
+            displayFormat: '{0} Total Active Agents',
+          },
+          {
+            column: 'Any Roadster Certifications',
+            summaryType: 'sum',
+            displayFormat: '{0} Total Certifications'
+          },
+        ]
+      },
+    });
+    $('#online_metrics_summ').dxDataGrid({
+      dataSource: online_metrics_sum,
+      showColumnLines: false,
+      showRowLines: true,
+      columnAutoWidth: true,
+      wordWrapEnabled: true,
+      onCellPrepared: function(e) {
+        if (e.rowType == "header") {
+          e.cellElement.css('background', 'black')
+        };
+        if (e.value == 0) {
+          e.cellElement.css('color', 'white')
+        }
+      },
+      masterDetail: {
+        enabled: true,
+        template: function(container, options) {
+          var dlr = options.data['Dealership']
+          $("<div>").dxDataGrid({
+            dataSource: online_metrics_sum.filter(function(x) {
+              return (x.Dealership == dlr);
+            }),
+            columns: [{
+                caption: 'Dealer Visitors',
+                cellTemplate: function(container, options) {
+                  container.addClass("chart-cell");
+                  $("<div />").dxSparkline({
+                    dataSource: online.filter(function(x) {
+                      return (x.Dealership == dlr);
+                    }),
+                    argumentField: 'Date',
+                    valueField: 'Rooftop Website Visitors',
+                    type: 'line',
+                    lineColor: '#aaabaa',
+                  }).appendTo(container);
+                }
+              },
+              {
+                caption: 'Express Store Visitors',
+                cellTemplate: function(container, options) {
+                  container.addClass("chart-cell");
+                  $("<div />").dxSparkline({
+                    dataSource: online.filter(function(x) {
+                      return (x.Dealership == dlr);
+                    }),
+                    argumentField: 'Date',
+                    valueField: 'Express Store Visitors',
+                    type: 'line',
+                    lineColor: '#03367c',
+                  }).appendTo(container);
+                },
+              },
+              {
+                caption: 'Prospects',
+                cellTemplate: function(container, options) {
+                  container.addClass("chart-cell");
+                  $("<div />").dxSparkline({
+                    dataSource: online.filter(function(x) {
+                      return (x.Dealership == dlr);
+                    }),
+                    argumentField: 'Date',
+                    valueField: 'Prospects',
+                    type: 'line',
+                    lineColor: '#27825c'
+                  }).appendTo(container);
+                },
+              },
+              {
+                caption: 'Shares',
+                cellTemplate: function(container, options) {
+                  container.addClass("chart-cell");
+                  $("<div />").dxSparkline({
+                    dataSource: online.filter(function(x) {
+                      return (x.Dealership == dlr);
+                    }),
+                    argumentField: 'Date',
+                    valueField: 'Shares',
+                    type: 'line',
+                    lineColor: '#8a1a23'
+                  }).appendTo(container);
+                },
+              },
+              {
+                caption: 'Orders',
+                cellTemplate: function(container, options) {
+                  container.addClass("chart-cell");
+                  $("<div />").dxSparkline({
+                    dataSource: online.filter(function(x) {
+                      return (x.Dealership == dlr);
+                    }),
+                    argumentField: 'Date',
+                    valueField: 'Orders',
+                    type: 'line',
+                    lineColor: '#2c057a'
+                  }).appendTo(container);
+                },
+              },
+            ],
+          }).appendTo(container);
+        }
+      },
+      columns: [{
+          dataField: 'Dealership',
+          caption: 'Rooftop',
+          alignment: 'center',
+          dataType: 'string',
+          sortOrder: 'desc',
+          headerCellTemplate: $('<p style="color: white">Rooftop</p>')
+        },
+        {
+          dataField: 'Dealer Visitors',
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 0,
+          },
+          headerCellTemplate: $('<p style="color: white">Dealer Visitors</p>')
+        },
+        {
+          dataField: 'Express Visitors',
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 0,
+          },
+          headerCellTemplate: $('<p style="color: white">Express Visitors</p>')
+        },
+        {
+          dataField: 'Online Express Ratio',
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 2,
+            type: 'percent'
+          },
+          headerCellTemplate: $('<p style="color: white">Online Express Ratio</p>')
+        },
+        {
+          dataField: "Online Prospects",
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 0,
+          },
+          headerCellTemplate: $('<p style="color: white">Prospects</p>')
+        },
+        {
+          dataField: 'Prospect Conversion',
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 2,
+            type: 'percent'
+          },
+          headerCellTemplate: $('<p style="color: white">Prospect Conversion</p>')
+        },
+        {
+          dataField: 'Online Shares',
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 0,
+          },
+          headerCellTemplate: $('<p style="color: white">Online Shares</p>')
+        },
+        {
+          dataField: 'Online Orders',
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 0,
+          },
+          headerCellTemplate: $('<p style="color: white">Online Orders</p>')
+        },
+        {
+          dataField: 'Roadster Matched Sales',
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 0,
+          },
+          headerCellTemplate: $('<p style="color: white">Roadster Matched Sales</p>')
+        },
+        {
+          dataField: 'Close Rate',
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 2,
+            type: 'percent'
+          },
+          headerCellTemplate: $('<p style="color: white">Close Rate</p>')
+        },
+      ],
+    });
+    // In-Store Data Grid
+    $('#in_store_metrics_summ').dxDataGrid({
+      dataSource: instore_metrics_sum,
+      showColumnLines: false,
+      showRowLines: true,
+      columnAutoWidth: true,
+      wordWrapEnabled: true,
+      onCellPrepared: function(e) {
+        if (e.rowType == "header") {
+          e.cellElement.css('background', 'black')
+        };
+        if (e.value == 0) {
+          e.cellElement.css('color', 'white')
+        }
+      },
+      masterDetail: {
+        enabled: true,
+        template: function(container, options) {
+          var dlr = options.data['Dealership']
+          $("<div>").dxDataGrid({
+            dataSource: instore_metrics_sum.filter(function(x) {
+              return (x.Dealership == dlr);
+            }),
+            columns: [{
+                caption: 'In-Store Prospects',
+                cellTemplate: function(container, options) {
+                  container.addClass("chart-cell");
+                  $("<div />").dxSparkline({
+                    dataSource: instore.filter(function(x) {
+                      return (x.Dealership == dlr);
+                    }),
+                    argumentField: 'Date',
+                    valueField: 'In-Store Prospects',
+                    type: 'line',
+                    lineColor: '#27825c'
+                  }).appendTo(container);
+                }
+              },
+              {
+                caption: 'In-Store Shares',
+                cellTemplate: function(container, options) {
+                  container.addClass("chart-cell");
+                  $("<div />").dxSparkline({
+                    dataSource: instore.filter(function(x) {
+                      return (x.Dealership == dlr);
+                    }),
+                    argumentField: 'Date',
+                    valueField: 'In-Store Shares',
+                    type: 'line',
+                    lineColor: '#8a1a23'
+                  }).appendTo(container);
+                },
+              },
+              {
+                caption: 'In-Store Orders',
+                cellTemplate: function(container, options) {
+                  container.addClass("chart-cell");
+                  $("<div />").dxSparkline({
+                    dataSource: instore.filter(function(x) {
+                      return (x.Dealership == dlr);
+                    }),
+                    argumentField: 'Date',
+                    valueField: 'In-Store Orders',
+                    type: 'line'
+                  }).appendTo(container);
+                },
+              },
+              {
+                caption: 'Copies',
+                cellTemplate: function(container, options) {
+                  container.addClass("chart-cell");
+                  $("<div />").dxSparkline({
+                    dataSource: instore.filter(function(x) {
+                      return (x.Dealership == dlr);
+                    }),
+                    argumentField: 'Date',
+                    valueField: 'Copies',
+                    type: 'line',
+                    lineColor: '#00b2d4'
+                  }).appendTo(container);
+                },
+              },
+              {
+                caption: 'Prints',
+                cellTemplate: function(container, options) {
+                  container.addClass("chart-cell");
+                  $("<div />").dxSparkline({
+                    dataSource: instore.filter(function(x) {
+                      return (x.Dealership == dlr);
+                    }),
+                    argumentField: 'Date',
+                    valueField: 'Prints',
+                    type: 'line',
+                    lineColor: '#0b0a05'
+                  }).appendTo(container);
+                },
+              },
+            ],
+          }).appendTo(container);
+        }
+      },
+      columns: [{
+          dataField: 'Dealership',
+          caption: 'Rooftop',
+          alignment: 'center',
+          dataType: 'string',
+          sortOrder: 'desc',
+          headerCellTemplate: $('<p style="color: white">Rooftop</p>')
+        },
+        {
+          dataField: 'In-Store Prospects',
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 0,
+          },
+          headerCellTemplate: $('<p style="color: white">In-Store Prospects</p>')
+        },
+        {
+          dataField: 'In-Store Shares',
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 0,
+          },
+          headerCellTemplate: $('<p style="color: white">In-Store Shares</p>')
+        },
+        {
+          dataField: 'In-Store Orders',
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 0,
+          },
+          headerCellTemplate: $('<p style="color: white">In-Store Orders</p>')
+        },
+        {
+          dataField: 'Copies',
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 0
+          },
+          headerCellTemplate: $('<p style="color: white">Copies</p>')
+        },
+        {
+          dataField: 'Prints',
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 0,
+          },
+          headerCellTemplate: $('<p style="color: white">Prints</p>')
+        },
+        {
+          dataField: 'In-Store Sales',
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 0,
+          },
+          headerCellTemplate: $('<p style="color: white">In-Store Sales</p>')
+        },
+        {
+          dataField: 'Close Rate',
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 0,
+            type: 'percent'
+          },
+          headerCellTemplate: $('<p style="color: white">Close Rate</p>')
+        },
+        {
+          dataField: 'Active Agents',
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 0,
+          },
+          headerCellTemplate: $('<p style="color: white">Active Agents</p>')
+        },
+        {
+          dataField: 'Certified Agents',
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 0,
+          },
+          headerCellTemplate: $('<p style="color: white">Certified Agents</p>')
+        },
+        {
+          dataField: 'Activity w/n 3 Days',
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 0,
+          },
+          headerCellTemplate: $('<p style="color: white">Activity w/n 3 Days</p>')
+        },
+      ],
+    });
+    // Order Funnel Summarized
+    $('#order_funnel_summ').dxDataGrid({
+      dataSource: order_funnel_sum,
+      showColumnLines: false,
+      showRowLines: true,
+      columnAutoWidth: true,
+      wordWrapEnabled: true,
+      onCellPrepared: function(e) {
+        if (e.rowType == "header") {
+          e.cellElement.css('background', 'black')
+        };
+        if (e.value == 0) {
+          e.cellElement.css('color', 'white')
+        }
+      },
+      masterDetail: {
+        enabled: true,
+        template: function(container, options) {
+          var dlr = options.data['Dealership']
+          $("<div>").dxChart({
+            rotated: true,
+            size: {
+              height: 300,
+              width: 700
+            },
+            dataSource: order_funnel_bar.filter(function(x) {
+              return (x.Dealership == dlr);
+            }),
+            legend: {
+              visible: false
+            },
+            series: {
+              label: {
+                visible: true,
+                format: {
+                  type: 'percent',
+                  precision: 0
+                },
+              },
+              argumentField: 'metric',
+              valueField: 'value_order_steps',
+              type: 'bar',
+            },
+          }).appendTo(container);
+        }
+      },
+      columns: [{
+          dataField: 'Dealership',
+          caption: 'Rooftop',
+          alignment: 'center',
+          dataType: 'string',
+          sortOrder: 'desc',
+          width: 175,
+          headerCellTemplate: $('<p style="color: white">Rooftop</p>')
+        },
+        {
+          dataField: 'Total Orders Submitted',
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 0,
+          },
+          headerCellTemplate: $('<p style="color: white">Total Order Submitted</p>')
+        },
+        {
+          dataField: 'Deal Sheet Accepted Rate',
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 0,
+            type: 'percent'
+          },
+          headerCellTemplate: $('<p style="color: white">Deal Sheet Accepted</p>')
+        },
+        {
+          dataField: 'Trade-In Completed Rate',
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 0,
+            type: 'percent'
+          },
+          headerCellTemplate: $('<p style="color: white">Trade-In Completed</p>')
+        },
+        {
+          dataField: 'Credit Completed Rate',
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 0,
+            type: 'percent'
+          },
+          headerCellTemplate: $('<p style="color: white">Credit Completed</p>')
+        },
+        {
+          dataField: 'Service Plans Completed Rate',
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 0,
+            type: 'percent'
+          },
+          headerCellTemplate: $('<p style="color: white">Service Plans Completed</p>')
+        },
+        {
+          dataField: 'Accessories Completed Rate',
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 0,
+            type: 'percent'
+          },
+          headerCellTemplate: $('<p style="color: white">Accessories Completed Rate</p>')
+        },
+        {
+          dataField: 'Final Deal Sent Rate',
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 0,
+            type: 'percent'
+          },
+          headerCellTemplate: $('<p style="color: white">Final Deal Sent Rate</p>')
+        },
+      ],
+    });
+    // $("#funnel").dxFunnel({
+    //   dataSource: order_funnel_graphic,
+    //   title: {
+    //     text: "Order Metrics",
+    //     margin: 30
+    //   },
+    //   argumentField: "arg",
+    //   valueField: "ct",
+    //   tooltip: {
+    //         enabled: true,
+    //         format: "fixedPoint"
+    //     },
+    //   item: {
+    //     border: {
+    //         visible: true
+    //       }
+    //   },
+    //   palette:"Soft Pastel",
+    //   label: {
+    //         visible: true,
+    //         position: "inside",
+    //         backgroundColor: "none",
+    //         customizeText: function(e) {
+    //             return "<span style='font-size: 28px'>" +
+    //                 e.percentText +
+    //                 "</span><br/>" +
+    //                 e.item.argument;
+    //         }
+    //     }
+    // });
+  });
+</script>
+<script>
+  $(document).ready(function() {
+    // navigation click actions
+    $('.scroll-link').on('click', function(event) {
+      event.preventDefault();
+      var sectionID = $(this).attr("data-id");
+      scrollToID('#' + sectionID, 750);
+    });
+    // scroll to top action
+    $('.scroll-top').on('click', function(event) {
+      event.preventDefault();
+      $('html, body').animate({
+        scrollTop: 0
+      }, 'slow');
+    });
+    // mobile nav toggle
+    $('#nav-toggle').on('click', function(event) {
+      event.preventDefault();
+      $('#main-nav').toggleClass("open");
+    });
+  });
+  // scroll function
+  function scrollToID(id, speed) {
+    var offSet = 50;
+    var targetOffset = $(id).offset().top - offSet;
+    $('html,body').animate({
+      scrollTop: targetOffset
+    }, speed);
+  }
+</script>
