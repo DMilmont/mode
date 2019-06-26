@@ -25,14 +25,14 @@ WITH
    SELECT *
    FROM public.ga2_sessions
    WHERE agent_dbid ~ '^[0-9]*$'
-   AND timestamp > (date_trunc('day' :: text, now()) - '7 days' :: interval)
+   AND timestamp > (date_trunc('day' :: text, now()) - '28 days' :: interval)
    )
    gs ON ga2_pageviews.ga2_session_id = gs.id
    LEFT JOIN public.dealer_partners dp ON gs.dpid = dp.dpid
    LEFT JOIN agents a ON (gs.agent_dbid)::integer = a.user_dbid
    WHERE Property = 'Dealer Admin'
      AND ((ga2_pageviews."timestamp" AT TIME ZONE 'UTC') AT TIME
-          ZONE dp.timezone) > (date_trunc('day' :: text, now()) - '7 days' :: interval)
+          ZONE dp.timezone) > (date_trunc('day' :: text, now()) - '28 days' :: interval)
      AND ((ga2_pageviews."timestamp" AT TIME ZONE 'UTC') AT TIME
           ZONE dp.timezone) < (date_trunc('day' :: text, now())) 
      AND dp.status = 'Live'
@@ -62,7 +62,7 @@ WITH
 SELECT 
        to_date(LPAD(day_t::text, 2, '0') || LPAD(month_t::text, 2, '0') || year_t::text, 'DDMMYYYY') "Date",
        sum(GAday.daily_views) AS "Report Views",
-       
+
        CASE
            WHEN agent_email ~* '@roadster.com\M' then '.Roadster Users'
            ELSE 'Customers'

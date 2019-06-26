@@ -59,7 +59,7 @@ WITH tGA AS
             agent_email)
 
 
-SELECT agent_email AS "Agent Email",
+SELECT case when right(agent_email,4) = '.com' then left(agent_email,length(agent_email)-4) else agent_email end AS "Agent Email",
        dealer_name AS "Dealer Partner",
        sum(tReportCount.daily_views) AS "Report Views",
        RANK() OVER (ORDER BY SUM(tReportCount.daily_views) DESC) Rank,

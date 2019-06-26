@@ -3,6 +3,11 @@
   <p>{{ description }}</p>
 </div>
 <div class="mode-grid container">
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_82f557ed-335a-471d-dc05-b18d76f1cdde" dataset="dataset" options="text_options"></mode-text>
+    </div>
+  </div>
   <div class="row" data-row-height="large">
     <div class="col-md-12">
       <mode-chart id="chart_89f5812134e9" dataset="dataset" options="chart_options"></mode-chart>
@@ -10,104 +15,60 @@
   </div>
   <div class="row" data-row-height="large">
     <div class="col-md-12">
+      <mode-chart id="chart_9fb0d8c06119" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row" data-row-height="large">
+    <div class="col-md-6">
+      <mode-chart id="chart_8b49768a8c92" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-6">
+      <mode-chart id="chart_1c63b21af12f" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row" data-row-height="extra-large">
+    <div class="col-md-6">
+      <mode-chart id="chart_6f99a304897f" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-6">
+      <mode-chart id="chart_415ea311edf9" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_03859ad2-a68d-4403-a780-2e658993f3c7" dataset="dataset" options="text_options">
+        <p>This tracks user loyalty to all of our reports. If a report has at least 1 loyal user, it's valuable. If there aren't any loyal users then we should improve it, promote it or delete it.</p>
+        <p>We chose to consider someone is loyal to a report if they pull that report up on 3 distinct days in the past 6 weeks (every other week).</p>
+      </mode-text>
+    </div>
+  </div>
+  <div class="row" data-row-height="large">
+    <div class="col-md-6">
+      <mode-chart id="chart_ff18546e7570" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-6">
       <mode-chart id="chart_71d15e99609e" dataset="dataset" options="chart_options"></mode-chart>
     </div>
   </div>
   <div class="row" data-row-height="large">
-    <div class="col-md-12">
-      <mode-chart id="chart_ff18546e7570" dataset="dataset" options="chart_options"></mode-chart>
-    </div>
-  </div>
-  <div class="row" data-row-height="large">
-    <div class="col-md-12">
+    <div class="col-md-6">
       <mode-chart id="chart_fee17ee8b6d2" dataset="dataset" options="chart_options"></mode-chart>
     </div>
-  </div>
-  <div class="row" data-row-height="large">
-    <div class="col-md-12">
-      <mode-chart id="chart_827b548e7d51" dataset="dataset" options="chart_options"></mode-chart>
-    </div>
-  </div>
-  <div class="row" data-row-height="large">
-    <div class="col-md-12">
+    <div class="col-md-6">
       <mode-chart id="chart_2eb19b4b224d" dataset="dataset" options="chart_options"></mode-chart>
     </div>
   </div>
   <div class="row" data-row-height="large">
-    <div class="col-md-12">
-      <mode-chart id="chart_6f99a304897f" dataset="dataset" options="chart_options"></mode-chart>
+    <div class="col-md-6">
+      <mode-chart id="chart_827b548e7d51" dataset="dataset" options="chart_options"></mode-chart>
     </div>
-  </div>
-  <div class="row" data-row-height="large">
-    <div class="col-md-12">
-      <mode-chart id="chart_415ea311edf9" dataset="dataset" options="chart_options"></mode-chart>
+    <div class="col-md-6">
+      <mode-chart id="chart_1c59ddfa59f0" dataset="dataset" options="chart_options"></mode-chart>
     </div>
   </div>
 </div>
 <script>
-  setTimeout(function() {
 
-
-    // loop through each of the charts, from #0 through #X .  If you are modifying different types of charts, differently, then repeat this block for each chart type.  
-    var i;
-    for (i = 1; i < 8; i++) {
-
-      /* Focus on Chart # i */
-      var chart = Highcharts.charts[i];
-
-      chart.update({
-
-        /*   You can change the Chart type here. 
-             List of Chart types:  www.highcharts.com/docs/chart-and-series-types/chart-types */
-        // chart: {type: 'bar'},
-
-        /*   Plot Options are next.  
-             Docs are here - find your chart on the left sidebar:  https://api.highcharts.com/highcharts/plotOptions */
-
-        // plotOptions: {
-        //  bar: {grouping: false, shadow: false, borderWidth: 0}
-        //},
-
-
-        /* add xAxis settings here.  
-         List of settings are: https://api.highcharts.com/highcharts/xAxis.type */
-
-        xAxis: {
-
-          // type: 'date',    //this forces the xAxis to be a 'date type'
-          // labels: { formatter: function () {return Highcharts.dateFormat('%a %e %b', this.value);}} . // Make the date format "Sun Mar 6"
-
-          minorTickLength: 0, //hide the little ticks on the Vertical Axis
-          tickLength: 0, //hide the little ticks on the Vertical Axis
-          lineColor: "#FFFFFF", //make the vertical axis white <<<< DOESN'T Work for some reason
-          lineWidth: 0, //make the vertical axis 0 pixels wide
-        },
-
-
-        /* add yAxis settings here.  
-       List of settings are: https://api.highcharts.com/highcharts/yAxis.type . */
-        yAxis: {
-
-          labels: {
-            enabled: false
-          }, // get rid of Horizontal Axis Labels.  
-          style: {
-            "color": "#8a1a23",
-            "fontsize": "18px"
-          }, //***This line has no effect... why? 
-          gridLineColor: 'transparent' // hide vertical gridlines
-        }
-
-        /* add individual settings for each series here.  
-         List of settings are: https://api.highcharts.com/highcharts/series -- select your chart type on the left. */
-        //series: [
-        //  {pointPadding: 0.1, pointPlacement: -0.0 },
-        //  {pointPadding: 0.3, pointPlacement: -0.0 },
-        //  ],
-
-      });
-    }
-  }, 100);
 
   setTimeout(function() {
     // set the first chart to have 'SUN' in the date format
@@ -118,10 +79,130 @@
         labels: {
           formatter: function() {
             return Highcharts.dateFormat('%a %b %e', this.value);
-          }
+           }
         }
       }
     });
 
+
+    var chart = Highcharts.charts[3];//Horizontal Bar Chart
+      chart.update({
+        xAxis: {
+          minorTickLength: 0, //hide the little ticks on the Vertical Axis
+          tickLength: 0, //hide the little ticks on the Vertical Axis
+          lineWidth: 0, //make the vertical axis 0 pixels wide
+        },
+        yAxis: {
+          labels: {enabled: false}, // get rid of Horizontal Axis Labels.  
+          gridLineColor: 'transparent' // hide vertical gridlines
+        }
+      });
+      
+    var chart = Highcharts.charts[4];//Horizontal Bar Chart
+      chart.update({
+        xAxis: {
+          minorTickLength: 0, //hide the little ticks on the Vertical Axis
+          tickLength: 0, //hide the little ticks on the Vertical Axis
+          lineWidth: 0, //make the vertical axis 0 pixels wide
+        },
+        yAxis: {
+          labels: {enabled: false}, // get rid of Horizontal Axis Labels.  
+          gridLineColor: 'transparent' // hide vertical gridlines
+        }
+      });
+      
+    var chart = Highcharts.charts[5];//Horizontal Bar Chart
+      chart.update({
+        xAxis: {
+          minorTickLength: 0, //hide the little ticks on the Vertical Axis
+          tickLength: 0, //hide the little ticks on the Vertical Axis
+          lineWidth: 0, //make the vertical axis 0 pixels wide
+        },
+        yAxis: {
+          labels: {enabled: false}, // get rid of Horizontal Axis Labels.  
+          gridLineColor: 'transparent' // hide vertical gridlines
+        }
+      });
+    
+        var chart = Highcharts.charts[6];//Horizontal Bar Chart
+      chart.update({
+        xAxis: {
+          minorTickLength: 0, //hide the little ticks on the Vertical Axis
+          tickLength: 0, //hide the little ticks on the Vertical Axis
+          lineWidth: 0, //make the vertical axis 0 pixels wide
+        },
+        yAxis: {
+          labels: {enabled: false}, // get rid of Horizontal Axis Labels.  
+          gridLineColor: 'transparent' // hide vertical gridlines
+        }
+      });
+    
+        var chart = Highcharts.charts[7];//Horizontal Bar Chart
+      chart.update({
+        xAxis: {
+          minorTickLength: 0, //hide the little ticks on the Vertical Axis
+          tickLength: 0, //hide the little ticks on the Vertical Axis
+          lineWidth: 0, //make the vertical axis 0 pixels wide
+        },
+        yAxis: {
+          labels: {enabled: false}, // get rid of Horizontal Axis Labels.  
+          gridLineColor: 'transparent' // hide vertical gridlines
+        }
+      });
+      
+          var chart = Highcharts.charts[8];//Horizontal Bar Chart
+      chart.update({
+        xAxis: {
+          minorTickLength: 0, //hide the little ticks on the Vertical Axis
+          tickLength: 0, //hide the little ticks on the Vertical Axis
+          lineWidth: 0, //make the vertical axis 0 pixels wide
+        },
+        yAxis: {
+          labels: {enabled: false}, // get rid of Horizontal Axis Labels.  
+          gridLineColor: 'transparent' // hide vertical gridlines
+        }
+      });
+      
+          var chart = Highcharts.charts[9];//Horizontal Bar Chart
+      chart.update({
+        xAxis: {
+          minorTickLength: 0, //hide the little ticks on the Vertical Axis
+          tickLength: 0, //hide the little ticks on the Vertical Axis
+          lineWidth: 0, //make the vertical axis 0 pixels wide
+        },
+        yAxis: {
+          labels: {enabled: false}, // get rid of Horizontal Axis Labels.  
+          gridLineColor: 'transparent' // hide vertical gridlines
+        }
+      });
+    
+        var chart = Highcharts.charts[10]; //Horizontal Bar Chart
+      chart.update({
+        xAxis: {
+          minorTickLength: 0, //hide the little ticks on the Vertical Axis
+          tickLength: 0, //hide the little ticks on the Vertical Axis
+          lineWidth: 0, //make the vertical axis 0 pixels wide
+        },
+        yAxis: {
+          labels: {enabled: false}, // get rid of Horizontal Axis Labels.  
+          gridLineColor: 'transparent' // hide vertical gridlines
+        }
+      });
+      
+          var chart = Highcharts.charts[11];  //Vertical Column Chart
+      chart.update({
+        xAxis: {
+          minorTickLength: 0, //hide the little ticks on the Vertical Axis
+          tickLength: 0, //hide the little ticks on the Vertical Axis
+          lineWidth: 0, //make the vertical axis 0 pixels wide
+        },
+        yAxis: {
+          labels: {enabled: false}, // get rid of Horizontal Axis Labels.  
+          gridLineColor: 'transparent' // hide vertical gridlines
+        }
+      });
+    
   }, 100);
+  
+
 </script>
