@@ -10,6 +10,7 @@ SELECT DISTINCT name
 FROM fact.salesforce_dealer_info di
 LEFT JOIN public.dealer_partners dp ON di.dpid = dp.dpid
 WHERE CASE WHEN dealer_group IS NULL THEN dealer_name ELSE dealer_group END IN (SELECT * FROM filter_for_dpids)
+AND dp.status = 'Live'
 --and dealer_group <> dp.name
 ), 
 
@@ -22,7 +23,7 @@ base_online_data as (
 )
 ----
 
-
+,almost_final as (
 SELECT "Dealership", 
 "Date"::text,
 SUM("Dealer Visitors CLEANED") "Dealer Visitors",
@@ -35,5 +36,22 @@ SUM("online_orders") "Online Orders",
 SUM(online_sales) "Roadster Matched Sales", 
 SUM(online_sales) / NULLIF(SUM("Online Prospects"), 0) "Close Rate"
 FROM base_online_data
+WHERE "Date"  >= (date_trunc('month', now()) - '2 months'::interval)
 GROUP BY 1,2
 ORDER BY "Dealership", "Date"::text
+)
+
+SELECT
+"Dealership", 
+"Date"::text, 
+CASE WHEN "Dealer Visitors" = 0 OR "Dealer Visitors" IS NULL THEN 'Traffic Unavailable' ELSE "Dealer Visitors"::text END "Dealer Visitors (text)", 
+"Dealer Visitors",
+"Express Visitors",
+"Online Express Ratio",
+"Prospect Conversion", 
+"Online Prospects",
+"Online Shares", 
+"Online Orders",
+"Roadster Matched Sales",
+"Close Rate"
+FROM almost_final

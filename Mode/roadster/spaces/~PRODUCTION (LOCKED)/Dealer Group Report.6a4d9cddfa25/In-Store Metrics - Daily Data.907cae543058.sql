@@ -12,12 +12,13 @@ SELECT DISTINCT name
 FROM fact.salesforce_dealer_info di
 LEFT JOIN public.dealer_partners dp ON di.dpid = dp.dpid
 WHERE CASE WHEN dealer_group IS NULL THEN dealer_name ELSE dealer_group END IN (SELECT * FROM filter_for_dpids)
+AND dp.status = 'Live'
 --and dealer_group <> dp.name
 )
 
 SELECT 
 im."Dealership",
-im."Date"::text,
+im."Date" date_sparkline,
 im."In-Store Prospects",
 im."In-Store Shares",
 im."In-Store Orders",

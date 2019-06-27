@@ -13,6 +13,7 @@ SELECT DISTINCT name
 FROM fact.salesforce_dealer_info di
 LEFT JOIN public.dealer_partners dp ON di.dpid = dp.dpid
 WHERE CASE WHEN dealer_group IS NULL THEN dealer_name ELSE dealer_group END IN (SELECT * FROM filter_for_dpids)
+AND dp.status = 'Live'
 --and dealer_group <> dp.name
 ), 
 
@@ -21,6 +22,7 @@ base_order_data as (
   FROM report_layer.dg_order_step_metrics
   WHERE "Dealership" IN (SELECT initcap(name) FROM dpids)
   AND "Date" IN (select generate_series(date_trunc('month', now()) - '6 mons'::interval, date_trunc('month', now()), '1 month'))
+  AND "Date"  >= (date_trunc('month', now()) - '2 months'::interval)
 )
 
 SELECT "Dealership", "Date"::text, 'Total Orders Submitted' metric, 1 value_order_steps, 1 step FROM base_order_data UNION

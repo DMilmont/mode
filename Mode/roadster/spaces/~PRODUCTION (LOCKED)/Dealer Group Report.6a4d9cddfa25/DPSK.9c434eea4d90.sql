@@ -5,8 +5,8 @@
   {% form %}
 
 dpsk:
-    type: select
-    default: '1766768799'
+    type: text
+    default: 1766768799
     label: dpsk
     input_type: string
     options:
