@@ -7,6 +7,10 @@
     /*font-family: 'Helvetica Neue', 'Segoe UI', Helvetica, Verdana, sans-serif !important;*/
     vertical-align: middle !important;
   }
+
+  .mode-grid container {
+    background-color: rgb(247, 247, 249);
+  }
 </style>
 <div class="row" data-row-height="small">
   <div class="col-md-4">
@@ -35,23 +39,19 @@
   <div class="row">
     <div class="col-md-12">
       <mode-text id="text_1a38d606-2f60-4f0a-9892-569db3842b15" dataset="dataset" options="text_options">
-        <p><strong>TEST</strong> <strong>REPORT</strong> for Dealer Groups</p>
-        <p>Quick Facts:</p>
-        <p><br></p>
-        <ol>
-          <li>By selecting a given dpid this report should display all rooftops related to that dealer. We use SalesForce for this record keeping. If you don't see the correct dpids. Please let me know.</li>
-          <li>The drop-downs on each row give you more information on how the metrics have moved over time. And match to the data summarized in the tables themselves.</li>
-          <li>Please select one date at a time on the right. </li>
-        </ol>
+        <p>Dealer-Group Report (<strong>BETA</strong>)</p>
+        <ul>
+          <li>If you are not seeing all the rooftops you expect, please email analytics@roadster.com</li>
+          <li>Click the little gray triangles at the beginning of each row for more details. </li>
+          <li>Select a date range on the right.</li>
+          <li>We are still developing this report, please send feedback about what you love, what isn't useful and what is missing to analytics@roadster.com. Screen shots are very helpful. </li>
+        </ul>
         <p><br></p>
       </mode-text>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-6">
-      <mode-chart id="chart_7b985d93b6b6" dataset="dataset" options="chart_options"></mode-chart>
-    </div>
-    <div class="col-md-6">
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
       <mode-chart id="chart_6652a17ed5f5" dataset="dataset" options="chart_options"></mode-chart>
     </div>
   </div>
@@ -59,7 +59,7 @@
     <div class="col-md-12">
       <mode-text id="text_ea82726d-3f75-4537-d183-094509322168" dataset="dataset" options="text_options">
         <h4>Online Metrics</h4>
-        <p>If you would like to see 'Dealer Visitors' populated please let your Success Manager know!</p>
+        <p><em>If you would like to see 'Dealer Visitors' populated please let your Success Manager know!</em></p>
       </mode-text>
     </div>
   </div>
@@ -72,7 +72,7 @@
     <div class="col-md-12">
       <mode-text id="text_ea82726d-3f75-4537-d183-094509322169" dataset="dataset" options="text_options" ,="" class="text">
         <h4>In-Store Metrics</h4>
-        <p>Here you can monitor you dealer's In-Store Metrics</p>
+        <p><em>How are your dealer performing with customer's directly?</em></p>
         <p><br></p>
       </mode-text>
     </div>
@@ -90,7 +90,7 @@
     <div class="col-md-12">
       <mode-text id="text_ea82726d-3f75-4537-d183-094509322170" dataset="dataset" options="text_options">
         <h4>Order Metrics</h4>
-        <p><em>Here you can understand how customer's are completing order steps</em></p>
+        <p><em>What are the steps your customer are completing?</em></p>
       </mode-text>
     </div>
   </div>
@@ -126,9 +126,11 @@
       <mode-table id="dealer_properties" dataset="dataset" options="table_options"></mode-table>
     </div>
   </div>
-  <div class="row">
+  <div class="row" data-row-height="small">
     <div class="col-md-12">
-      <mode-text id="text_c75c763a-02e0-4f43-f7ca-00f71bef64a1" dataset="dataset" options="text_options"></mode-text>
+      <mode-text id="text_c75c763a-02e0-4f43-f7ca-00f71bef64a1" dataset="dataset" options="text_options">
+        <p>Questions? Contact Dealer Support at dealersupport@roadster.com</p>
+      </mode-text>
     </div>
   </div>
 </div>
