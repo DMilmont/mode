@@ -1,0 +1,5 @@
+---
+report_description: This pulls the number of prints, copies and in-store shares each
+  agent has done in the past 3 months, along with their DPID, title and department.
+is_full_width: false
+hide_run_button: false
