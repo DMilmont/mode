@@ -1,15 +1,23 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.common.css">
 <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.light.css">
+<link rel="stylesheet" media="screen" href="//d2yvqewjuuy0k6.cloudfront.net/fonts/232352/75E15E124468560E8.css">
 <script type="text/javascript" src="https://cdn3.devexpress.com/jslib/18.2.8/js/dx.all.js"></script>
 <style>
   * {
-    /*font-family: 'Helvetica Neue', 'Segoe UI', Helvetica, Verdana, sans-serif !important;*/
-    vertical-align: middle !important;
+    font-size: 100%;
+    font-family: "Gotham SSm A", "Gotham SSm B", Georgia;
   }
 
   .mode-grid container {
     background-color: rgb(247, 247, 249);
+  }
+  
+  .right-side {
+    position: fixed;
+    top: 10px;
+    right: 15px;
+    width: 300px;
   }
 </style>
 <div class="row" data-row-height="small">
@@ -36,6 +44,9 @@
   </h1>
 </div>
 <div class="mode-grid container">
+  <div class="right-side">Month & Year
+    <div id="selectStatus"></div>
+  </div>
   <div class="row">
     <div class="col-md-12">
       <mode-text id="text_1a38d606-2f60-4f0a-9892-569db3842b15" dataset="dataset" options="text_options">
@@ -183,12 +194,30 @@
       dpids.push(daily_srp[i]['Dealership']);
     }
     var dpids = [...new Set(dpids)];
-    var val_field = []
+    var val_field = [];
     for (var i = 0; i < dpids.length; i++) {
       val_field.push({
         valueField: dpids[i]
       });
     };
+  
+    var dts = [];
+    for (var i = 0; i < online_metrics_sum.length; i++) {
+      dts.push(online_metrics_sum[i]['Date']);
+    };
+    var unique_dts = [...new Set(dts)]; 
+    unique_dts.sort();
+    console.log(unique_dts);
+    
+    $("#selectStatus").dxSelectBox({
+        dataSource: unique_dts,
+        value: unique_dts[unique_dts.length - 1],
+        onValueChanged: function(data) {
+            summ1.filter(["Date", "=", data.value]);
+            summ2.filter(["Date", "=", data.value]);
+        }
+    });
+
 
     $('#online_srp').dxChart({
       palette: 'Harmony Light',
@@ -321,7 +350,7 @@
         ]
       },
     });
-    $('#online_metrics_summ').dxDataGrid({
+    var summ1 = $('#online_metrics_summ').dxDataGrid({
       dataSource: online_metrics_sum,
       showColumnLines: false,
       showRowLines: true,
@@ -514,9 +543,9 @@
           headerCellTemplate: $('<p style="color: white">Close Rate</p>')
         },
       ],
-    });
+    }).dxDataGrid("instance");
     // In-Store Data Grid
-    $('#in_store_metrics_summ').dxDataGrid({
+    var summ2 = $('#in_store_metrics_summ').dxDataGrid({
       dataSource: instore_metrics_sum,
       showColumnLines: false,
       showRowLines: true,
@@ -716,7 +745,7 @@
           headerCellTemplate: $('<p style="color: white">Activity w/n 3 Days</p>')
         },
       ],
-    });
+    }).dxDataGrid("instance");
     // Order Funnel Summarized
     $('#order_funnel_summ').dxDataGrid({
       dataSource: order_funnel_sum,
@@ -843,65 +872,11 @@
         },
       ],
     });
-    // $("#funnel").dxFunnel({
-    //   dataSource: order_funnel_graphic,
-    //   title: {
-    //     text: "Order Metrics",
-    //     margin: 30
-    //   },
-    //   argumentField: "arg",
-    //   valueField: "ct",
-    //   tooltip: {
-    //         enabled: true,
-    //         format: "fixedPoint"
-    //     },
-    //   item: {
-    //     border: {
-    //         visible: true
-    //       }
-    //   },
-    //   palette:"Soft Pastel",
-    //   label: {
-    //         visible: true,
-    //         position: "inside",
-    //         backgroundColor: "none",
-    //         customizeText: function(e) {
-    //             return "<span style='font-size: 28px'>" +
-    //                 e.percentText +
-    //                 "</span><br/>" +
-    //                 e.item.argument;
-    //         }
-    //     }
-    // });
+    
+    summ1.filter(["Date", "=", unique_dts[(unique_dts.length - 1)]]);  
+    summ2.filter(["Date", "=", unique_dts[(unique_dts.length - 1)]]);  
+    
   });
-</script>
-<script>
-  $(document).ready(function() {
-    // navigation click actions
-    $('.scroll-link').on('click', function(event) {
-      event.preventDefault();
-      var sectionID = $(this).attr("data-id");
-      scrollToID('#' + sectionID, 750);
-    });
-    // scroll to top action
-    $('.scroll-top').on('click', function(event) {
-      event.preventDefault();
-      $('html, body').animate({
-        scrollTop: 0
-      }, 'slow');
-    });
-    // mobile nav toggle
-    $('#nav-toggle').on('click', function(event) {
-      event.preventDefault();
-      $('#main-nav').toggleClass("open");
-    });
-  });
-  // scroll function
-  function scrollToID(id, speed) {
-    var offSet = 50;
-    var targetOffset = $(id).offset().top - offSet;
-    $('html,body').animate({
-      scrollTop: targetOffset
-    }, speed);
-  }
+  
+
 </script>
