@@ -6,10 +6,22 @@
 <style>
   * {
     font-size: 100%;
-    font-family: "Gotham SSm A", "Gotham SSm B", Georgia !important;
+    font-family: "Gotham SSm A", "Gotham SSm B", Georgia;
   }
   .b { 
   text-algin: left !important;
+}
+
+.right-side {
+    position: absolute;
+    right: 7px ;
+    top: 3px;
+    margin-bottom: 40px;
+    margin-top: 30px;
+}
+
+.row {
+  margin-top: 45px!important;
 }
 </style>
 <script>
@@ -20,19 +32,12 @@
   var link_p = link.concat(dpid, '/users');
   //console.log(link_p)
 </script>
-<div class="mode-header embed-hidden">
-  <h1>{{ title }}</h1>
-  <p>{{ description }}</p>
-</div>
+
 <div class="mode-grid container">
-  <div class="row">
-    <div class="col-md-12">
-      <mode-text id="text_e5928c50-be3b-40ab-8789-24060b49dbc0" dataset="dataset" options="text_options">
-        <p>Testing Using Mode for the Agent Report</p>
-        <p><br></p>
-      </mode-text>
-    </div>
+  <div class="right-side">
+    <div id="selectStatus"></div>
   </div>
+  <div></div>
   <div class="row">
     <div class="col-md-12">
       <mode-chart id="agent_reports"></mode-chart>
@@ -82,9 +87,17 @@
       mth.push(agent_report[i]['Month & Year'])
     }
     var uniqueItems = Array.from(new Set(mth));
+    
+    $("#selectStatus").dxSelectBox({
+        dataSource: uniqueItems,
+        value: uniqueItems[1],
+        onValueChanged: function(data) {
+            dataGrid.filter(["Month & Year", "=", data.value]);
+        }
+    });
 
 
-    $('#agent_reports').dxDataGrid({
+    var dataGrid = $('#agent_reports').dxDataGrid({
       dataSource: agent_report,
       showColumnLines: false,
       showRowLines: true,
@@ -99,7 +112,14 @@
           e.cellElement.css('color', 'white')
         }
       },
-      columns: [{
+      columns: [
+        {
+          dataField: 'Month & Year',
+          width: 100,
+          visible: false,
+        },
+        
+        {
           dataField: 'Agent Role',
           width: 170,
           headerCellTemplate: $('<p style="color: white">Role</p>'),
@@ -109,13 +129,13 @@
         {
           dataField: 'Agent',
           sortOrder: 'desc',
-          width: 175,
+          width: 165,
           headerCellTemplate: $('<p style="color: white">Agent</p>'),
           alignment: 'center'
         },
         {
           dataField: 'Certification Flag',
-          width: 115,
+          width: 112,
           headerCellTemplate: $('<p style="color: white">Certifications</p>'),
           alignment: 'center',
           cellTemplate: function (cellElement, cellInfo) {
@@ -135,7 +155,7 @@
         },
         {
           dataField: 'check_for_activity',
-          width: 100,
+          width: 85,
           headerCellTemplate: $('<p style="color: white">Activity Indicator</p>'),
           alignment: 'center'
         },
@@ -182,11 +202,9 @@
 
       ],
 
-    });
+    }).dxDataGrid("instance");
+  
+  
+  dataGrid.filter(["Month & Year", "=", uniqueItems[(uniqueItems.length - 1)]]);  
   });
-</script>
-<script>
-  console.log($("#change_me").attr("href"))
-  $("#change_me").attr("href", link_p)
-  console.log($("#change_me").attr("href"))
 </script>
