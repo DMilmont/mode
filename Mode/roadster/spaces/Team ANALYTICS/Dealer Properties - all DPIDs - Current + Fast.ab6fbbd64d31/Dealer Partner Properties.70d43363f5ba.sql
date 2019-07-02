@@ -43,11 +43,16 @@ SELECT
        dp.dpid,
        admin.dealer_partner_id,
        dp.name,
+       case 
+          when dp.dpid = 'roadster' then '-DEFAULT-'
+          when admin.properties ->> 'reports' is null then '' 
+          else 'CUSTOMIZED' 
+        end as "Custom Reports?",
        dp.ga_tracking_id "GA2 Property",
        admin.properties ->> 'ga_accounts' "GA Accounts",
        admin.properties ->> 'gtm_account' "GTM Accounts",
        dp.price_unlock_mode,
-       admin.properties ->> 'embedded_checkout_frame' "Slide-out",
+       case when admin.properties ->> 'embedded_checkout_frame' = 'TRUE' then 'Slide Out' else Null end as "Slide-out",
        admin.properties ->> 'cdk_extract_id' "CDK Sales Match",
        to_char(sf.actual_live_date, 'yyyy-mm-dd') "Go Live Date",
        dealer_visitors.count "Dealer Visitors past wk",
