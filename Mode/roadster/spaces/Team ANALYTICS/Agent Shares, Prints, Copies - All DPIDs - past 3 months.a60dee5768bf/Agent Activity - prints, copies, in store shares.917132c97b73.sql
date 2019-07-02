@@ -58,17 +58,18 @@ with agent_prints_copies AS (
 GROUP BY 1,2
 )
 
-select apc.dpid
-       ,apc.agent_email "Agent Email"
+select 
+       apc.agent_email "Agent Email"
+       ,apc.department "Agent Department"
+       ,apc.dpid
+       ,COALESCE(iss."In Store Shares",0) "In Store Shares"
+       ,apc."Copies To Clipboard"
+       ,apc."Print Price Summary"
+       ,apc."Print Share Details"
+       ,apc."Print Price Summary" + apc."Print Share Details" + apc."Copies To Clipboard" + COALESCE(iss."In Store Shares",0) as "Total Activity"
        ,apc.first_name "Agent First Name"
        ,apc.last_name "Agent Last Name"
        ,apc.job_title "Agent Job Title"
-       ,apc.department "Agent Department"
-       ,apc."Print Price Summary"
-       ,apc."Print Share Details"
-       ,apc."Copies To Clipboard"
-       ,COALESCE(iss."In Store Shares",0) "In Store Shares"
-       ,apc."Print Price Summary" + apc."Print Share Details" + apc."Copies To Clipboard" + COALESCE(iss."In Store Shares",0) as "Total Activity"
 from agent_prints_copies apc 
     left join in_store_shares iss on iss.dpid = apc.dpid and iss.agent_email = apc.agent_email --and iss.month_year = apc.month_year 
     where apc.agent_email not ilike '%roadster.com'
