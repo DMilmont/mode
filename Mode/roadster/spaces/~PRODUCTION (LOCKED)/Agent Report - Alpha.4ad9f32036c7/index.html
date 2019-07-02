@@ -21,7 +21,7 @@
 }
 
 .row {
-  margin-top: 45px!important;
+  margin-top: 90px!important;
 }
 </style>
 <script>
@@ -34,7 +34,7 @@
 </script>
 
 <div class="mode-grid container">
-  <div class="right-side">
+  <div class="right-side">Month & Year
     <div id="selectStatus"></div>
   </div>
   <div></div>
@@ -44,7 +44,7 @@
     </div>
   </div>
   <div>
-    <p> Agent Role missing? Click <a id="change_me" href="https://www.dealers.roadster.com" target="_blank">here</a> to make a change to your job title. Updates can take up to 24 hours</p>
+    <p> Agent Role missing? Click <a id="change_me" href="https://dealers.roadster.com" target="_blank">here</a> to make a change to your job title. Updates can take up to 24 hours</p>
   </div>
 </div>
 <script>
@@ -205,6 +205,6 @@
     }).dxDataGrid("instance");
   
   
-  dataGrid.filter(["Month & Year", "=", uniqueItems[(uniqueItems.length - 1)]]);  
+  dataGrid.filter(["Month & Year", "=", uniqueItems[(uniqueItems.length - 2)]]);  
   });
 </script>
