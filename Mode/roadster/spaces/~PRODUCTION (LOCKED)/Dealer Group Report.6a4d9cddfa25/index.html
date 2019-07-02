@@ -9,15 +9,17 @@
     font-family: "Gotham SSm A", "Gotham SSm B", Georgia;
   }
 
-  .mode-grid container {
-    background-color: rgb(247, 247, 249);
+  .mode-grid {
+    margin-top: 80px;
   }
   
   .right-side {
     position: fixed;
     top: 10px;
-    right: 15px;
+    left: 15px;
+    margin-bottom: 20px;
     width: 300px;
+    z-index:10;
   }
 </style>
 <div class="row" data-row-height="small">
@@ -43,10 +45,10 @@
     <span id="title"></span>
   </h1>
 </div>
-<div class="mode-grid container">
   <div class="right-side">Month & Year
     <div id="selectStatus"></div>
   </div>
+<div class="mode-grid container">
   <div class="row">
     <div class="col-md-12">
       <mode-text id="text_1a38d606-2f60-4f0a-9892-569db3842b15" dataset="dataset" options="text_options">
@@ -200,6 +202,8 @@
         valueField: dpids[i]
       });
     };
+    
+    console.log(instore);
   
     var dts = [];
     for (var i = 0; i < online_metrics_sum.length; i++) {
@@ -367,10 +371,11 @@
       masterDetail: {
         enabled: true,
         template: function(container, options) {
-          var dlr = options.data['Dealership']
+          var dlr = options.data['Dealership'];
+          var dt = options.data['Date'];
           $("<div>").dxDataGrid({
             dataSource: online_metrics_sum.filter(function(x) {
-              return (x.Dealership == dlr);
+              return (x.Dealership == dlr && x.Date == dt);
             }),
             columns: [{
                 caption: 'Dealer Visitors',
@@ -562,10 +567,11 @@
       masterDetail: {
         enabled: true,
         template: function(container, options) {
-          var dlr = options.data['Dealership']
+          var dlr = options.data['Dealership'];
+          var dt = options.data['Date'];
           $("<div>").dxDataGrid({
             dataSource: instore_metrics_sum.filter(function(x) {
-              return (x.Dealership == dlr);
+              return (x.Dealership == dlr && x.Date == dt);
             }),
             columns: [{
                 caption: 'In-Store Prospects',
@@ -575,7 +581,7 @@
                     dataSource: instore.filter(function(x) {
                       return (x.Dealership == dlr);
                     }),
-                    argumentField: 'Date',
+                    argumentField: 'date_sparkline',
                     valueField: 'In-Store Prospects',
                     type: 'line',
                     lineColor: '#27825c'
@@ -747,7 +753,7 @@
       ],
     }).dxDataGrid("instance");
     // Order Funnel Summarized
-    $('#order_funnel_summ').dxDataGrid({
+    var summ3 = $('#order_funnel_summ').dxDataGrid({
       dataSource: order_funnel_sum,
       showColumnLines: false,
       showRowLines: true,
@@ -764,7 +770,8 @@
       masterDetail: {
         enabled: true,
         template: function(container, options) {
-          var dlr = options.data['Dealership']
+          var dlr = options.data['Dealership'];
+          var dt = options.data['Date'];
           $("<div>").dxChart({
             rotated: true,
             size: {
@@ -772,7 +779,7 @@
               width: 700
             },
             dataSource: order_funnel_bar.filter(function(x) {
-              return (x.Dealership == dlr);
+              return (x.Dealership == dlr && x.Date == dt);
             }),
             legend: {
               visible: false
@@ -871,10 +878,11 @@
           headerCellTemplate: $('<p style="color: white">Final Deal Sent Rate</p>')
         },
       ],
-    });
+    }).dxDataGrid("instance");
     
     summ1.filter(["Date", "=", unique_dts[(unique_dts.length - 1)]]);  
-    summ2.filter(["Date", "=", unique_dts[(unique_dts.length - 1)]]);  
+    summ2.filter(["Date", "=", unique_dts[(unique_dts.length - 1)]]); 
+    summ3.filter(["Date", "=", unique_dts[(unique_dts.length - 1)]]); 
     
   });
   
