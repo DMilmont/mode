@@ -6,8 +6,8 @@ with date_dpid as (
               WHEN '{{ DateR }}'='Past 30 Days' and  c.date >= (date_trunc('day', now()) - interval '62 days') then 'Previous 30 Days'
               WHEN '{{ DateR }}'='Past 60 Days' and  c.date >= (date_trunc('day', now()) - interval '61 days') then 'Current 60 Days'
               WHEN '{{ DateR }}'='Past 60 Days' and  c.date >= (date_trunc('day', now()) - interval '122 days') then 'Previous 60 Days'
-              WHEN '{{ DateR }}'='Past 90 Days' and  c.date >= (date_trunc('day', now()) - interval '91 days') then 'Current Week'
-              WHEN '{{ DateR }}'='Past 90 Days' and  c.date >= (date_trunc('day', now()) - interval '182 days') then 'Previous Week'
+              WHEN '{{ DateR }}'='Past 90 Days' and  c.date >= (date_trunc('day', now()) - interval '91 days') then 'Current 90 Days'
+              WHEN '{{ DateR }}'='Past 90 Days' and  c.date >= (date_trunc('day', now()) - interval '182 days') then 'Previous 90 Days'
               END as time_frame
         from fact.d_cal_date c
                cross join (
@@ -68,6 +68,7 @@ with date_dpid as (
                FROM date_dpid dd
                       left join leads_submitted ls on dd.id = ls.dealer_partner_id and date(dd.date) = date(ls.sent_at)
                       left join agent a on ls.agent_id=a.id
+                where a.agent_name is not null       
     ),
 agent_detail as (select time_frame 
                 ,agent_name 
@@ -131,14 +132,15 @@ totals as (
 ),
 agent_score as (select am.time_frame 
       ,agent_full_name
-      ,sum(net_cnt)::decimal/Total_shares as Shares_Contributed
-      ,sum(case when "E-Mail Status"='4. Clicked' then net_cnt else 0 end)::decimal /Total_Clicked as Clicks_Contributed
+      ,sum(case when "E-Mail Status"='4. Clicked' or "E-Mail Status"='3. Opened - Not Clicked' or "E-Mail Status"='2. Delivered - Not Opened' then net_cnt end)::decimal/Total_shares as Shares_Contributed
+      ,case when Total_Clicked<>0 then sum(case when "E-Mail Status"='4. Clicked' then net_cnt else 0 end)::decimal /Total_Clicked else 0 end as Clicks_Contributed
       ,sum(case when "E-Mail Status"='4. Clicked' then net_cnt else 0 end)::decimal /sum(net_cnt) as Click_Rate
-      ,sum(net_cnt)::decimal/Total_shares + 2*sum(case when "E-Mail Status"='4. Clicked' then net_cnt else 0 end)::decimal /Total_Clicked + sum(case when "E-Mail Status"='4. Clicked' then net_cnt else 0 end)::decimal /sum(net_cnt) as Agent_Score
+      ,case when Total_Clicked<>0  then sum(case when "E-Mail Status"='4. Clicked' or "E-Mail Status"='3. Opened - Not Clicked' or "E-Mail Status"='2. Delivered - Not Opened' then net_cnt end)::decimal/Total_shares + 2*sum(case when "E-Mail Status"='4. Clicked' then net_cnt else 0 end)::decimal /Total_Clicked + sum(case when "E-Mail Status"='4. Clicked' then net_cnt else 0 end)::decimal /sum(net_cnt) else sum(case when "E-Mail Status"='4. Clicked' or "E-Mail Status"='3. Opened - Not Clicked' or "E-Mail Status"='2. Delivered - Not Opened' then net_cnt end)::decimal/Total_shares end as Agent_Score
 from agent_metrics am
 left JOIN totals t on am.time_frame=t.time_frame
 group by 1,2,Total_shares,Total_Clicked
 ),
+
 agent_ranks as (select time_frame
                        ,agent_full_name
                        ,row_number () over (partition by time_frame order by agent_score desc) as rnk

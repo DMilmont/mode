@@ -5,6 +5,7 @@ with date_dpid as (
           select distinct dps.id,dps.dpid, dps.tableau_secret, dps.name, primary_make
           from dealer_partners dps
           where status = 'Live'
+
             AND dpid='{{ dpid }}'
         ) dp
              --  where dpid not like '%demo%')dp
@@ -21,7 +22,7 @@ with date_dpid as (
               ,first_name||' ' || last_name as agent_full_name
               ,a.*
        from agents a
-       WHERE  status='Active'
+       WHERE    status='Active'
        and email not like '%roadster%'
      ),
     leads_submitted as (
@@ -38,6 +39,7 @@ with date_dpid as (
                     ,a.email
                     ,a.agent_full_name
                     ,a.job_title
+                    ,ls.agent_id
                     , ls.id
                     ,ls.crm_record_id
                     ,ls.vin
@@ -58,9 +60,11 @@ with date_dpid as (
                FROM date_dpid dd
                       left join leads_submitted ls on dd.id = ls.dealer_partner_id and date(dd.date) = date(ls.sent_at)
                       left join agent a on ls.agent_id=a.id
+              where a.agent_name is not null        
     ),
 agent_detail as (select agent_name 
                 ,agent_full_name
+                ,email
                 ,COALESCE(job_title,'Job Title Missing') as job_title
                 ,dpid
                 ,name
@@ -69,9 +73,10 @@ agent_detail as (select agent_name
                 ,sum(Open_Check) as EmailOpen
                 ,sum(Click_Check)  as EmailClick
           from detail
-            GROUP BY 1,2,3,4,5
+            GROUP BY 1,2,3,4,5,6
             HAVING COUNT(distinct id)<>0
       ),
+      
       
 agent_email as(  SELECT ad.dpid
             ,ad.name
@@ -87,12 +92,14 @@ agent_email as(  SELECT ad.dpid
           ,('Opened', ad.EmailOpen)
           ,('Clicked', ad.EmailClick)
           ) e (email_event, cnt )
-      )
+      ),
 
-        SELECT ae.dpid
+agent_metrics   as     (SELECT ae.dpid
             ,ae.name
+            ,ae.agent_full_name
             ,ae.job_title || ' - ' || ae.agent  as "Agent"
             ,ae.job_title as "Title"
+            ,ae.agent as agent_name
             ,CASE WHEN ae.email_event='Sent' then '1. Invalid Email' 
                   WHEN ae.email_event='Delivered' then '2. Delivered - Not Opened'
                   WHEN ae.email_event='Opened' then '3. Opened - Not Clicked'
@@ -106,6 +113,11 @@ agent_email as(  SELECT ad.dpid
       LEFT JOIN (select * from agent_email where email_event='Clicked') aec on ae.agent_full_name=aec.agent_full_name
        LEFT JOIN (select * from agent_email where email_event='Opened') aeo on ae.agent_full_name=aeo.agent_full_name
        LEFT JOIN (select * from agent_email where email_event='Delivered') aed on ae.agent_full_name=aed.agent_full_name
+) 
+select am.*
+      ,am."Title" ||' - ' || am.agent_name as "Agent Ranked" -- ar.rnk || '.
+from agent_metrics am
+
 
       
       

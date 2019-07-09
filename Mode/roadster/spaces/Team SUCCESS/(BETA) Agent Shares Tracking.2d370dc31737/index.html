@@ -29,7 +29,7 @@
 
 * {
  font-size: 100%;
- font-family: 'Gotham' !important;
+ font-family: 'Verdana' !important;
 }
 </style>
 <script>
@@ -42,7 +42,11 @@
   var dpid = data[0]['dpid']
   var str1 = 'Agent Shares Tracking - '
   var link = "https://dealers.roadster.com/"
-  var link_p = link.concat(dpid, '/users')
+  var link1 = "https://dealers.roadster.com/"
+  var link_p = link.concat(dpid, '/users');
+  var link_d = link1.concat(dpid, '/user_contacts?type=SharedExpressCar&grade=New%20%26%20Used&sort=created');
+  console.log(link_p)
+  console.log(link_d)
   $("#title").text(str1.concat(title))
 </script>
 <div class="mode-header embed-hidden">
@@ -51,7 +55,9 @@
   </h1>
   <p>{{ description }}</p>
 </div>
-<div class="mode-grid container">
+
+<div id="t1"  class="mode-grid container">
+  <div class="ReportT">
   <h2><u>Summary</u></h2>
   <div class="row" data-row-height="small">
     <div class="col-md-12">
@@ -78,12 +84,14 @@
     </div>
   </div>
     </div>
+    <p> ▶ See <a href="" id="link_d" target="_blank">Share Details</a> in Dealer Admin </p>
   <p> ▶ Please click <a href="" id="link_p" target="_blank">Here</a> to update the <b>Job Title</b> for agents where its currently missing for dealer <span id="titleHolder"></span>. </p>
   <p> ▶ Provide 'Date Range' and 'DPID' to see historical agent share activity at the dealer/agent level </p>
+
   <p> ▶ Share activity is counted based on date initially sent. Opened/Clicked status is based on current tracking information </p>
-  <p> ▶ Agent share tracking provides a view of volume vs effectivenss by time series and per agent</p>
   <p> ▶ Please see <a href="https://roadsterteam.atlassian.net/wiki/spaces/AN/pages/325386285/Agent+Share+Tracking+Feedback" target="_blank">Confluence page</a> to provide any feedback on report</p>
   <p> ▶ * Highest Contributing Agent is determined by looking at an agents share contribution, click contribution and click thru rate.
+</div>
 </div>
 <script>
   setTimeout(function() {
@@ -95,14 +103,26 @@
     if (data.length == 0) {
       $('.InvalidE').remove();
     }
+    
+        var data = datasets.filter(function(d) {
+      return d.queryName == "Totals";
+    })[0].content;
+
+
+    if (data.length == 0) {
+      $('.ReportT').remove();
+      $('#t1').prepend("<h1><b>No share activity in last 30 days</b></h1>")
+      
+    }
   }, 100);  
   
 </script>
 
 <script>
   document.getElementById("link_p").href = link_p;
+  document.getElementById("link_d").href = link_d;
   setTimeout(function() {
-    console.log(link_p)
+ 
     var i;
     for (i = 0; i < Highcharts.charts.length; i++) {
 
@@ -148,11 +168,15 @@
             lineWidth: 0, //make the vertical axis 0 pixels wide
           },
 
-          yAxis: {
+          yAxis: [{
 
             gridLineColor: 'transparent' // hide vertical gridlines
+          },{
+            max:1,
+             tickInterval: .2,
+             alignTicks: false // Keeps max at 100% but shifts nuumbr
           }
-
+        ]
         });
       }
     }
@@ -162,11 +186,28 @@
     }
     console.log(Y_value)
 
+var shares_delivered = [];
+for (index = 0; index < data.length; ++index) {
+      shares_delivered.push(data[index]['Shares Delivered']);
+    }
+
+var shares_delivered_max = Math.max.apply(Math,shares_delivered) ;
+
     for (i = 0; i < Highcharts.charts.length; i++) {
 
       /* Focus on Chart # i */
       var chart = Highcharts.charts[i];
       if (chart.container.closest("#chart_756374192ece") != null) {
+        
+        if (shares_delivered_max <8){
+  chart.update({
+    yAxis: {
+            max:10,
+            min:0
+                }
+          })
+      }
+        
         chart.addSeries({
           name: 'Shares Clicked %',
           data: Y_value,
@@ -175,6 +216,9 @@
         });
       }
     }
+
+
+
 
 
   }, 100);
@@ -231,7 +275,7 @@
           dataField: 'Time Frame',
 
           headerCellTemplate: $('<p style="color: white">Time Frame</p>'),
-          sortOrder: 'asc',
+     //     sortOrder: 'asc',
           alignment: 'center'
         },
         {
