@@ -9,16 +9,16 @@ WHERE date > (date_trunc('day', now()) - INTERVAL '1 day')
 
 
 ,date_dpid as (
-select c.month_year, dp.dpid, sf.status, sf.success_manager, sf.actual_live_date, dp.name, dp.tableau_secret as dpsk
+select c.month_year, dp.dpid, sf.status, dp.status dp_status, sf.success_manager, sf.actual_live_date, dp.name, dp.tableau_secret as dpsk
 from fact.d_cal_month c
 cross join (
-  select distinct dpid, tableau_secret, name from dealer_partners) dp
+  select distinct dpid, tableau_secret, name, status from dealer_partners) dp
 
 LEFT JOIN public.custom_dealer_grouping cdg ON dp.dpid = cdg.dpid
 left join fact.salesforce_dealer_info sf on sf.dpid = cdg.dpid
 where c.month_year >= (date_trunc('day', now()) - INTERVAL '91 days')
-and sf.status = 'Live'
-group by 1,2,3,4,5,6,7
+and (sf.status = 'Live' or dp.status = 'Live')
+group by 1,2,3,4,5,6,7,8
 )
 
 ,in_store_shares as (
@@ -151,6 +151,7 @@ select
 
 , dd.name as "Dealership"
 , dd.status as "SF Status"
+, dd.dp_status as "DA Status"
 , dd.success_manager
 , dp.primary_make as "Primary Make"
 , to_char(dd.actual_live_date,'yyyy_mm_dd') as "SF Go Live"
@@ -204,5 +205,5 @@ LEFT JOIN pivot_orders_agg poa ON dd.month_year = poa.month_year AND dd.dpid = p
 LEFT JOIN in_store_shares iss ON dd.month_year = iss.month_year AND dd.dpid = iss.dpid
 LEFT JOIN in_store_prospects isp ON dd.month_year = isp.month_year AND dd.dpid = isp.dpid
 left join report_layer.vw_share_open_rate sor on dd.month_year=sor.month_year and dd.dpid= sor.dpid 
-group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25, 26, 27, 28, 29,30,31,32,33,34,35
+group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25, 26, 27, 28, 29,30,31,32,33,34,35,36
 ORDER BY dd.month_year::date desc, COALESCE(sdd."MATCHED SALE", 0) desc
