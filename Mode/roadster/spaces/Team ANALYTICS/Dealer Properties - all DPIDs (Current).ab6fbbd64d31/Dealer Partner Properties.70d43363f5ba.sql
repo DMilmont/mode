@@ -43,16 +43,17 @@ SELECT
        dp.dpid,
        admin.dealer_partner_id,
        dp.name,
+       dp.ga_tracking_id "Roadster's GA Property",
+       admin.properties ->> 'ga_accounts' "Customer GA Account",
+       admin.properties ->> 'gtm_account' "Customer GTM Container",
        case 
           when dp.dpid = 'roadster' then '-DEFAULT-'
           when admin.properties ->> 'reports' is null then '' 
           else 'CUSTOMIZED' 
-        end as "Custom Reports?",
-       dp.ga_tracking_id "GA2 Property",
-       admin.properties ->> 'ga_accounts' "GA Accounts",
-       admin.properties ->> 'gtm_account' "GTM Accounts",
+       end as "Custom Reports?",
        dp.price_unlock_mode,
-       case when admin.properties ->> 'embedded_checkout_frame' = 'TRUE' then 'Slide Out' else Null end as "Slide-out",
+       --admin.properties ->> 'embedded_checkout_frame' "Slide-out",
+       case when admin.properties ->> 'embedded_checkout_frame' = 'true' then 'Slide Out' else Null end as "Slide-out",
        admin.properties ->> 'cdk_extract_id' "CDK Sales Match",
        to_char(sf.actual_live_date, 'yyyy-mm-dd') "Go Live Date",
        dealer_visitors.count "Dealer Visitors past wk",
@@ -67,9 +68,10 @@ SELECT
        dp.primary_make,
        dp.inventory_type,
        dp.marketplace_type,
+       admin.properties ->> 'crm_vendor' "Dealer Admin CRM",
        dp.city,
        dp.state,
-       dp.zip,
+       --dp.zip,
        dp.timezone,
        sf.status "SF Status",
        dp.status "Dealer.Admin Status"
