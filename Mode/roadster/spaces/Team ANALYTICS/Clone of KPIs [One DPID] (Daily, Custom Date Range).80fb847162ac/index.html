@@ -1,0 +1,180 @@
+<div class="mode-header embed-hidden">
+  <h1>{{ title }}</h1>
+  <div id="subtitle_dealership"></div>
+  <p>{{ description }}</p>
+</div>
+<div class="mode-grid container">
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <mode-chart id="chart_f010465f2ee3" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <mode-chart id="chart_5a7e333553a8" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <mode-chart id="chart_2539a4857b8f" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <mode-chart id="chart_8e9d54ebdb7a" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <mode-chart id="chart_2cb96fa8c380" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <mode-chart id="chart_3682139ebd72" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <mode-chart id="chart_e923325598b5" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <mode-chart id="chart_2f859c36310f" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-6">
+      <mode-chart id="chart_5624c4d916d2" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row" data-row-height="small">
+    <div class="col-md-12">
+      <mode-table id="table_73d60ddc52c9" dataset="dataset" options="table_options"></mode-table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-table id="table_376ce2e817f6" dataset="dataset" options="table_options"></mode-table>
+    </div>
+  </div>
+</div>
+<script>
+  setInterval(function() {
+    var dealership_name = dataset.content[0]["Dealership"]; // assign variable 
+    document.getElementById("subtitle_dealership").innerHTML = dealership_name;
+    $("#subtitle_dealership").css("color", "black");
+    $("#subtitle_dealership").css("font-size", "30px");
+  }, 500);
+</script>
+<script>
+  setTimeout(function() {
+    var i;
+    // For the First 3 bar charts
+    for (i = 0; i < 2; i++) {
+      var chart = Highcharts.charts[i];
+      chart.update({
+        xAxis: {
+          minorTickLength: 0,
+          tickLength: 0,
+        },
+        yAxis: {
+          labels: {
+            enabled: false
+          },
+          gridLineColor: 'transparent'
+        }
+      });
+    }
+
+    // For instore shares bar chart
+    for (i = 5; i < 8; i++) {
+      var chart = Highcharts.charts[i];
+      chart.update({
+        xAxis: {
+          minorTickLength: 0,
+          tickLength: 0,
+        },
+        yAxis: {
+          labels: {
+            enabled: false
+          },
+          gridLineColor: 'transparent'
+        }
+      });
+    }
+
+    // for online orders chart    
+    for (i = 6; i < 7; i++) {
+      var chart = Highcharts.charts[i];
+      chart.update({
+        xAxis: {
+          minorTickLength: 0,
+          tickLength: 0,
+        },
+        yAxis: {
+          labels: {
+            enabled: false
+          },
+          gridLineColor: 'transparent'
+        }
+      });
+    }
+
+
+    // for line charts (Online Express Ratio) 
+    var chart = Highcharts.charts[3];
+    chart.update({
+      series: {
+        dataLabels: {
+          enabled: true,
+          format: '{y:.0f}%',
+          align: 'center',
+          style: {
+            fontSize: '11px',
+            fontWeight: '300'
+          }
+        }
+      }
+    });
+
+    // for line charts (Conversion to Online Prospects) 
+    var chart = Highcharts.charts[4];
+    chart.update({
+      series: {
+        dataLabels: {
+          enabled: true,
+          format: '{y:.0f}%',
+          align: 'center',
+          style: {
+            fontSize: '11px',
+            fontWeight: '300'
+          }
+        }
+      }
+    });
+
+
+    /// For ALL charts
+    //var i;
+    for (i = 0; i < 8; i++) {
+
+      var chart = Highcharts.charts[i];
+      chart.update({
+        xAxis: {
+          type: 'date',
+          labels: {
+            formatter: function() {
+              return Highcharts.dateFormat('%a %m/%e/%y', this.value);
+            }
+          }
+        },
+        yAxis: {
+          labels: {
+            enabled: false
+          },
+          gridLineColor: 'transparent'
+        }
+      });
+    }
+  }, 750);
+</script>
