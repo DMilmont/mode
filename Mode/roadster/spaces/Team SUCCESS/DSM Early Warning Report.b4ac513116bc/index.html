@@ -55,6 +55,7 @@
     <div class="row">
       <div class="col-md-12">
         <h2><u>Critical Problems</u></h2>
+        <h4>If your name is here, you need to contact your dealer partner and ask them to re-install the "Roadster Analytics Script" on their site.</h4>
       <mode-table id="table_8b070d86a10a" dataset="dataset" options="table_options"></mode-table>
       </div>
     </div>
@@ -62,47 +63,53 @@
     <div class="row">
       <div class="WebT">
         <div class="col-md-6">
-          <h3>Web Traffic</h3>
+          <h2><br><u>Web Traffic</u></h2>
+          <h4>These lines should never hit zero.</h4>
+
           <mode-chart id="chart_0fc947540e3a" dataset="dataset" options="chart_options" options.title.text="WebT"></mode-chart>
         </div>
       </div>
       <div class="ExpressT">
         <div class="col-md-6">
-          <h3>Express Traffic</h3>
+          <h3><u>Express Traffic</u></h3>
           <mode-chart id="chart_3ecc7b52da12" dataset="dataset" options="chart_options" options.title.text="ExpT"></mode-chart>
         </div>
       </div>
     </div>
     <div class="row">
-      <p> ▶ Dealers listed see a sudden and signifcant drop in Dealer Site / Express Store visits. </p>
-      <p> ▶ DSMs should run diagnostics to ensure GA Tags have not been removed / CTAs are working as expected. </p>
-      <p> ▶ See <a href="https://roadsterteam.atlassian.net/wiki/spaces/AN/pages/314114111/Early+Warning+System+Criteria" target="_blank">Confluence page</a> for documentation on how we detect these dealers. Feel free to add any comments.</p>
+      <p>Check site to see if GA Tags are up / CTAs are working as expected. <a href="https://roadsterteam.atlassian.net/wiki/spaces/AN/pages/333152257/How+to+detect+if+Roadster+Google+Analytic+Tags+are+up" target="_blank">How to detect if GA Tags are on a webpage.</a> </p>
+      <p>See <a href="https://roadsterteam.atlassian.net/wiki/spaces/AN/pages/314114111/Early+Warning+System+Criteria" target="_blank">Confluence page</a> for documentation on how we detect these dealers. Feel free to add any comments.</p>
     </div>
   </div>
   <div class="row" data-row-height="large">
     <div class="col-md-12">
-      <h2><u>Unexpected Drops</u></h2>
+      <h2><br><u>Unexpected Drops</u></h2>
+      <h4>The GRAY bar is the number of ES visitors we expected last week, based on history. 
+      <br>The RED bar is how many they actually got last week - and it's low.
+      <br>If your dealer is listed here, you should reach out to them to understand why they might have dropped.</h4>
       <mode-chart id="chart_ab32773c17a5" dataset="dataset" options="chart_options"></mode-chart>
     </div>
   </div>
       <div class="row">
-      <p> ▶ Dealers listed have seen a significant drop in their current week's express traffic compared to the previous month's weekly average. </p>
-      <p> ▶ Click on dealers name to see when drop off occurred. Run diagnostics on CTAs for express store </p>
-      <p> ▶ Click <a href="https://modeanalytics.com/roadster/reports/c6692ea0a8ca" target="_self">Here</a> to see all dealers for a given DSM</p>
+      <p> Click on dealers name to see when drop off occurred. Run diagnostics on CTAs for express store </p>
+      <p> Click <a href="https://modeanalytics.com/roadster/reports/c6692ea0a8ca" target="_self">Here</a> to see all dealers for a given DSM</p>
     </div>
   <div class="row" data-row-height="large">
     <div class="col-md-12">
-      <h2><u>Impressive Jumps</u></h2>
+      <h2><br><u>Impressive Jumps</u></h2>
+      <h4>The GRAY bar is the number of ES visitors we expected last week, based on history. 
+      <br>The GREEN bar is how many they actually got last week - and it's better than expected!
+      <br>If your dealer is listed here, you should reach out to congratulate them, understand what they change and share best practices with the team.</h4>
       <mode-chart id="chart_549986fb9872" dataset="dataset" options="chart_options" options.title.text="Jumps"></mode-chart>
     </div>
   </div>
         <div class="row">
-      <p> ▶ Dealers listed have seen a significant jump in their current week's express traffic compared to the previous month's weekly average. </p>
-      <p> ▶ If increase in express store traffic is due to an update in CTA's, share it with company as a case study</p>
+      <p> If increase in express store traffic is due to an update in CTA's, share it with company as a case study</p>
     </div>
   <div class="row">
     <div class="col-md-12">
       <h2><u>Dealers Not Sending Website Traffic by DSM</u></h2>
+      <h4>If your name is in the top half of this list, you need to work with your Dealer Partners to get the Analytics Script installed on their sites.</h4>
       <mode-chart id="chart_24bb77d70133" dataset="dataset" options="chart_options" options.title.text="GAWeb"></mode-chart>
     </div>
   </div>
@@ -118,9 +125,9 @@
 
         <base target="_self">
 
-        <p> ▶ These dealers are not sending Roadster their website traffic - please contact them to make sure the Roadster GA tags are implemented on their site. </p>
-        <p> ▶ Without website traffic, many of the key Roadster metrics are going to be 0 or ugly N/As.</p>
-        <p> ▶ This list excludes customers who have 'opted out'. If your customer wants to opt out, please send a slack message to #anlytx_L2_Support.</p>
+        <p>These dealers are not sending Roadster their website traffic - please contact them to make sure the Roadster GA tags are implemented on their site. </p>
+        <p>Without website traffic, many of the key Roadster metrics are going to be 0 or ugly N/As.</p>
+        <p>This list excludes customers who have 'opted out'. If your customer wants to opt out, please send a slack message to #anlytx_L2_Support.</p>
         <p><br></p>
       </mode-text>
     </div>
