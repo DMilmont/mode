@@ -34,11 +34,6 @@
       <mode-chart id="chart_3682139ebd72" dataset="dataset" options="chart_options"></mode-chart>
     </div>
   </div>
-  <div class="row" data-row-height="large">
-    <div class="col-md-12">
-      <mode-chart id="chart_e923325598b5" dataset="dataset" options="chart_options"></mode-chart>
-    </div>
-  </div>
   <div class="row">
     <div class="col-md-6">
       <mode-chart id="chart_2f859c36310f" dataset="dataset" options="chart_options"></mode-chart>
@@ -47,7 +42,7 @@
       <mode-chart id="chart_5624c4d916d2" dataset="dataset" options="chart_options"></mode-chart>
     </div>
   </div>
-  <div class="row" data-row-height="small">
+  <div class="row" data-row-height="medium">
     <div class="col-md-12">
       <mode-table id="table_73d60ddc52c9" dataset="dataset" options="table_options"></mode-table>
     </div>
@@ -69,22 +64,166 @@
 <script>
   setTimeout(function() {
     var i;
-    // For the First 3 bar charts
-    for (i = 0; i < 2; i++) {
-      var chart = Highcharts.charts[i];
-      chart.update({
-        xAxis: {
-          minorTickLength: 0,
-          tickLength: 0,
-        },
-        yAxis: {
-          labels: {
-            enabled: false
-          },
-          gridLineColor: 'transparent'
+
+    ////////////////// Dealer Website Visitors [AREA CHART]
+    var chart = Highcharts.charts[0];
+    chart.update({
+
+      chart: {
+        type: 'area'
+      },
+
+      series: {
+        fillColor: 'rgba(38,127,161,.10)',
+        lineColor: 'rgba(38,127,161,1)',
+        lineWidth: 2
+      },
+
+      xAxis: {
+        minorTickLength: 0,
+        tickLength: 0,
+        //labels: { formatter: function() {return Highcharts.dateFormat('%a, %b %e, %Y', this.value); } }
+      },
+
+      yAxis: {
+        //labels: {enabled: false}
+        //gridLineColor: 'transparent'
+      }
+
+    });
+
+
+    ////////////////// Online Roadster Users [AREA CHART]
+    var chart = Highcharts.charts[1];
+    chart.update({
+
+      chart: {
+        type: 'area'
+      },
+
+      series: {
+        fillColor: 'rgba(20,55,119,.10)',
+        lineColor: 'rgba(20,55,119,1)',
+        lineWidth: 2
+      },
+
+      xAxis: {
+        minorTickLength: 0,
+        tickLength: 0,
+        //labels: {formatter: function() {return Highcharts.dateFormat('%a, %b %e, %Y', this.value); }}
+      },
+
+      yAxis: {
+        //labels: {enabled: false}
+        //gridLineColor: 'transparent'
+      }
+
+    });
+
+
+    ////////////////// Online Roadster Prospects [AREA CHART]
+    var chart = Highcharts.charts[2];
+    chart.update({
+
+      chart: {
+        type: 'area'
+      },
+
+      series: {
+        fillColor: 'rgba(65,128,96,.10)',
+        lineColor: 'rgba(65,128,96,1)',
+        lineWidth: 2
+      },
+
+      xAxis: {
+        minorTickLength: 0,
+        tickLength: 0,
+        //labels: {formatter: function() {return Highcharts.dateFormat('%a, %b %e, %Y', this.value); }}
+      },
+
+      yAxis: {
+        //labels: {enabled: false}
+        //gridLineColor: 'transparent'
+      }
+
+    });
+
+    ////////////////// Online Express Ratio [Smooth Line CHART]
+    var chart = Highcharts.charts[3];
+    chart.update({
+
+      chart: {
+        type: 'spline'
+      },
+
+      series: {
+        //fillColor: 'rgba(65,128,96,.10)',
+        //lineColor: 'rgba(65,128,96,1)',
+        lineWidth: 3,
+        dataLabels: {
+          //enabled: true,
+          //format: '{y:.0f}%',
+          //align: 'center',
+          //style: {
+          //  fontSize: '11px',
+          //  fontWeight: '300'
+          //  }
         }
-      });
-    }
+      },
+
+      xAxis: {
+        minorTickLength: 0,
+        tickLength: 0,
+        //labels: {formatter: function() {return Highcharts.dateFormat('%a, %b %e, %Y', this.value); }}
+      },
+
+      yAxis: {
+        //labels: {enabled: false}
+        //gridLineColor: 'transparent'
+      }
+
+    });
+
+
+
+    ////////////////// Converstion to Prospect (Online)  [Smooth Line CHART]
+    var chart = Highcharts.charts[4];
+    chart.update({
+
+      chart: {
+        type: 'spline'
+      },
+
+      series: {
+        //fillColor: 'rgba(65,128,96,.10)',
+        //lineColor: 'rgba(65,128,96,1)',
+        lineWidth: 3,
+        dataLabels: {
+          //enabled: true,
+          //format: '{y:.0f}%',
+          //align: 'center',
+          //style: {
+          //  fontSize: '11px',
+          //  fontWeight: '300'
+          //  }
+        }
+      },
+
+      xAxis: {
+        minorTickLength: 0,
+        tickLength: 0,
+        //labels: {formatter: function() {return Highcharts.dateFormat('%a, %b %e, %Y', this.value); }}
+      },
+
+      yAxis: {
+        //labels: {enabled: false}
+        //gridLineColor: 'transparent'
+      }
+
+    });
+
+
+
 
     // For instore shares bar chart
     for (i = 5; i < 8; i++) {
@@ -93,6 +232,12 @@
         xAxis: {
           minorTickLength: 0,
           tickLength: 0,
+          type: 'date',
+          labels: {
+            formatter: function() {
+              return Highcharts.dateFormat('%a %m/%e/%y', this.value);
+            }
+          }
         },
         yAxis: {
           labels: {
@@ -110,57 +255,6 @@
         xAxis: {
           minorTickLength: 0,
           tickLength: 0,
-        },
-        yAxis: {
-          labels: {
-            enabled: false
-          },
-          gridLineColor: 'transparent'
-        }
-      });
-    }
-
-
-    // for line charts (Online Express Ratio) 
-    var chart = Highcharts.charts[3];
-    chart.update({
-      series: {
-        dataLabels: {
-          enabled: true,
-          format: '{y:.0f}%',
-          align: 'center',
-          style: {
-            fontSize: '11px',
-            fontWeight: '300'
-          }
-        }
-      }
-    });
-
-    // for line charts (Conversion to Online Prospects) 
-    var chart = Highcharts.charts[4];
-    chart.update({
-      series: {
-        dataLabels: {
-          enabled: true,
-          format: '{y:.0f}%',
-          align: 'center',
-          style: {
-            fontSize: '11px',
-            fontWeight: '300'
-          }
-        }
-      }
-    });
-
-
-    /// For ALL charts
-    //var i;
-    for (i = 0; i < 8; i++) {
-
-      var chart = Highcharts.charts[i];
-      chart.update({
-        xAxis: {
           type: 'date',
           labels: {
             formatter: function() {
@@ -176,5 +270,11 @@
         }
       });
     }
+
+
+
+
+
+
   }, 750);
 </script>
