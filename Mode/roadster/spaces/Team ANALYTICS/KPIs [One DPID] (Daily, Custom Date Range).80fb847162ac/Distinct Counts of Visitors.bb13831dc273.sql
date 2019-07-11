@@ -1,4 +1,6 @@
-WITH tab1 as (
+-- this query is taking too long, messing up the report.  
+
+/* WITH tab1 as (
   SELECT dpid, COUNT(DISTINCT gp.distinct_id) "Express Store Visitors"
   FROM public.ga2_pageviews gp
   INNER JOIN public.ga2_sessions gs ON gp.ga2_session_id = gs.id
@@ -24,3 +26,4 @@ and gp.timestamp <= '{{ end_date }}'
 and gs.timestamp >= '{{ start_date }}'  
 and gs.timestamp <= '{{ end_date }}'
 GROUP BY 1,2
+*/
