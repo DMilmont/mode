@@ -1,5 +1,7 @@
 
-SELECT distinct     dp.dpid,    sf.success_manager, sf.account_executive, sf.integration_manager
+
+
+SELECT distinct     dp.dpid,   dp.primary_make, sf.success_manager, sf.account_executive, sf.integration_manager, sf.status
   
 FROM public.crm_records crm
 
@@ -8,7 +10,8 @@ left join fact.salesforce_dealer_info sf on sf.dpid = dp.dpid
 
 where crm_type = 'dealer-socket'
   and crm.status = 'Sold'
-
+  and created_at > now()-'3 months'::interval
+  --and sf.status = 'live'
 order by dpid
 
   
