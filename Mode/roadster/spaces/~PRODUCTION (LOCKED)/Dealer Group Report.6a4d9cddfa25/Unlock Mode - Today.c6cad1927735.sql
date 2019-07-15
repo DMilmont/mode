@@ -86,6 +86,75 @@ AND date = (SELECT max(date) FROM dealer_partner_properties)
 ORDER BY date desc
 )
 
+,rolling_nps as (
+SELECT dp.name,
+             count(
+               CASE
+                 WHEN (r.recommend >= 9) THEN r.dealer_partner_id
+                 ELSE NULL :: integer
+                   END) AS rolling_promoters,
+             count(
+               CASE
+                 WHEN (r.recommend <= 6) THEN r.dealer_partner_id
+                 ELSE NULL :: integer
+                   END) AS rolling_detractors,
+             count(
+               CASE
+                 WHEN (r.recommend IS NOT NULL) THEN r.dealer_partner_id
+                 ELSE NULL :: integer
+                   END) AS rolling_total_reviews
+      FROM (rating r
+          JOIN dealer_partners dp ON ((dp.id = r.dealer_partner_id)))
+      WHERE r.timestamp >= date_trunc('day', now()) - '60 days'::interval
+      AND 
+      r.timestamp < date_trunc('day', now())
+      GROUP BY dp.name
+
+),
+
+lifetime as (
+SELECT dp.name ,
+             count(
+               CASE
+                 WHEN (r.recommend >= 9) THEN r.dealer_partner_id
+                 ELSE NULL :: integer
+                   END) AS lifetime_promoters,
+             count(
+               CASE
+                 WHEN (r.recommend <= 6) THEN r.dealer_partner_id
+                 ELSE NULL :: integer
+                   END) AS lifetime_detractors,
+             count(
+               CASE
+                 WHEN (r.recommend IS NOT NULL) THEN r.dealer_partner_id
+                 ELSE NULL :: integer
+                   END) AS lifetime_total_reviews
+      FROM (rating r
+          JOIN dealer_partners dp ON ((dp.id = r.dealer_partner_id)))
+      GROUP BY dp.name
+)
+
+,almost as (
+
+SELECT rolling_nps.*, 
+       lifetime_promoters, 
+       lifetime_detractors,
+       lifetime_total_reviews,
+       ROUND(((((rolling_nps.rolling_promoters) :: double precision / (NULLIF(rolling_nps.rolling_total_reviews, 0)) :: double precision) -
+           ((rolling_nps.rolling_detractors) :: double precision / (NULLIF(rolling_nps.rolling_total_reviews, 0)) :: double precision)) *
+          (100) :: double precision)::decimal, 2)                                AS rolling_nps,
+        ROUND(((((t.lifetime_promoters) :: double precision / (NULLIF(t.lifetime_total_reviews, 0)) :: double precision) -
+           ((t.lifetime_detractors) :: double precision / (NULLIF(t.lifetime_total_reviews, 0)) :: double precision)) *
+          (100) :: double precision)::decimal, 2)                                AS lifetime_nps,
+        'https://dealers.roadster.com/' || dp.dpid || '/ratings' ratings_urls
+FROM rolling_nps
+LEFT JOIN (
+SELECT *
+FROM lifetime) t on rolling_nps.name = t.name
+LEFT JOIN dealer_partners dp ON rolling_nps.name = dp.name
+
+ )
+
 SELECT 
 initcap("Dealership") "Dealership",
 CASE WHEN in_store_wizard = '' OR in_store_wizard = 'false' THEN 'x'
@@ -109,5 +178,9 @@ CASE
   CASE WHEN marketplace = 'centralized' THEN 'Centralized' 
     WHEN marketplace = 'express' THEN 'Express' 
     WHEN marketplace = 'delegated' THEN 'Delegated' 
-    ELSE '' END AS "Marketplace Type"
+    ELSE '' END AS "Marketplace Type",
+  rolling_nps,
+  lifetime_nps,
+  ratings_urls
 FROM almost_final
+LEFT JOIN almost ON almost_final."Dealership" = almost.name

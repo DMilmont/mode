@@ -12,14 +12,14 @@
   .mode-grid {
     margin-top: 80px;
   }
-  
+
   .right-side {
     position: fixed;
     top: 10px;
     left: 15px;
     margin-bottom: 20px;
     width: 300px;
-    z-index:10;
+    z-index: 10;
   }
 </style>
 <div class="row" data-row-height="small">
@@ -45,9 +45,9 @@
     <span id="title"></span>
   </h1>
 </div>
-  <div class="right-side">Month & Year
-    <div id="selectStatus"></div>
-  </div>
+<div class="right-side">Month &amp; Year
+  <div id="selectStatus"></div>
+</div>
 <div class="mode-grid container">
   <div class="row">
     <div class="col-md-12">
@@ -202,24 +202,24 @@
         valueField: dpids[i]
       });
     };
-    
+
     console.log(instore);
-  
+
     var dts = [];
     for (var i = 0; i < online_metrics_sum.length; i++) {
       dts.push(online_metrics_sum[i]['Date']);
     };
-    var unique_dts = [...new Set(dts)]; 
+    var unique_dts = [...new Set(dts)];
     unique_dts.sort();
     console.log(unique_dts);
-    
+
     $("#selectStatus").dxSelectBox({
-        dataSource: unique_dts,
-        value: unique_dts[unique_dts.length - 1],
-        onValueChanged: function(data) {
-            summ1.filter(["Date", "=", data.value]);
-            summ2.filter(["Date", "=", data.value]);
-        }
+      dataSource: unique_dts,
+      value: unique_dts[unique_dts.length - 1],
+      onValueChanged: function(data) {
+        summ1.filter(["Date", "=", data.value]);
+        summ2.filter(["Date", "=", data.value]);
+      }
     });
 
 
@@ -238,6 +238,10 @@
 
     $('#dealer_properties').dxDataGrid({
       dataSource: dealer_attributes,
+      showColumnLines: false,
+      showRowLines: true,
+      columnAutoWidth: true,
+      wordWrapEnabled: true,
       onCellPrepared: function(e) {
         if (e.rowType == "header") {
           e.cellElement.css('background', 'black')
@@ -245,6 +249,7 @@
       },
       masterDetail: {
         enabled: true,
+        
         template: function(container, options) {
           var dlr = options.data['Dealership']
           $("<div>").dxDataGrid({
@@ -286,7 +291,7 @@
           dataField: 'In-Store Purchase Wizard',
           alignment: 'center',
           dataType: 'string',
-          headerCellTemplate: $('<p style="color: white">In-Store Purchase Wizard</p>')
+          headerCellTemplate: $('<p style="color: white">In-StorePurchase Wizard</p>')
         },
         {
           dataField: 'Lead Type',
@@ -305,6 +310,18 @@
           alignment: 'center',
           dataType: 'date',
           headerCellTemplate: $('<p style="color: white">Marketplace Type</p>')
+        },
+        {
+          dataField: 'rolling_nps',
+          alignment: 'center',
+          dataType: 'number',
+          headerCellTemplate: $('<p style="color: white">60-Day Rolling NPS</p>'),
+        },
+                {
+          dataField: 'lifetime_nps',
+          alignment: 'center',
+          dataType: 'number',
+          headerCellTemplate: $('<p style="color: white">Lifetime NPS</p>'),
         },
       ],
     });
@@ -879,12 +896,10 @@
         },
       ],
     }).dxDataGrid("instance");
-    
-    summ1.filter(["Date", "=", unique_dts[(unique_dts.length - 1)]]);  
-    summ2.filter(["Date", "=", unique_dts[(unique_dts.length - 1)]]); 
-    summ3.filter(["Date", "=", unique_dts[(unique_dts.length - 1)]]); 
-    
-  });
-  
 
+    summ1.filter(["Date", "=", unique_dts[(unique_dts.length - 1)]]);
+    summ2.filter(["Date", "=", unique_dts[(unique_dts.length - 1)]]);
+    summ3.filter(["Date", "=", unique_dts[(unique_dts.length - 1)]]);
+
+  });
 </script>
