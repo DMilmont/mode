@@ -126,7 +126,17 @@
             caption: "Totals",
              dataField: "title",
             area: "column"
-          }, {
+          },  
+          {
+            dataField: "sessions",
+            caption: "Sessions",
+            area: "data",
+            summaryType: "sum",
+            format: {
+              type: "fixedPoint",
+              precision: 0
+            }
+          },{
             dataField: "users",
             caption: "Users",
             area: "data",
@@ -138,16 +148,6 @@
           },{
             dataField: "new_users",
             caption: "New Users",
-            area: "data",
-            summaryType: "sum",
-            format: {
-              type: "fixedPoint",
-              precision: 0
-            }
-          }, 
-          {
-            dataField: "sessions",
-            caption: "Sessions",
             area: "data",
             summaryType: "sum",
             format: {
