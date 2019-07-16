@@ -1,0 +1,302 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.common.css">
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.light.css">
+<link rel="stylesheet" media="screen" href="//d2yvqewjuuy0k6.cloudfront.net/fonts/232352/75E15E124468560E8.css">
+<script type="text/javascript" src="https://cdn3.devexpress.com/jslib/18.2.8/js/dx.all.js"></script>
+<style>
+  .chart-header {
+    display: none;
+  }
+
+  p {
+    font-size: medium;
+  }
+
+  BR {
+    clear: right
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  a:hover,
+  a:active,
+  a:focus {
+    color: darkred;
+    text-decoration: underline;
+  }
+
+  * {
+    font-size: 100%;
+    font-family: "Gotham SSm A", "Gotham SSm B", Georgia
+  }
+</style>
+<div class="mode-header embed-hidden">
+  <h1>{{ title }}</h1>
+  <p>{{ description }}</p>
+</div>
+
+<div class="mode-grid container">
+  <div class="row">
+    <div class="col-md-12">
+      <mode-chart id="chart_566e729f22fc" dataset="dataset" options="chart_options"></mode-chart>
+    
+      <mode-chart id="Summary_Pivot"></mode-chart>
+    </div>
+  </div>
+</div>
+  <div id="pivotgrid-chart"></div>
+<script>
+  var roadsterdx = {
+    version: 1,
+    getDataSource: function(queryName) {
+      // find the right data on the page, by name
+      var ii = 0;
+      var theSet = null;
+      for (ii = 0; ii < datasets.length; ii++) {
+        if (datasets[ii].queryName == queryName) {
+          theSet = datasets[ii].content;
+          break;
+        }
+      }
+      if (!theSet) {
+        theSet = [];
+      }
+
+      return theSet;
+
+    },
+  };
+  $(function() {
+/*     var pivotGridChart = $("#pivotgrid-chart").dxChart({
+        dataSource: summary,
+        commonSeriesSettings: {
+            type: "bar",
+            argumentField:"date",
+        },
+ 
+    }).dxChart("instance");
+   */
+    var summary = roadsterdx.getDataSource('GA_Metrics');
+    var pivotGrid = $("#Summary_Pivot").dxPivotGrid({
+      allowSortingBySummary: true,
+      allowFiltering: true,
+      showBorders: true,
+      showColumnGrandTotals: false,
+      showRowGrandTotals: false,
+      showRowTotals: false,
+      showColumnTotals: false,
+      fieldChooser: {
+        enabled: true,
+        height: 400
+      },
+      dataSource: {
+        retrieveFields: false,
+        fields: [{
+            caption: "Channel Grouping",
+            dataField: "channel_grouping",
+            area: "row",
+            width: 80,
+            alignment: 'center',
+            sortBySummaryField: 'Users',
+            sortOrder: 'desc'
+          },  
+          {
+            caption: "Session Type",
+            dataField: "session_type",
+            area: "row"
+          },
+          {
+            caption: "Prospect",
+            dataField: "prospect_flag",
+            area: "row"
+          },
+          {
+            caption: "Medium",
+            dataField: "medium",
+            area: "row"
+          },
+          {
+            caption: "Source",
+            dataField: "source",
+            area: "row"
+          }
+          , {
+            caption: "Totals",
+             dataField: "title",
+            area: "column"
+          }, {
+            dataField: "users",
+            caption: "Users",
+            area: "data",
+            summaryType: "sum",
+            format: {
+              type: "fixedPoint",
+              precision: 0
+            }
+          },{
+            dataField: "new_users",
+            caption: "New Users",
+            area: "data",
+            summaryType: "sum",
+            format: {
+              type: "fixedPoint",
+              precision: 0
+            }
+          }, 
+          {
+            dataField: "sessions",
+            caption: "Sessions",
+            area: "data",
+            summaryType: "sum",
+            format: {
+              type: "fixedPoint",
+              precision: 0
+            }
+          },{
+            dataField: "bounce",
+            caption: "Bounces",
+            area: "data",
+            summaryType: "sum",
+            visible: false,
+          }, {
+            caption: "Bounce Rate",
+            area: "data",
+            summaryType: "custom",
+            calculateSummaryValue: e => {
+              if (e.value('sessions') == 0) {
+                return 0;
+              } else {
+                return e.value('bounce') / e.value('sessions');
+              }
+
+            },
+
+            format: {
+              precision: 1,
+              type: 'percent'
+            },
+          }, 
+          
+          {
+            dataField: "pageviews",
+            caption: "Pageviews",
+            area: "data",
+            summaryType: "sum",
+            format: {
+              type: "fixedPoint",
+              precision: 0
+            },},     {
+            caption: "Pages / Session",
+            area: "data",
+            summaryType: "custom",
+            calculateSummaryValue: e => {
+              if (e.value('sessions') == 0) {
+                return 0;
+              } else {
+                return e.value('pageviews') / e.value('sessions');
+              }
+
+            },
+
+            format: {
+              type: "fixedPoint",
+              precision: 2
+            }
+          },
+
+          {
+            dataField: "duration",
+            caption: "Duration",
+            area: "data",
+             visible: false,
+            summaryType: "sum",
+            format: {
+              type: "fixedPoint",
+              precision: 0
+            }
+          },
+          {
+            caption: "Avg Session Duration",
+            area: "data",
+            summaryType: "custom",
+            calculateSummaryValue: e => {
+              if (e.value('sessions') == 0) {
+                return 0;
+              } else {
+                return Math.floor((e.value('duration') / e.value('sessions')) / 60) + ":" + ((e.value('duration') / e.value('sessions')) % 60 ?  Math.floor((e.value('duration') / e.value('sessions')) % 60): '00') ;
+                
+              }
+
+            },
+
+            format: {
+              type: "fixedPoint",
+              precision: 2
+            }
+          },{
+            caption: "Avg Session Duration",
+            area: "data",
+            summaryType: "custom",
+            visible:false,
+            calculateSummaryValue: e => {
+              if (e.value('sessions') == 0) {
+                return 0;
+              } else {
+                return e.value('duration') / e.value('sessions');
+                
+              }
+
+            },
+
+            format: {
+              type: "fixedPoint",
+              precision: 2
+            }
+          }
+          
+        ],
+        store: summary
+      }
+    }).dxPivotGrid("instance");
+    pivotGrid.bindChart(pivotGridChart, {
+   //     dataFieldsDisplayMode: "splitPanes",
+        alternateDataFields: true,
+    });
+  });
+</script>
+
+<script>
+   setTimeout(function() {
+    var i;
+
+    ////////////////// Dealer Website Visitors [AREA CHART]
+    var chart = Highcharts.charts[0];
+    chart.update({
+
+      chart: {
+        type: 'area'
+      },
+
+      series: {
+        fillColor: 'rgba(60,140,194,.10)',
+        lineColor: 'rgba(60,140,194,1)',
+        lineWidth: 2
+      },
+
+      xAxis: {
+        minorTickLength: 0,
+        tickLength: 0,
+                type: 'date',
+               labels: { formatter: function() {return Highcharts.dateFormat('%a, %b %e, %Y', this.value); } }
+      },
+
+      yAxis: {
+        //labels: {enabled: false}
+        //gridLineColor: 'transparent'
+      }
+
+    })
+   }, 750);
+</script>
