@@ -1,7 +1,7 @@
 WITH min_session_id AS
 ( SELECT distinct_id
         ,min(session_id) as min_session_id
-  FROM report_layer.ga_test_toyotawc_sessions
+  FROM report_layer.ga_test_toyotaleg_sessions
   WHERE date_local >= '{{ start_date }}'  
 and date_local <= '{{ end_date }}'  
 GROUP BY distinct_id
@@ -11,6 +11,8 @@ details as (SELECT medium
       ,channel_grouping
       ,session_type
       ,prospect_flag
+      ,new_used
+      ,srp_vdp
       ,date_local as date
       ,sum(case when bounce=true then 1 else 0 end ) as bounce
       ,count(1) as sessions
@@ -19,11 +21,11 @@ details as (SELECT medium
       ,sum(pageviews) as pageviews
       ,sum(duration) as duration
       ,'Summary' as title
-from report_layer.ga_test_toyotawc_sessions ga
+from report_layer.ga_test_toyotaleg_sessions ga
 LEFT JOIN min_session_id msi on ga.session_id=msi.min_session_id
 WHERE date_local >= '{{ start_date }}'  
 and date_local <= '{{ end_date }}'  
-group by 1,2,3,4,5,6
+group by 1,2,3,4,5,6,7,8
 ),
 detail_breakout as (SELECT 'Day' as type
       ,* 
@@ -36,6 +38,8 @@ select 'Week' as type
       ,channel_grouping
       ,session_type
       ,prospect_flag
+      ,new_used
+      ,srp_vdp
       ,date_trunc('week',date)
       ,sum(bounce)
       ,sum(sessions)
@@ -45,7 +49,7 @@ select 'Week' as type
       ,sum(duration)
       ,title
 FROM details
-GROUP by 2,3,4,5,6,7,title
+GROUP by 2,3,4,5,6,7,8,9,title
 
 UNION
 select 'Month' as type
@@ -54,6 +58,8 @@ select 'Month' as type
       ,channel_grouping
       ,session_type
       ,prospect_flag  
+      ,new_used
+      ,srp_vdp
       ,date_trunc('month',date)
       ,sum(bounce)
       ,sum(sessions)
@@ -63,7 +69,7 @@ select 'Month' as type
       ,sum(duration)
       ,title
 FROM details
-GROUP by 2,3,4,5,6,7,title
+GROUP by 2,3,4,5,6,7,8,9,title
 )
 SELECT * 
 FROM detail_breakout
