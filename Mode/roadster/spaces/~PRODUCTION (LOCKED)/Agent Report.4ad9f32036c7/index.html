@@ -44,7 +44,7 @@
     </div>
   </div>
   <div>
-    <p> Agent Role missing? Click <a id="change_me" href="https://dealers.roadster.com" target="_blank">here</a> to make a change to your job title. Updates can take up to 24 hours</p>
+    <p> Agent Role missing? Click <a id="change_me" href="https://dealers.roadster.com/users" target="_blank">here</a> to make a change to your job title. Updates can take up to 24 hours</p>
   </div>
 </div>
 <script>
@@ -141,6 +141,8 @@
           cellTemplate: function (cellElement, cellInfo) {
             var tipid = cellInfo.data.id;
             var sitetextid = cellInfo.data.id + "s";
+            console.log(tipid)
+            console.log(sitetextid)
             $("<div id=" + tipid + "></div><div id=" + sitetextid + "><div>").text(cellInfo.data['Certification Flag']).appendTo(cellElement);
             $("#" + tipid).dxTooltip({
                 target: "#" + sitetextid,
