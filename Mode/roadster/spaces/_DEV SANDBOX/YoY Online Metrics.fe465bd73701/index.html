@@ -1,0 +1,199 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.common.css">
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.light.css">
+<link rel="stylesheet" media="screen" href="//d2yvqewjuuy0k6.cloudfront.net/fonts/232352/75E15E124468560E8.css">
+<script type="text/javascript" src="https://cdn3.devexpress.com/jslib/18.2.8/js/dx.all.js"></script>
+
+--  
+
+
+<style>
+  * {
+    font-size: 100%;
+    font-family: "Gotham SSm A", "Gotham SSm B", Georgia;
+  }
+
+  .mode-grid {
+    margin-top: 80px;
+  }
+
+  .right-side {
+    position: fixed;
+    top: 10px;
+    left: 15px;
+    margin-bottom: 20px;
+    width: 300px;
+    z-index: 10;
+  }
+</style>
+<div class="mode-header embed-hidden">
+  <h1>{{ title }}</h1>
+  <p>{{ description }}</p>
+</div>
+<div class="mode-grid container">
+  <div class="row">
+    <div class="col-md-12">
+      <mode-chart id="online_metrics_summ"></mode-chart>
+    </div>
+  </div>
+</div>
+<script>
+  var roadsterdx = {
+    version: 1,
+    getDataSource: function(queryName) {
+      // find the right data on the page, by name
+      var ii = 0;
+      var theSet = null;
+      for (ii = 0; ii < datasets.length; ii++) {
+        if (datasets[ii].queryName == queryName) {
+          theSet = datasets[ii].content;
+          break;
+        }
+      }
+      if (!theSet) {
+        //console.log('did not find data ' + queryName);
+        // make an empty data array
+        theSet = [];
+      }
+      //console.log('returning data');
+      return theSet;
+      /*
+      return new DevExpress.data.DataSource({
+        // array of data
+        store: theSet,
+        // additional configuration options
+        // sort: "name",
+        // pageSize: 10
+      });
+      */
+    },
+  };
+
+
+  $(function() {
+    var online = roadsterdx.getDataSource('Online Metrics Data');
+    $('#online_metrics_summ').dxDataGrid({
+      dataSource: online,
+      showColumnLines: false,
+      showRowLines: true,
+      columnAutoWidth: true,
+      wordWrapEnabled: true,
+      onCellPrepared: function(e) {
+        if (e.rowType == "header") {
+          e.cellElement.css('background', 'black')
+        };
+        if (e.value == 0) {
+          e.cellElement.css('color', 'white')
+        }
+      },
+      columns: [{
+          dataField: 'Dealership',
+          caption: 'Rooftop',
+          alignment: 'center',
+          dataType: 'string',
+          sortOrder: 'desc',
+          headerCellTemplate: $('<p style="color: white">Rooftop</p>')
+        },
+        {
+          dataField: 'interval_time',
+          caption: 'YOY Metrics',
+          alignment: 'center',
+          dataType: 'string',
+          sortOrder: 'desc',
+          headerCellTemplate: $('<p style="color: white">YOY Metrics</p>')
+        },
+        // {
+        //   dataField: 'Dealer Visitors (text)',
+        //   alignment: 'center',
+        //   format: {
+        //     precision: 0,
+        //   },
+        //   headerCellTemplate: $('<p style="color: white">Dealer Visitors</p>')
+        // },
+        {
+          dataField: 'Online Express Visitors',
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 0,
+          },
+          headerCellTemplate: $('<p style="color: white">Express Visitors</p>')
+        },
+        // {
+        //   dataField: 'Online Express Ratio',
+        //   alignment: 'center',
+        //   dataType: 'number',
+        //   format: {
+        //     precision: 2,
+        //     type: 'percent'
+        //   },
+        //   headerCellTemplate: $('<p style="color: white">Online Express Ratio</p>')
+        // },
+        {
+          dataField: "Online Prospects",
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 0,
+          },
+          headerCellTemplate: $('<p style="color: white">Prospects</p>')
+        },
+        {
+          dataField: 'Prospect Conversion',
+          alignment: 'center',
+          dataType: 'number',
+          calculateCellValue: function (rowData) {
+                return (rowData["Online Prospects"] /  rowData['Online Express Visitors']);
+            },
+          format: {
+            precision: 1,
+            type: 'percent'
+          },
+          headerCellTemplate: $('<p style="color: white">Prospect Conversion</p>')
+        },
+        {
+          dataField: 'online_shares',
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 0,
+          },
+          headerCellTemplate: $('<p style="color: white">Online Shares</p>')
+        },
+        {
+          dataField: 'online_orders',
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 0,
+          },
+          headerCellTemplate: $('<p style="color: white">Online Orders</p>')
+        },
+        {
+          dataField: 'online_sales',
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 0,
+          },
+          headerCellTemplate: $('<p style="color: white">Roadster Matched Sales</p>')
+        },
+        {
+          dataField: 'Close Rate',
+          alignment: 'center',
+          dataType: 'number',
+          calculateCellValue: function (rowData) {
+                return (rowData["online_sales"] /  rowData['Online Prospects']);
+            },
+          format: {
+            precision: 1,
+            type: 'percent'
+          },
+          headerCellTemplate: $('<p style="color: white">Close Rate</p>')
+        },
+      ],
+    }).dxDataGrid("instance");
+
+
+  });
+</script>
