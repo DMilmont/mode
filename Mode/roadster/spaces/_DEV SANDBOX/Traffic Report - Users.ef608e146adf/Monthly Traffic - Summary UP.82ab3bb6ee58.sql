@@ -1,4 +1,4 @@
-WITH Overlay_Dealers as (select distinct dpid, properties->>'embedded_checkout_frame' 
+/*WITH Overlay_Dealers as (select distinct dpid, properties->>'embedded_checkout_frame' 
                       from dealer_partner_properties
                       left join dealer_partners dp on dealer_partner_properties.dealer_partner_id = dp.id
                       where  properties->>'embedded_checkout_frame' ='true'
@@ -89,25 +89,50 @@ price_unlock as (select dpid
                   where dpid='{{ dpid }}'
                   and month_year >= (date_trunc('day', now()) - INTERVAL '7 Months')
                   and month_year <= (date_trunc('day', now()) - INTERVAL '1 Months')
-                  )
+                  ),
+detail as  (SELECT ev.month_year + 1  as "Month Year"
+                  ,pu.price_unlock as "Price Unlock"
+                  ,case when ev.is_in_store is true then 'In-Store' else 'Online' end as "In Store"
+                  ,coalesce(dv.dealer_visits,0) as dealer_visitors
+                  ,ev.express_visits as express_visitors
+            
+                  ,ev.express_visits::decimal/dv.dealer_visits as online_express_ratio
+                  ,evs.express_visits_SRP as express_srp_visitors
+                  ,evv.express_visits_VDP as express_vdp_visitors
+                  ,op.prospect_count as prospect_count
+                  ,op.prospect_count::decimal/ev.express_visits as conversion_to_online_prospect
+            FROM express_visits ev
+            left join price_unlock pu on ev.month_year=pu.month_year
+            left join dealer_visits dv on ev.month_year=dv.month_year and ev.is_in_store =dv.is_in_store
+            left join express_visits_SRP evs on ev.month_year=evs.month_year and ev.is_in_store=evs.is_in_store
+            left join express_visits_VDP evv on ev.month_year=evv.month_year and ev.is_in_store=evv.is_in_store
+            left join online_prospects op on ev.month_year=op.month_year and ev.is_in_store=op.is_in_store
+            ),
 
+data as  (select to_char(d."Month Year", 'Mon YYYY') as "Month Year"
+                  ,d."Price Unlock"
+                  ,d."In Store"
+                  ,c.*
+            FROM detail d
+            , LATERAL (
+            VALUES
+            ('Dealer Visitors',d.dealer_visitors)
+            ,('Express Visitors',d.express_visitors)
+            --,('Online Express Ratio',d.online_express_ratio)
+            ,('Express SRP Visitors',d.express_srp_visitors)
+            ,('Express VDP Visitors',d.express_vdp_visitors)
+            ,('Prospect Count',d.prospect_count)
+            --,('Conversion to Online Prospect Count',d.conversion_to_online_prospect)
+            ) c (metric,value)
+)
 
-SELECT ev.month_year + 1  as "Month Year"
-      ,pu.price_unlock as "Price Unlock"
-      ,case when ev.is_in_store is true then 'In-Store' else 'Online' end as "In Store"
-      ,coalesce(dv.dealer_visits,0) as dealer_visitors
-      ,ev.express_visits as express_visitors
+select *
+      ,case when metric='Dealer Visitors' then 1
+            when metric='Express Visitors' then 2
+            when metric='Express SRP Visitors' then 3
+            when metric='Express VDP Visitors' then 4
+            when metric='Prospect Count' then 5
+            else 9999 end rnk
+from data
 
-      ,ev.express_visits::decimal/dv.dealer_visits as "Online Express Ratio"
-      ,evs.express_visits_SRP as "Express SRP Visitors"
-      ,evv.express_visits_VDP as "Express VDP Visitors"
-      ,op.prospect_count as prospect_count
-      ,op.prospect_count::decimal/ev.express_visits as "Conversion to Online Prospect"
-      ,'Summary' as title
-FROM express_visits ev
-left join price_unlock pu on ev.month_year=pu.month_year
-left join dealer_visits dv on ev.month_year=dv.month_year and ev.is_in_store =dv.is_in_store
-left join express_visits_SRP evs on ev.month_year=evs.month_year and ev.is_in_store=evs.is_in_store
-left join express_visits_VDP evv on ev.month_year=evv.month_year and ev.is_in_store=evv.is_in_store
-left join online_prospects op on ev.month_year=op.month_year and ev.is_in_store=op.is_in_store
-
+*/
