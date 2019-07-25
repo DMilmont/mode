@@ -1,7 +1,4 @@
 
-
-
-
 with 
 order_steps as (
 SELECT 
@@ -166,10 +163,11 @@ SELECT
       JOIN orders c ON ((order_cancelled.order_id = c.id)))
 )
 
---select * from order_steps where order_id = 297670
+
 
 , order_status as (SELECT
      order_id
+     ,dealer_partner_id
      ,max(user_id) "user_id"
      ,max(agent_id) "agent_id"
      ,min(timestamp) as "orderstart"
@@ -182,12 +180,12 @@ SELECT
      ,max(case when "Item Type" = 'Accessories Completed' then '✓' end) as "ac"
      ,max(case when "Item Type" = 'Final Deal Sent' then '✓' end) as "fds"
      ,max(case when "Item Type" = 'Final Deal Accepted' then '✓' end) as "fda"
-     ,max(case when "Item Type" = 'Order Completed' then 'Completed' end) as "complete"
+     ,max(case when "Item Type" = 'Order Completed' then 'Complete' end) as "complete"
      ,max(case when "Item Type" = 'Order Cancelled' then 'Cancelled' end) as "cancelled"
      
      from order_steps
 
-     group by order_id
+     group by 1,2
      )
 
 
@@ -204,14 +202,17 @@ SELECT
 
 select  
   dp.dpid as "DPID"
+  --,os.cancelled,os.complete 
   ,case when os.cancelled = 'Cancelled' then 'Cancelled' when os.complete = 'Complete' then 'Complete' else 'Open' end as "Status"
-  ,o.order_dbid as "Order ID"
-  --,os.order_id as "order_id"
+  ,o.order_dbid as "Application Order ID"
+  ,os.order_id as "order_id"
   ,case when u.in_store = true then 'In Store' else 'Online' end as "Source"
   ,agent.first_name || ' ' || agent.last_name as "Agent (bug... this isnt right)"
   ,os.os
   ,os.ds
   ,os.da
+  ,COALESCE(ti.status, case when tc.is_final = true then 'notrade' else '' end) "ts"
+  --,tc.is_final "Trade Complete Final?"
   ,os.sp 
   ,serviceplans.count as "sp#"
   ,to_char(serviceplans.amt,'L999,999') as "sp$"
@@ -235,16 +236,33 @@ select
   ,o.term as "Term"
   ,o.interest_rate as "Rate"
   ,o.mileage_limit as "Mile Lmt"
+  ,ti.vin "TradeIn VIN"
+  ,ti.source "TradeIn Source"
+  ,ti.trade_in_dbid "TradeIn ID" 
+  ,ti.model "TradeIn Model"
+  ,ti.year "TradeIn year"
+  ,ti.mileage "TradeIn Mileage"
+  ,tio.timestamp "TradeOffer Timestamp"
+  ,tio.trade_in_offer_dbid "TradeOffer ID"
+  ,tio.source "TradeOffer Source"
+  ,tc.timestamp "TradeComplete Timestamp"
+  ,tc.duration "TradeComplete Duration"
+
+  
 
 
 from order_status os
 left join public.orders o on o.id = os.order_id
 left join public.users u on u.id = os.user_id
 left join public.agents agent on agent.id = os.agent_id
-left join public.dealer_partners dp on dp.id = agent.dealer_partner_id
+left join public.dealer_partners dp on dp.id = os.dealer_partner_id
 left join accessories on accessories.order_id = os.order_id 
 left join serviceplans on serviceplans.order_id = os.order_id
+left join public.trade_ins ti on ti.order_id = os.order_id 
+left join public.trade_in_offer tio on tio.order_id = os.order_id
+left join public.trade_in_completed tc on tc.order_id = os.order_id  
 
-where dpid = 'oxmoortoyota'
+
+where dpid = '{{dpid}}'
 order by os.orderstart desc 
 
