@@ -9,8 +9,8 @@ GROUP BY 1, 2
 ),
 
 matched_sales as (
-SELECT date_trunc('month' :: text,
-                    ((f_sale.first_lead_timestamp) :: date) :: timestamp with time zone) AS month_year,
+SELECT (date_trunc('month' :: text,
+                    ((f_sale.first_lead_timestamp) :: date) :: timestamp with time zone)) AS month_year,
          f_sale.first_is_in_store                                                        AS is_in_store,
          count(DISTINCT
            CASE
