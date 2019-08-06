@@ -11,6 +11,7 @@ agent_prospects AS (
    FROM fact.f_prospect f
    WHERE
    dpid = '{{ dpid }}'
+   AND dpsk = {{ dpsk }}
    AND f.cohort_date_utc >= (date_trunc('month', now()) - '5 months'::interval)
    GROUP BY 1,2,3,4,5,6, date_trunc('month' :: text, (f.cohort_date_utc) :: timestamp with time zone)
   ),
@@ -27,6 +28,7 @@ online_prospects AS (
    FROM fact.f_prospect f
    WHERE
    dpid = '{{ dpid }}'
+  AND dpsk = {{ dpsk }}
    AND is_in_store = true
    AND f.cohort_date_utc >= (date_trunc('month', now()) - '5 months'::interval)
    GROUP BY 1,2,3,4,5,6, date_trunc('month' :: text, (f.cohort_date_utc) :: timestamp with time zone)
@@ -45,6 +47,7 @@ instore_prospects AS (
    FROM fact.f_prospect f
    WHERE
    dpid = '{{ dpid }}'
+  AND dpsk = {{ dpsk }}
    AND is_in_store <> true
    AND f.cohort_date_utc >= (date_trunc('month', now()) - '5 months'::interval)
    GROUP BY 1,2,3,4,5,6, date_trunc('month' :: text, (f.cohort_date_utc) :: timestamp with time zone)
@@ -62,6 +65,7 @@ express_visitors as (
    FROM fact.f_traffic
    WHERE 
    dpid = '{{ dpid }}'
+ AND dpsk = {{ dpsk }}
    AND  f_traffic.date >= (date_trunc('month', now()) - '5 months'::interval)
    GROUP BY 1,2,3,4,5,6,
    (date_trunc('month' :: text, (f_traffic.date) :: timestamp with time zone))

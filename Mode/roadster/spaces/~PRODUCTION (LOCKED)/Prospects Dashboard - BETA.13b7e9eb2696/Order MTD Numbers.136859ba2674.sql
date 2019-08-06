@@ -2,7 +2,8 @@
 with base_data as (
 SELECT *
 FROM fact.agg_mtd_prospects
-WHERE dpid = '{{ dpid }}'
+WHERE dpid = '{{ dpid }}' 
+ AND dpsk = '{{ dpsk }}'
 )
 
 SELECT 

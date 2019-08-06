@@ -188,6 +188,7 @@ LEFT JOIN orders o ON order_steps.order_id = o.id
 LEFT JOIN agents a ON order_steps.agent_id = a.id
 LEFT JOIN users u ON order_steps.user_id = u.id
 WHERE dpid = '{{ dpid }}'
+AND  tableau_secret = '{{ dpsk }}'
 )
 
 SELECT 

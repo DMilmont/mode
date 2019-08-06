@@ -5,16 +5,13 @@ with order_status as (
   SELECT order_id, 'completed' status
   FROM order_completed
 
-),
-
-tab2 as (
+)
 
 SELECT 
 'Prospects' title,
 dpid,
 name,
-ls.timestamp ts_prospects,
-extract(DAY from ls.timestamp) day_of_month,
+ls.timestamp,
 to_char(ls.timestamp, 'Month YYYY') mth_yr,
 to_char(ls.timestamp, 'DD Month YYYY') dt,
 to_char(ls.timestamp, 'HH') hr,
@@ -46,15 +43,4 @@ LEFT JOIN orders o ON ls.order_id = o.id
 LEFT JOIN order_status os ON ls.order_id = os.order_id
 WHERE timestamp >= (date_trunc('month', now()) - '6 months'::interval)
 AND dpid = '{{ dpid }}'
-)
-
-SELECT date_trunc('month', ts_prospects) dt,
-SUM(CASE WHEN in_store = True THEN exists END) online,
-SUM(CASE WHEN in_store <> True THEN exists END) in_store,
-ROUND((SUM(CASE WHEN in_store = True THEN exists END)::decimal / SUM(exists))*100, 1)|| ' %' online_perc,
-SUM(exists) total
-
-FROM tab2
-WHERE day_of_month <= EXTRACT(DAY FROM NOW())
-GROUP BY date_trunc('month', ts_prospects)
-ORDER BY date_trunc('month', ts_prospects)
+ AND tableau_secret = '{{ dpsk }}'

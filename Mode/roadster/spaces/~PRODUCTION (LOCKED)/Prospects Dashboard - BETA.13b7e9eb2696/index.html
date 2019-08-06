@@ -21,6 +21,10 @@
     margin-bottom: 40px;
     margin-top: 30px;
   }
+
+  .bottom_text {
+    text-align: left;
+  }
 </style>
 <div class="mode-header embed-hidden">
   <h1>{{ title }}</h1>
@@ -54,6 +58,14 @@
     </div>
   </div>
   <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_ea82726d-3f75-4537-d183-094509322155" dataset="dataset" options="text_options">
+        <h4>6 Month Lookback</h4>
+        <p><em>How have your lead types changed over time?</em></p>
+      </mode-text>
+    </div>
+  </div>
+  <div class="row">
     <div class="col-md-6">
       <mode-chart id="chart_09496dc623e6" dataset="dataset" options="chart_options"></mode-chart>
     </div>
@@ -65,7 +77,7 @@
     <div class="col-md-12">
       <mode-text id="text_ea82726d-3f75-4537-d183-094509322168" dataset="dataset" options="text_options">
         <h4>Lead Types</h4>
-        <p><em>What kind of prospects are being generated?</em></p>
+        <p><em>What kind of prospects are being generated? Hint: Click a cell!</em></p>
       </mode-text>
     </div>
   </div>
@@ -98,7 +110,7 @@
     <div class="col-md-12">
       <mode-text id="text_ea82726d-3f75-4537-d183-094509322105" dataset="dataset" options="text_options">
         <h4>Order Information</h4>
-        <p><em>View your Canceled, Completed, and Open Orders here</em></p>
+        <p><em>View your Canceled, Completed, and Open Orders here. Open Orders show the most recent step taken.</em></p>
       </mode-text>
     </div>
   </div>
@@ -629,7 +641,7 @@
           .updateDimensions();
       }
     }).dxPopup("instance");
-    
+
     var order_specific_info = $("#order_specific_info").dxPopup({
       width: 950,
       height: 800,

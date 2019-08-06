@@ -53,4 +53,5 @@ date_trunc('month', ls.timestamp) = (date_trunc('month', now()) - '1 month'::int
 )
 AND 
 dpid = '{{ dpid }}'
+AND  tableau_secret = '{{ dpsk }}'
 ORDER BY ls.timestamp desc
