@@ -897,6 +897,7 @@
       ],
     }).dxDataGrid("instance");
 
+    // Not related to the select box filter - hacky fix to date not showing up
     summ1.filter(["Date", "=", unique_dts[(unique_dts.length - 1)]]);
     summ2.filter(["Date", "=", unique_dts[(unique_dts.length - 1)]]);
     summ3.filter(["Date", "=", unique_dts[(unique_dts.length - 1)]]);
