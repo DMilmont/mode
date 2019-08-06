@@ -1,0 +1,187 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.common.css">
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.light.css">
+<link rel="stylesheet" media="screen" href="//d2yvqewjuuy0k6.cloudfront.net/fonts/232352/75E15E124468560E8.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdn3.devexpress.com/jslib/18.2.8/js/dx.all.js"></script>
+<style>
+  .chart-header {
+    display: none;
+  }
+
+  p {
+    font-size: medium;
+  }
+
+  BR {
+    clear: right
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  a:hover,
+  a:active,
+  a:focus {
+    color: darkred;
+    text-decoration: underline;
+  }
+
+  * {
+    font-size: 100%;
+    font-family: "Gotham SSm A", "Gotham SSm B", Georgia
+  }
+
+  .dx-icon {
+    display: inline-block;
+    font-size: inherit;
+    font-family: 'DXIcons' !important;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-transform: translate(0, 0);
+    transform: translate(0, 0);
+  }
+
+  .dx-pivotgrid .dx-expand-icon-container {
+    font-family: 'DXIcons' !important;
+  }
+</style>
+<script>
+  // Pull in the Data Group Name for displaying in the title tag
+  var data = datasets.filter(function(d) {
+    return d.queryName == "Session Metrics";
+  })[0].content;
+  var dpid = data[0]['dpid']
+
+  var link = "https://modeanalytics.com/roadster/reports/e6826888aa30?max_age=3600&param_dpid="
+  var link1 = "https://modeanalytics.com/roadster/reports/ef608e146adf?max_age=3600&param_dpid="
+  var link_p = link.concat(dpid);
+  var link_h = link1.concat(dpid);
+  document.getElementById("link_p").href = link_p;
+  document.getElementById("link_h").href = link_h;
+</script>
+<div class="mode-header embed-hidden">
+  <h1>{{ title }}</h1>
+  <h4>Click <a href="" id="link_p"> Here</a> to understand user behavior on dealer and express site.</h4>
+  <h4>Click <a href="" id="link_h"> Here</a> to view historic user metrics.</h4>
+  <h4>Please provide any feedback <a href="https://roadsterteam.atlassian.net/wiki/spaces/AN/pages/350388229/Traffic+Reporting+2.0+Feedback" target="_blank">Here </a></h4>
+  <p>{{ description }}</p>
+</div>
+<div class="mode-grid container">
+  <div class="row">
+    <div class="col-md-6">
+      <h3>Bounce Rate</h3>
+      <mode-chart id="chart_02052c77b103" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+
+    <div class="col-md-6">
+      <h3>New User Ratio</h3>
+      <mode-chart id="chart_ecbf6478c32f" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3>Average Session Duration</h3>
+      <mode-chart id="chart_a882f344d632" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-6">
+      <h3>Average Pages per Session</h3>
+      <mode-chart id="chart_864d0a4c2f53" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <h2><u>Notes</u></h2>
+  <p> ▶ Session metrics are available across the four differeent categories - update 'Segment' parameter then run</p>
+  <p> ▶ Session data is available after May 10th </p>
+</div>
+<script>
+  setTimeout(function() {
+    var i;
+    for (i = 0; i < Highcharts.charts.length; i++) {
+      var chart = Highcharts.charts[i];
+      if (chart.container.closest("#chart_02052c77b103") != null || chart.container.closest("#chart_ecbf6478c32f") != null) {
+        chart.update({
+          plotOptions: {
+            series: {
+              dataLabels: {
+                enabled: true,
+                formatter: function() {
+                  return '' +
+                    (this.y * 100).toFixed(1) + '%';
+                }
+              }
+            }
+          },
+          xAxis: {
+            minorTickLength: 0,
+            tickLength: 0,
+          },
+          yAxis: {
+            labels: {
+              enabled: false
+            },
+            gridLineColor: 'transparent'
+          }
+        });
+
+      }
+    }
+
+    var i;
+    for (i = 0; i < Highcharts.charts.length; i++) {
+      var chart = Highcharts.charts[i];
+      if (chart.container.closest("#chart_a882f344d632") != null || chart.container.closest("#chart_864d0a4c2f53") != null) {
+        chart.update({
+          plotOptions: {
+            series: {
+
+              dataLabels: {
+                enabled: true,
+
+              }
+            }
+          },
+          xAxis: {
+            minorTickLength: 0,
+            tickLength: 0,
+          },
+          yAxis: {
+            labels: {
+              enabled: false
+            },
+            gridLineColor: 'transparent'
+          }
+        });
+
+      }
+    }
+
+
+    var i;
+    for (i = 0; i < Highcharts.charts.length; i++) {
+      var chart = Highcharts.charts[i];
+      if (chart.container.closest("#chart_a882f344d632") != null) {
+        chart.update({
+          plotOptions: {
+            series: {
+
+              dataLabels: {
+                enabled: true,
+                formatter: function() {
+                  var time = this.y;
+                  console.log(time)
+                  var mins1 = parseInt(time / 60);
+                  var seconds = parseInt((parseInt(time % 60)));
+                  return (mins1 < 10 ? '0' + mins1 : mins1) + ':' + (seconds < 10 ? '0' + seconds : seconds);
+                },
+              }
+            }
+          },
+        });
+
+      }
+    }
+
+  }, 100);
+</script>
