@@ -5,6 +5,7 @@ is_in_store,
 COUNT(DISTINCT customer_email) ct_prospects
 FROM fact.f_prospect
 WHERE dpid = '{{ dpid }}'
+AND dpsk = '{{ dpsk }}'
 GROUP BY 1, 2
 ),
 
@@ -20,6 +21,7 @@ SELECT (date_trunc('month' :: text,
   FROM fact.f_sale
   WHERE (f_sale.days_to_close_from_first_lead < (91) :: double precision)
   AND dpid = '{{ dpid }}'
+  AND dpsk = '{{ dpsk }}'
   GROUP BY 1,2
 ),
 

@@ -17,4 +17,5 @@ WHERE dpid = '{{ dpid }}'
 AND item_type ILIKE '%matched%'
 AND first_prospect_type IS NOT NULL
 AND fs.days_to_close_from_last_lead <= 90
+AND dpsk = '{{ dpsk }}'
 ORDER BY sold_date desc
