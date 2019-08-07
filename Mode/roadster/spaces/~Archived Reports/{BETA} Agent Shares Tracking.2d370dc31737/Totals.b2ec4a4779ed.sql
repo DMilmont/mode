@@ -144,6 +144,9 @@ group by 1,2,Total_shares,Total_Clicked
 agent_ranks as (select time_frame
                        ,agent_full_name
                        ,row_number () over (partition by time_frame order by agent_score desc) as rnk
+                       ,(shares_contributed*100)::integer as shares_contributed
+                       ,(clicks_contributed*100)::integer as clicks_contributed
+                       ,(click_rate*100)::integer as click_rate
                 from agent_score       
                   )
 
@@ -154,6 +157,8 @@ select t.time_frame as "Time Frame"
       ,total_clicked as "Total Clicked"
       ,total_clicked/total_shares as "Click Thru Rate"
       ,agent_full_name as "Most Efficient Agent"
+      ,'* Highest Contributing Agent is determined by looking at an agents <br>share contribution <b>('||shares_contributed|| '%)</b>, click contribution <b>('||clicks_contributed|| '%)</b> and click thru rate <b>('||click_rate|| '%).</b>' as tooltip
+      ,'Clicked / Shares <b>('||total_clicked||'/'||total_shares||')</b>' as tooltip_click
 FROM totals t
 left join agent_ranks ar on ar.time_frame=t.time_frame and ar.rnk=1 
       

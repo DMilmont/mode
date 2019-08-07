@@ -62,6 +62,7 @@
   <div class="row" data-row-height="small">
     <div class="col-md-12">
       <mode-chart id="total_summary"></mode-chart>
+    <i>*Highest Contributing Agent is determined by looking at an agents share contribution, click contribution and click thru rate.</i>
     </div>
   </div>
   <h2><u>Dealer Performance</u></h2>
@@ -90,7 +91,7 @@
 
   <p> ▶ Share activity is counted based on date initially sent. Opened/Clicked status is based on current tracking information </p>
   <p> ▶ Please see <a href="https://roadsterteam.atlassian.net/wiki/spaces/AN/pages/325386285/Agent+Share+Tracking+Feedback" target="_blank">Confluence page</a> to provide any feedback on report</p>
-  <p> ▶ * Highest Contributing Agent is determined by looking at an agents share contribution, click contribution and click thru rate.
+
 </div>
 </div>
 <script>
@@ -98,7 +99,14 @@
     var data = datasets.filter(function(d) {
       return d.queryName == "Invalid Emails";
     })[0].content;
-
+   
+   console.log(data)
+    
+    var data1 = $.grep (data, function(d){
+    return d.Agent==="Amber K"; 
+    }
+    );
+ console.log(data1)
 
     if (data.length == 0) {
       $('.InvalidE').remove();
@@ -184,7 +192,7 @@
     for (index = 0; index < data.length; ++index) {
       Y_value.push(data[index]['Shares Clicked %']);
     }
-    console.log(Y_value)
+
 
 var shares_delivered = [];
 for (index = 0; index < data.length; ++index) {
@@ -257,12 +265,14 @@ var shares_delivered_max = Math.max.apply(Math,shares_delivered) ;
 
   $(function() {
     var summary = roadsterdx.getDataSource('Totals');
-    $('#total_summary').dxDataGrid({
+    var dataGrid=$('#total_summary').dxDataGrid({
       dataSource: summary,
       showColumnLines: false,
       showRowLines: true,
       columnAutoWidth: true,
       wordWrapEnabled: true,
+      allowColumnReordering: true,
+      
       onCellPrepared: function(e) {
         if (e.rowType == "header") {
           e.cellElement.css('background', 'black')
@@ -314,12 +324,44 @@ var shares_delivered_max = Math.max.apply(Math,shares_delivered) ;
             type: 'percent'
           },
           headerCellTemplate: $('<p style="color: white">Click Thru Rate</p>'),
-          alignment: 'center'
+          alignment: 'center',
+          //   cellTemplate: function (cellElement, cellInfo) {
+          //   var tipid2 = cellInfo.rowIndex;
+          //   var sitetextid2 = cellInfo.rowIndex + "s";
+  
+          //   $("<div id=" + tipid2 + "></div><div id=" + sitetextid2 + "><div>").text(cellInfo.data['Click Thru Rate']).appendTo(cellElement);
+          //   $("#" + tipid).dxTooltip({
+          //       target: "#" + sitetextid2,
+          //       showEvent: "dxhoverstart",
+          //       hideEvent: "dxhoverend",
+          //       position: "top",
+          //       contentTemplate: function (contentElement) {
+          //           contentElement.html("<p>"+cellInfo.data['tooltip_click'] +"</p>");
+          //       }
+          //   });
+          // } 
         },
         {
           dataField: 'Most Efficient Agent',
+          
           headerCellTemplate: $('<p style="color: white">Highest Contributing Agent *</p>'),
-          alignment: 'center'
+          alignment: 'center',
+          cellTemplate: function (cellElement, cellInfo) {
+            var tipid = cellInfo.rowIndex;
+            var sitetextid = cellInfo.rowIndex + "s";
+            console.log(tipid)
+            console.log(sitetextid)
+            $("<div id=" + tipid + "></div><div id=" + sitetextid + "><div>").text(cellInfo.data['Most Efficient Agent']).appendTo(cellElement);
+            $("#" + tipid).dxTooltip({
+                target: "#" + sitetextid,
+                showEvent: "dxhoverstart",
+                hideEvent: "dxhoverend",
+                position: "top",
+                contentTemplate: function (contentElement) {
+                    contentElement.html("<p>"+cellInfo.data['tooltip'] +"</p>");
+                }
+            });
+          } 
         }
       ],
     });
