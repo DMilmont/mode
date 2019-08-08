@@ -1,4 +1,30 @@
 
+
+
+/*
+
+-- Returns first 100 rows from roadster_salesforce.integration
+with sfstat as (SELECT date_trunc('day',insert_timestamp)::date "date", dpid, status
+FROM roadster_salesforce.integration
+WHERE insert_timestamp in (SELECT max(insert_timestamp) FROM roadster_salesforce.integration) 
+and contract_signed_date is not NULL 
+OR date_trunc('day', insert_timestamp) = (SELECT date_trunc('day', max(insert_timestamp) - '31 days'::interval) FROM roadster_salesforce.integration) 
+ORDER BY dpid)
+
+select
+  date,
+  sum(case when status = 'Live' then 1 else 0 end) as "Live",
+  sum(case when status = 'In Dev' then 1 else 0 end) as "In Dev"
+
+from sfstat
+group by 1
+order by 1 DESC
+
+*/
+
+
+
+
 select 
   case when status in ('Pending Cancellation','Wind Down','Live') then 'Live'
   else 'In Dev' end status
