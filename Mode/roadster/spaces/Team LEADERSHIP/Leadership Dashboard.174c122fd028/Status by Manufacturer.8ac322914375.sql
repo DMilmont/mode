@@ -31,9 +31,10 @@ WITH tab1 as (
            WHEN sf.status = 'Not Started' then '1) Not Started'
            --WHEN sf.status = 'Stalled' then '2) Stalled'
            WHEN sf.status = 'In Dev' then '2) In Dev'
-           WHEN sf.status = 'Live' then '3) Live'
+           WHEN sf.status = 'Live' and sf.actual_live_date < (now() - '6 months'::interval) then '3) Live (<6m)'
+           WHEN sf.status = 'Live' and sf.actual_live_date >= (now() - '6 months'::interval) then '4) Live (>6m)'
            --WHEN sf.status = 'Wind Down' then '5) Wind Down'
-           WHEN sf.status = 'Cancelled' then '4) Cancelled'
+           WHEN sf.status = 'Cancelled' then '5) Cancelled'
            ELSE ''
        END "Ordered Status",
        -- This counts 'dealer_name' because DPID isn't always filled out for new contracts in SFDC:  Bug Fix by Sean 20198_04_12
@@ -49,24 +50,27 @@ GROUP BY 1,2,3
 
  MFGLost as (
 select primary_manufacturer,
-sum(case when "Ordered Status" = '4) Cancelled' then count else 0 end ) as "cancelled",
-sum(case when "Ordered Status" = '3) Live' then count else 0 end ) as "live"
+sum(case when "Ordered Status" = '5) Cancelled' then count else 0 end ) as "cancelled",
+sum(case when "Ordered Status" = '4) Live (>6m)' then count else 0 end ) as "live",
+sum(case when "Ordered Status" = '3) Live (<6m)' then count else 0 end ) as "recent"
 from tab1
 group by 1
 ),
 
  MakeLost as (
 select primary_make,
-sum(case when "Ordered Status" = '4) Cancelled' then count else 0 end ) as "cancelled",
-sum(case when "Ordered Status" = '3) Live' then count else 0 end ) as "live"
+sum(case when "Ordered Status" = '5) Cancelled' then count else 0 end ) as "cancelled",
+sum(case when "Ordered Status" = '4) Live (>6m)' then count else 0 end ) as "live",
+sum(case when "Ordered Status" = '3) Live (<6m)' then count else 0 end ) as "recent"
 from tab1
 group by 1
 ),
 
 TotalLost as (
  select
-sum(case when "Ordered Status" = '4) Cancelled' then count else 0 end ) as "cancelled",
-sum(case when "Ordered Status" = '3) Live' then count else 0 end ) as "live"
+sum(case when "Ordered Status" = '5) Cancelled' then count else 0 end ) as "cancelled",
+sum(case when "Ordered Status" = '4) Live (>6m)' then count else 0 end ) as "live",
+sum(case when "Ordered Status" = '3) Live (<6m)' then count else 0 end ) as "recent"
 from tab1
 ),
 
@@ -77,16 +81,16 @@ SELECT
   tab1.primary_make as "Primary Make",
   tab1."Ordered Status" as "Status",
   CASE   
-      when tab1."Ordered Status" = '4) Cancelled' then -tab1.count
+      when tab1."Ordered Status" = '5) Cancelled' then -tab1.count
       else tab1.COUNT
   end as "Dealers",
-  MFGLost.cancelled / (MFGLost.live + MFGLost.cancelled) as "MFG Loss Rate",
-  MakeLost.cancelled / (MakeLost.live + MakeLost.cancelled) as "Make Loss Rate",
+  MFGLost.cancelled / (MFGLost.live + MFGLost.cancelled + MFGLost.recent) as "MFG Loss Rate",
+  MakeLost.cancelled / (MakeLost.live + MakeLost.cancelled + MakeLost.recent) as "Make Loss Rate",
   (MFGLost.live - (MFGLost.live+MFGLost.cancelled)*(1- TotalLost.cancelled / (TotalLost.Live + TotalLost.cancelled))) / sqrt ((MFGLost.live+MFGLost.cancelled)*(1- TotalLost.cancelled / (TotalLost.Live + TotalLost.cancelled)))*10 as "MfgChiSq",
   (MakeLost.live - (MakeLost.live+MakeLost.cancelled)*(1- TotalLost.cancelled / (TotalLost.Live + TotalLost.cancelled))) / sqrt ((MakeLost.live+MakeLost.cancelled)*(1- TotalLost.cancelled / (TotalLost.Live + TotalLost.cancelled)))*10 as "MakeChiSq",
   totalLost.live "Total Live",
   totalLost.cancelled "Total Cancelled",
-  totallost.cancelled / (totallost.live + totallost.cancelled) as "Total Loss Rate"
+  totallost.cancelled / (totallost.live + totallost.cancelled + totallost.recent) as "Total Loss Rate"
   
 FROM tab1
 left join MFGLost on MFGLost.primary_manufacturer = tab1.primary_manufacturer
@@ -111,9 +115,21 @@ rank_create as (
 )
 
 select 
-  to_char(rank_t,'00') || ' ' || "Primary Manufacturer" || ' (' || round("MFG Loss Rate"*100,0) || '% Lost)' as "Primary Manufacturer Display",
-  to_char(rank_v,'00') || ' ' || "Primary Make" || ' (' || round("Make Loss Rate"*100,0) || '% Lost)' as "Primary Make Display",
-  *
+  to_char(rank_t,'00') || ' ' || "Primary Manufacturer" || ' (' || round("MFG Loss Rate"*100,0) || '% Lost)' as "Primary Manufacturer Display"
+  ,to_char(rank_v,'00') || ' ' || "Primary Make" || ' (' || round("Make Loss Rate"*100,0) || '% Lost)' as "Primary Make Display"
+  ,"Primary Manufacturer"
+,"Primary Make"
+,"Status"
+,"Dealers"
+,round("MFG Loss Rate",2) as "MFG Loss Rate"
+,round("Make Loss Rate",2) as "Make Loss Rate"
+,round("MfgChiSq",1) as "MfgChiSq"
+,round("MakeChiSq",1) as "MakeChiSq"
+,"Total Live"
+,"Total Cancelled"
+,round("Total Loss Rate",2) as "Total Loss Rate"
+,"rank_t"
+,"rank_v"
  from rank_create
 order by 5 asc, 1 asc, 2 asc
 
