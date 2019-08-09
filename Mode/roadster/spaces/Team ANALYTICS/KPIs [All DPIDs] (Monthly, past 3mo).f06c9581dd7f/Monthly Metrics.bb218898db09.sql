@@ -1,4 +1,5 @@
 
+
 with cdk_api as (
 SELECT dp.dpid,
        case when properties -> 'cdk_extract_id' <> 'null' then 'CDK API' else '' end AS "cdk_api"
@@ -9,16 +10,15 @@ WHERE date > (date_trunc('day', now()) - INTERVAL '1 day')
 
 
 ,date_dpid as (
-select c.month_year, dp.dpid, sf.status, dp.status dp_status, sf.success_manager, sf.actual_live_date, dp.name, dp.tableau_secret as dpsk
+select c.month_year, dp.dpid, sf.status, dp.status dp_status, sf.success_manager, sf.actual_live_date, sf.dealer_group, dp.name, dp.tableau_secret as dpsk
 from fact.d_cal_month c
 cross join (
-  select distinct dpid, tableau_secret, name, status from dealer_partners) dp
-
-LEFT JOIN public.custom_dealer_grouping cdg ON dp.dpid = cdg.dpid
-left join fact.salesforce_dealer_info sf on sf.dpid = cdg.dpid
+  select distinct dpid, tableau_secret, name, status from dealer_partners
+  ) dp
+left join fact.salesforce_dealer_info sf on sf.dpid = dp.dpid
 where c.month_year >= (date_trunc('day', now()) - INTERVAL '91 days')
 and (sf.status = 'Live' or dp.status = 'Live')
-group by 1,2,3,4,5,6,7,8
+group by 1,2,3,4,5,6,7,8,9
 )
 
 ,in_store_shares as (
@@ -150,13 +150,14 @@ select
 
 
 , dd.name as "Dealership"
+, dd.dealer_group as "Dealer Group"
 , dd.status as "SF Status"
 , dd.dp_status as "DA Status"
 , dd.success_manager
 , dp.primary_make as "Primary Make"
 , to_char(dd.actual_live_date,'yyyy_mm_dd') as "SF Go Live"
 , cdk_api
-, dpp.properties ->> 'crm_vendor' "Dealer Admin CRM"
+--, dpp.properties ->> 'crm_vendor' "Dealer Admin CRM"
 , COALESCE(sdd."MATCHED SALE", 0) "Matched Sales w/i 90 Days"
 , COALESCE(sdd."ALL SALES", 0) "All Sales"
 , COALESCE(dt.visitors, 0) as "Dealer Visitors"
