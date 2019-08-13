@@ -33,7 +33,9 @@ LEFT JOIN (
 ) t ON 1=1
 ORDER BY month_year desc
 
-)
+),
+
+almost as (
 
 SELECT p.*, 
 ct_prospects "Total Unique Prospects",
@@ -41,4 +43,14 @@ ct_matched_sales "Total Matched Sales (90 Days)",
 (ct_matched_sales::decimal / ct_prospects) "90 Day Close Rate"
 FROM prospects p 
 LEFT JOIN matched_sales ms ON p.month_year = ms.month_year AND p.is_in_store = ms.is_in_store
-ORDER BY month_year desc
+
+)
+
+SELECT
+month_year, 
+SUM("Total Unique Prospects") "Total Unique Prospects",
+SUM("Total Matched Sales (90 Days)") "Total Matched Sales (90 Days)",
+SUM("Total Matched Sales (90 Days)") / SUM("Total Unique Prospects") "90 Day Close Rate"
+FROM almost
+GROUP BY 1
+ORDER BY 1
