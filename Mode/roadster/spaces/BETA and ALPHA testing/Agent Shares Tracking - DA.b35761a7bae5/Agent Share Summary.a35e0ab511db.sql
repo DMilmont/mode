@@ -1,20 +1,16 @@
 with date_dpid as (
-        select DISTINCT date(c.date) as date,dp.id ,dp.dpid, dp.name, primary_make
+        select DISTINCT date(c.date) as date,dp.id ,dp.dpid, dp.name, primary_make,timezone
         from fact.d_cal_date c
                cross join (
-          select distinct dps.id,dps.dpid, dps.tableau_secret, dps.name, primary_make
+          select distinct dps.id,dps.dpid, dps.tableau_secret, dps.name, primary_make,timezone
           from dealer_partners dps
-          where status = 'Live'
+          where status in ( 'Live','Pending')
             AND dpid='{{ dpid }}'
         ) dp
              --  where dpid not like '%demo%')dp
         where c.date <= (date_trunc('day', now()) - interval '1 days')
-          and CASE WHEN '{{ DateR }}'='Past 7 Days' and  c.date >= (date_trunc('day', now()) - interval '7 days') then 1
-                  WHEN  '{{ DateR }}'='Past 30 Days' and  c.date >= (date_trunc('day', now()) - interval '31 days') then 1 
-                  WHEN  '{{ DateR }}'='Past 60 Days' and  c.date >= (date_trunc('day', now()) - interval '61 days') then 1 
-                  WHEN  '{{ DateR }}'='Past 90 Days' and  c.date >= (date_trunc('day', now()) - interval '91 days') then 1 
-                  ELSE 0 END = 1
-        group by 1, 2, 3, 4, 5
+        and c.date >= (date_trunc('day', now()) - interval '31 days')  
+        group by 1, 2, 3, 4, 5, 6
       ),
      agent as (
        select first_name||' ' ||substr(last_name,1,1) as agent_name
@@ -25,11 +21,11 @@ with date_dpid as (
     leads_submitted as (
       select *
       from lead_submitted
-      where timestamp >= (date_trunc('day', now()) - interval '91 days')
+      where timestamp >= (date_trunc('day', now()) - interval '31 days')
         and type='SharedExpressVehicle'
         and sent_at is not null
     ),
-    detail as (SELECT dd.date
+    detail as (SELECT (dd.date AT TIME ZONE 'UTC') AT TIME ZONE dd.timezone as date
                     , dd.dpid
                     , dd.name
                     ,a.agent_name
@@ -51,7 +47,7 @@ with date_dpid as (
                    ,case when ls.clicked_at is not null
                           then 1 else 0 end as Click_Check
                FROM date_dpid dd
-                      left join leads_submitted ls on dd.id = ls.dealer_partner_id and date(dd.date) = date(ls.sent_at)
+                      left join leads_submitted ls on dd.id = ls.dealer_partner_id and date(dd.date) = date((ls.sent_at AT TIME ZONE 'UTC') AT TIME ZONE dd.timezone)
                       left join agent a on ls.agent_id=a.id
     )
 select date
@@ -67,12 +63,3 @@ select date
 from detail
 GROUP BY 1,2,3
 
-{% form %}
-
-DateR:
-    type: select
-    default: "Past 7 Days"
-    label: Date Range
-    options: ["Past 7 Days", "Past 30 Days","Past 60 Days","Past 90 Days"]
-    
-{% endform %}

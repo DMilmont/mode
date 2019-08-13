@@ -4,16 +4,12 @@ with date_dpid as (
                cross join (
           select distinct dps.id,dps.dpid, dps.tableau_secret, dps.name, primary_make
           from dealer_partners dps
-          where status = 'Live'
+          where status in ( 'Live','Pending')
             AND dpid='{{ dpid }}'
         ) dp
              --  where dpid not like '%demo%')dp
         where c.date <= (date_trunc('day', now()) - interval '1 days')
-          and CASE WHEN '{{ DateR }}'='Past 7 Days' and  c.date >= (date_trunc('day', now()) - interval '7 days') then 1
-                  WHEN  '{{ DateR }}'='Past 30 Days' and  c.date >= (date_trunc('day', now()) - interval '31 days') then 1   
-                  WHEN  '{{ DateR }}'='Past 60 Days' and  c.date >= (date_trunc('day', now()) - interval '61 days') then 1 
-                  WHEN  '{{ DateR }}'='Past 90 Days' and  c.date >= (date_trunc('day', now()) - interval '91 days') then 1 
-                  ELSE 0 END = 1
+        and c.date >= (date_trunc('day', now()) - interval '31 days')  
         group by 1, 2, 3, 4, 5
       ),
      agent as (
@@ -42,23 +38,10 @@ with date_dpid as (
               left join agent a on ls.agent_id=a.id
               left join all_leads_and_orders alo on 'UC' || ls.user_contact_dbid = alo.id
               WHERE sent_at <= (date_trunc('day', now()) - interval '1 days')
-               and CASE WHEN '{{ DateR }}'='Past 7 Days' and  sent_at >= (date_trunc('day', now()) - interval '7 days') then 1
-                  WHEN  '{{ DateR }}'='Past 30 Days' and  sent_at >= (date_trunc('day', now()) - interval '31 days') then 1   
-                  WHEN  '{{ DateR }}'='Past 60 Days' and  sent_at >= (date_trunc('day', now()) - interval '61 days') then 1 
-                  WHEN  '{{ DateR }}'='Past 90 Days' and  sent_at >= (date_trunc('day', now()) - interval '91 days') then 1 
-                  ELSE 0 END = 1
+                 and sent_at >= (date_trunc('day', now()) - interval '31 days')  
                   order by 1,3 asc
     )
     select * from detail
     
           
-{% form %}
-
-DateR:
-    type: select
-    default: "Past 30 Days"
-    label: Date Range
-    options: ["Past 7 Days", "Past 30 Days","Past 60 Days","Past 90 Days"]
-    
-{% endform %}
 

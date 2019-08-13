@@ -1,28 +1,19 @@
+
 with date_dpid as (
         select DISTINCT date(c.date) as date,dp.id ,dp.dpid, dp.name, primary_make
-        ,CASE WHEN '{{ DateR }}'='Past 7 Days' and  c.date >= (date_trunc('day', now()) - interval '7 days') then 'Current Week'
-              WHEN '{{ DateR }}'='Past 7 Days' and  c.date >= (date_trunc('day', now()) - interval '14 days') then 'Previous Week'
-              WHEN '{{ DateR }}'='Past 30 Days' and  c.date >= (date_trunc('day', now()) - interval '31 days') then 'Current 30 Days'
-              WHEN '{{ DateR }}'='Past 30 Days' and  c.date >= (date_trunc('day', now()) - interval '62 days') then 'Previous 30 Days'
-              WHEN '{{ DateR }}'='Past 60 Days' and  c.date >= (date_trunc('day', now()) - interval '61 days') then 'Current 60 Days'
-              WHEN '{{ DateR }}'='Past 60 Days' and  c.date >= (date_trunc('day', now()) - interval '122 days') then 'Previous 60 Days'
-              WHEN '{{ DateR }}'='Past 90 Days' and  c.date >= (date_trunc('day', now()) - interval '91 days') then 'Current 90 Days'
-              WHEN '{{ DateR }}'='Past 90 Days' and  c.date >= (date_trunc('day', now()) - interval '182 days') then 'Previous 90 Days'
+        ,CASE WHEN  c.date >= (date_trunc('day', now()) - interval '31 days') then 'Current 30 Days'
+              WHEN  c.date >= (date_trunc('day', now()) - interval '62 days') then 'Previous 30 Days'
               END as time_frame
         from fact.d_cal_date c
                cross join (
           select distinct dps.id,dps.dpid, dps.tableau_secret, dps.name, primary_make
           from dealer_partners dps
-          where status = 'Live'
+          where status in ( 'Live','Pending')
             AND dpid='{{ dpid }}'
         ) dp
              --  where dpid not like '%demo%')dp
         where c.date <= (date_trunc('day', now()) - interval '1 days')
-          and CASE WHEN '{{ DateR }}'='Past 7 Days' and  c.date >= (date_trunc('day', now()) - interval '14 days') then 1
-                  WHEN  '{{ DateR }}'='Past 30 Days' and  c.date >= (date_trunc('day', now()) - interval '62 days') then 1   
-                  WHEN  '{{ DateR }}'='Past 60 Days' and  c.date >= (date_trunc('day', now()) - interval '122 days') then 1 
-                  WHEN  '{{ DateR }}'='Past 90 Days' and  c.date >= (date_trunc('day', now()) - interval '182 days') then 1 
-                  ELSE 0 END = 1
+           and c.date >= (date_trunc('day', now()) - interval '62 days')  
         group by 1, 2, 3, 4, 5, c.date 
       ),
      agent as (
@@ -135,7 +126,7 @@ agent_score as (select am.time_frame
       ,sum(case when "E-Mail Status"='4. Clicked' or "E-Mail Status"='3. Opened - Not Clicked' or "E-Mail Status"='2. Delivered - Not Opened' then net_cnt end)::decimal/Total_shares as Shares_Contributed
       ,sum(case when "E-Mail Status"='4. Clicked' then net_cnt else 0 end)::decimal /Total_Clicked as Clicks_Contributed
       ,sum(case when "E-Mail Status"='4. Clicked' then net_cnt else 0 end)::decimal /sum(net_cnt) as Click_Rate
-      ,sum(case when "E-Mail Status"='4. Clicked' or "E-Mail Status"='3. Opened - Not Clicked' or "E-Mail Status"='2. Delivered - Not Opened' then net_cnt end)::decimal/Total_shares + 2*sum(case when "E-Mail Status"='4. Clicked' then net_cnt else 0 end)::decimal /Total_Clicked + sum(case when "E-Mail Status"='4. Clicked' then net_cnt else 0 end)::decimal /sum(net_cnt) as Agent_Score
+      ,sum(case when "E-Mail Status"='4. Clicked' or "E-Mail Status"='3. Opened - Not Clicked' or "E-Mail Status"='2. Delivered - Not Opened' then net_cnt end)::decimal/Total_shares + 3*sum(case when "E-Mail Status"='4. Clicked' then net_cnt else 0 end)::decimal /Total_Clicked + sum(case when "E-Mail Status"='4. Clicked' then net_cnt else 0 end)::decimal /sum(net_cnt) as Agent_Score
 from agent_metrics am
 left JOIN totals t on am.time_frame=t.time_frame
 group by 1,2,Total_shares,Total_Clicked
@@ -143,6 +134,9 @@ group by 1,2,Total_shares,Total_Clicked
 agent_ranks as (select time_frame
                        ,agent_full_name
                        ,row_number () over (partition by time_frame order by agent_score desc) as rnk
+                       ,(shares_contributed*100)::integer as shares_contributed
+                       ,(clicks_contributed*100)::integer as clicks_contributed
+                       ,(click_rate*100)::integer as click_rate
                 from agent_score       
                   )
 
@@ -153,16 +147,10 @@ select t.time_frame as "Time Frame"
       ,total_clicked as "Total Clicked"
       ,total_clicked/total_shares as "Click Thru Rate"
       ,agent_full_name as "Most Efficient Agent"
+      ,'* Highest Contributing Agent is determined by looking at an agents <br>share contribution <b>('||shares_contributed|| '%)</b>, click contribution <b>('||clicks_contributed|| '%)</b> and click thru rate <b>('||click_rate|| '%).</b>' as tooltip
 FROM totals t
 left join agent_ranks ar on ar.time_frame=t.time_frame and ar.rnk=1 
       
-{% form %}
+      
 
-DateR:
-    type: select
-    default: "Past 7 Days"
-    label: Date Range
-    options: ["Past 7 Days", "Past 30 Days","Past 60 Days","Past 90 Days"]
-    
-{% endform %}
 

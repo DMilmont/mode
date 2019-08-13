@@ -1,6 +1,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.common.css">
 <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.light.css">
+<link rel="stylesheet" media="screen" href="//d2yvqewjuuy0k6.cloudfront.net/fonts/232352/75E15E124468560E8.css">
 <script type="text/javascript" src="https://cdn3.devexpress.com/jslib/18.2.8/js/dx.all.js"></script>
 <style>
   .chart-header {
@@ -15,6 +16,11 @@
     clear: right
   }
 
+  .highcharts-background {
+    borderColor: #FFFFFF;
+    borderWidth: 5px;
+  }
+
   a {
     text-decoration: underline;
   }
@@ -26,11 +32,10 @@
     text-decoration: underline;
   }
 
-
-* {
- font-size: 100%;
- font-family: 'Verdana' !important;
-}
+  * {
+    font-size: 100%;
+    font-family: "Gotham SSm A", "Gotham SSm B", Georgia !important;
+  }
 </style>
 <script>
   // Pull in the Data Group Name for displaying in the title tag
@@ -40,9 +45,12 @@
   var title = data[0]['name']
   document.getElementById("titleHolder").innerHTML = title.toString();
   var dpid = data[0]['dpid']
-  var str1 = 'Agent Shares Tracking - '
+  var str1 = 'Shares Open Rate - '
   var link = "https://dealers.roadster.com/"
   var link_p = link.concat(dpid, '/users')
+  var link_d = link.concat(dpid, '/user_contacts?type=SharedExpressCar&grade=New%20%26%20Used&sort=created');
+  console.log(link_p)
+  console.log(link_d)
   $("#title").text(str1.concat(title))
 </script>
 <div class="mode-header embed-hidden">
@@ -51,65 +59,79 @@
   </h1>
   <p>{{ description }}</p>
 </div>
-<div class="mode-grid container">
-  <h2><u>Summary</u></h2>
-  <div class="row" data-row-height="small">
-    <div class="col-md-12">
-      <mode-chart id="total_summary"></mode-chart>
+<div id="t1" class="mode-grid container">
+  <div class="ReportT">
+    <h2><u>Summary</u></h2>
+    <div class="row" data-row-height="small">
+      <div class="col-md-12">
+        <mode-chart id="total_summary"></mode-chart>
+        <i>*Highest Contributing Agent is determined by looking at an agents share contribution, click contribution and click thru rate.</i>
+      </div>
     </div>
+    <h2><u>Dealer Performance</u></h2>
+    <div class="row" data-row-height="large">
+      <div class="col-md-12">
+        <mode-chart id="chart_148435cbd26e" dataset="dataset" options="chart_options"></mode-chart>
+      </div>
+    </div>
+    <h2><u>Agent Performance</u></h2>
+    <div class="row" data-row-height="large">
+      <div class="col-md-12">
+        <mode-chart id="chart_bbeadbd0b5be" dataset="dataset" options="chart_options"></mode-chart>
+      </div>
+    </div>
+
+    <div class="InvalidE">
+      <h2><u>Failed Shares - Invalid Email</u></h2>
+      <div class="row">
+        <div class="col-md-12">
+          <mode-table id="table_d4a7f7646236" dataset="dataset" options="table_options"></mode-table>
+        </div>
+      </div>
+    </div>
+    <p> ▶ See <a href="" id="link_d" target="_blank">Share Details</a> in Dealer Admin </p>
+    <p> ▶ Please click <a href="" id="link_p" target="_blank">Here</a> to update the <b>Job Title</b> for agents where its currently missing for dealer <span id="titleHolder"></span>. </p>
+    <p> ▶ Share activity is counted based on date initially sent. Opened/Clicked status is based on current tracking information </p>
+
+    </p>
   </div>
-  <h2><u>Dealer Performance</u></h2>
-  <div class="row" data-row-height="large">
-    <div class="col-md-12">
-      <mode-chart id="chart_148435cbd26e" dataset="dataset" options="chart_options"></mode-chart>
-    </div>
-  </div>
-  <h2><u>Agent Performance</u></h2>
-  <div class="row" data-row-height="large">
-    <div class="col-md-12">
-      <mode-chart id="chart_bbeadbd0b5be" dataset="dataset" options="chart_options"></mode-chart>
-    </div>
-  </div>
-  <div class="InvalidE">
-   <h2><u>Invalid Shares</u></h2>
-  <div class="row">
-    <div class="col-md-12">
-      <mode-table id="table_d4a7f7646236" dataset="dataset" options="table_options"></mode-table>
-    </div>
-  </div>
-    </div>
-  <p> ▶ Please click <a href="" id="link_p" target="_blank">Here</a> to update the <b>Job Title</b> for agents where its currently missing for dealer <span id="titleHolder"></span>. </p>
-  <p> ▶ Provide 'Date Range' and 'DPID' to see historical agent share activity at the dealer/agent level </p>
-  <p> ▶ Share activity is counted based on date initially sent. Opened/Clicked status is based on current tracking information </p>
-  <p> ▶ Please see <a href="https://roadsterteam.atlassian.net/wiki/spaces/AN/pages/325386285/Agent+Share+Tracking+Feedback" target="_blank">Confluence page</a> to provide any feedback on report</p>
-  <p> ▶ * Highest Contributing Agent is determined by looking at an agents share contribution, click contribution and click thru rate.
 </div>
 <script>
   setTimeout(function() {
-    var data = datasets.filter(function(d) {
-      return d.queryName == "Invalid Emails";
-    })[0].content;
+        var data = datasets.filter(function(d) {
+          return d.queryName == "Invalid Emails";
+        })[0].content;
 
 
-    if (data.length == 0) {
-      $('.InvalidE').remove();
-    }
-  }, 100);  
-  
+        if (data.length == 0) {
+          $('.InvalidE').remove();
+          var data = datasets.filter(function(d) {
+            return d.queryName == "Totals";
+          })[0].content;
+
+
+          if (data.length == 0) {
+            $('.ReportT').remove();
+            $('#t1').prepend("<h1><b>No share activity in last 30 days</b></h1>")
+
+
+          }
+        }, 100);
 </script>
-
 <script>
   document.getElementById("link_p").href = link_p;
+  document.getElementById("link_d").href = link_d;
   setTimeout(function() {
     console.log(link_p)
     var i;
     for (i = 0; i < Highcharts.charts.length; i++) {
 
       var chart = Highcharts.charts[i];
-      if (chart.container.closest("#chart_82dca96c0c8f") != null) {
+      if (chart.container.closest("#chart_bbeadbd0b5be") != null) {
         chart.update({
-
-
+          chart: {
+            borderColor: '#FFFFFF',
+          },
           xAxis: {
             minorTickLength: 0,
             tickLength: 0,
@@ -129,10 +151,11 @@
 
       /* Focus on Chart # i */
       var chart = Highcharts.charts[i];
-      if (chart.container.closest("#chart_756374192ece") != null) {
+      if (chart.container.closest("#chart_148435cbd26e") != null) {
         chart.update({
-
-
+          chart: {
+            borderColor: '#FFFFFF',
+          },
           xAxis: {
 
             type: 'date', //this forces the xAxis to be a 'date type'
@@ -150,12 +173,11 @@
           yAxis: [{
 
             gridLineColor: 'transparent' // hide vertical gridlines
-          },{
-            max:1,
-             tickInterval: .2,
-             alignTicks: false // Keeps max at 100% but shifts nuumbr
-          }
-        ]
+          }, {
+            max: 1,
+            tickInterval: .2,
+            alignTicks: false // Keeps max at 100% but shifts nuumbr
+          }]
         });
       }
     }
@@ -165,28 +187,28 @@
     }
     console.log(Y_value)
 
-var shares_delivered = [];
-for (index = 0; index < data.length; ++index) {
+    var shares_delivered = [];
+    for (index = 0; index < data.length; ++index) {
       shares_delivered.push(data[index]['Shares Delivered']);
     }
 
-var shares_delivered_max = Math.max.apply(Math,shares_delivered) ;
+    var shares_delivered_max = Math.max.apply(Math, shares_delivered);
 
     for (i = 0; i < Highcharts.charts.length; i++) {
 
       /* Focus on Chart # i */
       var chart = Highcharts.charts[i];
-      if (chart.container.closest("#chart_756374192ece") != null) {
-        
-        if (shares_delivered_max <8){
-  chart.update({
-    yAxis: {
-            max:10,
-            min:0
-                }
+      if (chart.container.closest("#chart_148435cbd26e") != null) {
+
+        if (shares_delivered_max < 8) {
+          chart.update({
+            yAxis: {
+              max: 10,
+              min: 0
+            }
           })
-      }
-        
+        }
+
         chart.addSeries({
           name: 'Shares Clicked %',
           data: Y_value,
@@ -254,8 +276,9 @@ var shares_delivered_max = Math.max.apply(Math,shares_delivered) ;
           dataField: 'Time Frame',
 
           headerCellTemplate: $('<p style="color: white">Time Frame</p>'),
-     //     sortOrder: 'asc',
-          alignment: 'center'
+          //     sortOrder: 'asc',
+          alignment: 'center',
+          width: 145
         },
         {
           dataField: 'Total Shares',
@@ -298,7 +321,25 @@ var shares_delivered_max = Math.max.apply(Math,shares_delivered) ;
         {
           dataField: 'Most Efficient Agent',
           headerCellTemplate: $('<p style="color: white">Highest Contributing Agent *</p>'),
-          alignment: 'center'
+          alignment: 'center',
+          cellTemplate: function (cellElement, cellInfo) {
+            var tipid = cellInfo.rowIndex;
+            var sitetextid = cellInfo.rowIndex + "s";
+            console.log(tipid)
+            console.log(sitetextid)
+            $("<div id=" + tipid + "></div><div id=" + sitetextid + "><div>").text(cellInfo.data['Most Efficient Agent']).appendTo(cellElement);
+            $("#" + tipid).dxTooltip({
+                target: "#" + sitetextid,
+                showEvent: "dxhoverstart",
+                hideEvent: "dxhoverend",
+                position: "top",
+                contentTemplate: function (contentElement) {
+                    contentElement.html("<p>"+cellInfo.data['tooltip'] +"</p>");
+                },
+                
+            });
+          }
+          
         }
       ],
     });
