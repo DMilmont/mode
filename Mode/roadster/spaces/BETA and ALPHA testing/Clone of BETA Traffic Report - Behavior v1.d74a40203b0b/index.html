@@ -1,0 +1,387 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.common.css">
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.light.css">
+<link rel="stylesheet" media="screen" href="//d2yvqewjuuy0k6.cloudfront.net/fonts/232352/75E15E124468560E8.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdn3.devexpress.com/jslib/18.2.8/js/dx.all.js"></script>
+<style>
+  .chart-header {
+    display: none;
+  }
+
+  p {
+    font-size: medium;
+  }
+
+  BR {
+    clear: right
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  a:hover,
+  a:active,
+  a:focus {
+    color: darkred;
+    text-decoration: underline;
+  }
+
+  * {
+    font-size: 100%;
+    font-family: "Gotham SSm A", "Gotham SSm B", Georgia 
+  }
+  
+.dx-icon {
+  display: inline-block;
+  font-size: inherit;
+  font-family: 'DXIcons'!important;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-transform: translate(0, 0);
+          transform: translate(0, 0);
+}
+
+.dx-pivotgrid .dx-expand-icon-container {
+  font-family: 'DXIcons'!important;
+}
+</style>
+
+<script>
+  // Pull in the Data Group Name for displaying in the title tag
+  var data = datasets.filter(function(d) {
+    return d.queryName == "GA_Metrics";
+  })[0].content;
+  var dpid = data[0]['dpid']
+
+  var link = "https://modeanalytics.com/roadster/reports/ef608e146adf?max_age=3600&param_dpid="
+  var link1="https://modeanalytics.com/roadster/reports/e566cf30926b?max_age=3600&param_dpid="
+  var link_p = link.concat(dpid);
+  var link_h =link1.concat(dpid);
+ document.getElementById("link_p").href = link_p;
+document.getElementById("link_h").href = link_h;
+</script>
+<h1>Traffic Report - Behavior</h1>
+  <!--<h4>Click <a href="" id="link_p"> Here</a> to view historic user metrics.</h4>-->
+  <!--<h4>Click <a href="" id="link_h"> Here</a> to view session metrics broken out by segments.</h4>-->
+  <!--<h4>Please provide any feedback <a href="https://roadsterteam.atlassian.net/wiki/spaces/AN/pages/350388229/Traffic+Reporting+2.0+Feedback" target="_blank" >Here </a></h4>-->
+<div class="row">
+  <div class="col-md-12">
+    <mode-chart id="chart_435769ef6158" dataset="dataset" options="chart_options"></mode-chart>
+
+  </div>
+</div>
+<mode-chart id="Summary_Pivot"></mode-chart>
+  </div>
+  <h2><u>Notes</u></h2>
+   <p> ▶ Data table is Pivot-Grid which is meant to mimic functionality from Pivot Table. All fields are customizable. <a href="https://roadsterteam.atlassian.net/wiki/spaces/AN/pages/350388225/Pivot+Grid+Walkthrough" >See Tutorial.</a></p>
+   <p> ▶ Sessions are segmented using categories on field panel. Field Panel is draggable and can be reordered/used as filters in order to analyze desired grouping</p>
+   <p> ▶ Sessions are most granular way of classifying behavior. Users with multiple sessions - we capture all sessions but only count the user once (earliest session)</p>
+   <p> ▶ Prospect sessions are defined as any sessions started by a User who becomes a Prospect in any of their sessions</p>
+    <p>▶ Session data is available after May 10th </p>
+</div>
+<script>
+  var roadsterdx = {
+    version: 1,
+    getDataSource: function(queryName) {
+      // find the right data on the page, by name
+      var ii = 0;
+      var theSet = null;
+      for (ii = 0; ii < datasets.length; ii++) {
+        if (datasets[ii].queryName == queryName) {
+          theSet = datasets[ii].content;
+          break;
+        }
+      }
+      if (!theSet) {
+        theSet = [];
+      }
+
+      return theSet;
+
+    },
+  };
+  $(function() {
+    /*     var pivotGridChart = $("#pivotgrid-chart").dxChart({
+            dataSource: summary,
+            commonSeriesSettings: {
+                type: "bar",
+                argumentField:"date",
+            },
+     
+        }).dxChart("instance");
+       */
+    var summary = roadsterdx.getDataSource('GA Metrics');
+    var zip = new JSZip();
+
+    var pivotGrid = $("#Summary_Pivot").dxPivotGrid({
+      allowSortingBySummary: true,
+      allowFiltering: true,
+      showBorders: true,
+      showColumnGrandTotals: false,
+      showRowGrandTotals: false,
+      showRowTotals: false,
+      showColumnTotals: false,
+      fieldPanel: {
+        showColumnFields: false,
+        showDataFields: false,
+        showFilterFields: true,
+        showRowFields: true,
+        allowFieldDragging: true,
+        visible: true
+      },
+      headerFilter: {
+        allowSearch: true,
+        showRelevantValues: true,
+        width: 300,
+        height: 400
+      },
+      // fieldChooser: {
+      //   enabled: true,
+      //   height: 400
+      // },
+  "export": {
+            enabled: true,
+            fileName: "traffic_users"
+        },
+      dataSource: {
+        retrieveFields: false,
+        export: {
+          enable: true
+        },
+        fields: [{
+            caption: "Channel Grouping",
+            dataField: "channel_grouping",
+            area: "row",
+            width: 100,
+            alignment: 'center',
+            sortBySummaryField: 'Users',
+            sortOrder: 'desc',
+            allowFiltering: true,
+          },
+          {
+            caption: "Session Type",
+            dataField: "session_type",
+            area: "row",
+
+          }, {
+            caption: "New/Used",
+            dataField: "new_used",
+            area: "row"
+          },
+          {
+            caption: "SRP/VDP",
+            dataField: "srp_vdp",
+            area: "row"
+          },
+          {
+            caption: "Prospect",
+            dataField: "prospect_flag",
+            area: "row"
+          },
+          {
+            caption: "Medium",
+            dataField: "medium",
+            area: "row"
+          },
+          {
+            caption: "Source",
+            dataField: "source",
+
+            area: "row"
+          }, {
+            caption: "In-Store",
+            dataField: "in_store_flag",
+
+            area: "filter",
+            filterType: 'include',
+            filterValues: ['Online'],
+          },
+          {
+            caption: "Totals",
+            dataField: "title",
+            area: "column"
+          },
+          {
+            dataField: "sessions",
+            caption: "Sessions",
+            area: "data",
+            summaryType: "sum",
+            allowFiltering: false,
+            format: {
+              type: "fixedPoint",
+              precision: 0
+            }
+          }, {
+            dataField: "users",
+            caption: "Users",
+            area: "data",
+            summaryType: "sum",
+            format: {
+              type: "fixedPoint",
+              precision: 0
+            }
+          }, {
+            dataField: "new_users",
+            caption: "New Users",
+            area: "data",
+            summaryType: "sum",
+            format: {
+              type: "fixedPoint",
+              precision: 0
+            }
+          }, {
+            dataField: "bounce",
+            caption: "Bounces",
+            area: "data",
+            summaryType: "sum",
+            visible: false,
+          }, {
+            caption: "Bounce Rate",
+            area: "data",
+            summaryType: "custom",
+            calculateSummaryValue: e => {
+              if (e.value('sessions') == 0) {
+                return 0;
+              } else {
+                return e.value('bounce') / e.value('sessions');
+              }
+
+            },
+
+            format: {
+              precision: 1,
+              type: 'percent'
+            },
+          },
+
+          {
+            dataField: "pageviews",
+            caption: "Pageviews",
+            visible: false,
+            area: "data",
+            summaryType: "sum",
+            format: {
+              type: "fixedPoint",
+              precision: 0
+            },
+          }, {
+            caption: "Pages / Session",
+            area: "data",
+            summaryType: "custom",
+            calculateSummaryValue: e => {
+              if (e.value('sessions') == 0) {
+                return 0;
+              } else {
+                return e.value('pageviews') / e.value('sessions');
+              }
+
+            },
+
+            format: {
+              type: "fixedPoint",
+              precision: 2
+            }
+          },
+
+          {
+            dataField: "duration",
+            caption: "Duration",
+            area: "data",
+            visible: false,
+            summaryType: "sum",
+            format: {
+              type: "fixedPoint",
+              precision: 0
+            }
+          },
+          {
+            caption: "Avg Session Duration",
+            area: "data",
+            summaryType: "custom",
+            calculateSummaryValue: e => {
+              if (e.value('sessions') == 0) {
+                return 0;
+              } else {
+                return Math.floor((e.value('duration') / e.value('sessions')) / 60) + ":" + ((e.value('duration') / e.value('sessions')) % 60 ? ('0' + Math.floor((e.value('duration') / e.value('sessions')) % 60)).slice(-2) : '00');
+
+              }
+
+            },
+
+            format: {
+              type: "fixedPoint",
+              precision: 2
+            }
+          }, {
+            caption: "Avg Session Duration",
+            area: "data",
+            summaryType: "custom",
+            visible: false,
+            calculateSummaryValue: e => {
+              if (e.value('sessions') == 0) {
+                return 0;
+              } else {
+                return e.value('duration') / e.value('sessions');
+
+              }
+
+            },
+
+            format: {
+              type: "fixedPoint",
+              precision: 2
+            }
+          }
+
+        ],
+        store: summary
+      }
+    }).dxPivotGrid("instance");
+    /*    pivotGrid.bindChart(pivotGridChart, {
+       //     dataFieldsDisplayMode: "splitPanes",
+            alternateDataFields: true,
+        });
+        */
+  });
+</script>
+<script>
+  setTimeout(function() {
+    var i;
+
+    ////////////////// Dealer Website Visitors [AREA CHART]
+    var chart = Highcharts.charts[0];
+    chart.update({
+
+      chart: {
+        type: 'area'
+      },
+
+      series: {
+        fillColor: 'rgba(60,140,194,.10)',
+        lineColor: 'rgba(60,140,194,1)',
+        lineWidth: 2
+      },
+
+      xAxis: {
+        minorTickLength: 0,
+        tickLength: 0,
+        tickInterval: 3600000 * 24,
+        type: 'date',
+        labels: {
+          formatter: function() {
+            return Highcharts.dateFormat('%a, %b %e, %Y', this.value);
+          }
+        }
+      },
+
+      yAxis: {
+        //labels: {enabled: false}
+        //gridLineColor: 'transparent'
+      }
+
+    })
+  }, 750);
+</script>
