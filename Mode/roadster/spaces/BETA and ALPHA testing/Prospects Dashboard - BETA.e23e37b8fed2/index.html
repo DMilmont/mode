@@ -1,0 +1,717 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.common.css">
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.light.css">
+<link rel="stylesheet" media="screen" href="//d2yvqewjuuy0k6.cloudfront.net/fonts/232352/75E15E124468560E8.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdn3.devexpress.com/jslib/18.2.8/js/dx.all.js"></script>
+<style>
+  * {
+    font-size: 100%;
+    font-family: "Gotham SSm A", "Gotham SSm B", Georgia;
+  }
+
+  .b {
+    text-algin: left !important;
+  }
+
+  .right-side {
+    position: absolute;
+    right: 7px;
+    top: 3px;
+    margin-bottom: 40px;
+    margin-top: 30px;
+  }
+
+  .bottom_text {
+    text-align: left;
+  }
+</style>
+<div class="mode-header embed-hidden">
+  <h1>{{ title }}</h1>
+  <p>{{ description }}</p>
+</div>
+<div class="mode-grid container">
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_80045e99-4135-4b91-ec49-ec2721db270a" dataset="dataset" options="text_options">
+        <p>Manage your Leads &amp; Orders here</p>
+      </mode-text>
+    </div>
+  </div>
+  <div></div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_ea82726d-3f75-4537-d183-094509322100" dataset="dataset" options="text_options">
+        <h4>Lead Movement</h4>
+        <p><em>Are customers interacting with you differently over time?</em></p>
+      </mode-text>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <mode-chart id="chart_d47b3e435788" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-6">
+      <mode-chart id="chart_a514e4586001" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_ea82726d-3f75-4537-d183-094509322155" dataset="dataset" options="text_options">
+        <h4>6 Month Lookback</h4>
+        <p><em>How have your lead types changed over time?</em></p>
+      </mode-text>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <mode-chart id="chart_21573122e523" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-6">
+      <mode-chart id="chart_fcbfad15a48a" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_ea82726d-3f75-4537-d183-094509322168" dataset="dataset" options="text_options">
+        <h4>Lead Types</h4>
+        <p><em>What kind of prospects are being generated? Hint: Click a cell!</em></p>
+      </mode-text>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-chart id="prospect"></mode-chart>
+      <div id="lead_specific_info"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_ea82726d-3f75-4537-d183-094509322102" dataset="dataset" options="text_options">
+        <h4>Orders by the numbers</h4>
+        <p><em>What is the health of your rooftop?</em></p>
+      </mode-text>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <mode-chart id="chart_6310ff303208" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-4">
+      <mode-chart id="chart_36d04b75b2bb" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-4">
+      <mode-chart id="chart_1bfbd851d6a9" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_ea82726d-3f75-4537-d183-094509322105" dataset="dataset" options="text_options">
+        <h4>Order Information</h4>
+        <p><em>View your Canceled, Completed, and Open Orders here. Open Orders show the most recent step taken.</em></p>
+      </mode-text>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-chart id="orders"></mode-chart>
+      <div id="order_specific_info"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_ea82726d-3f75-4537-d183-094509322107" dataset="dataset" options="text_options">
+        <h4>F&amp;I And Accessories</h4>
+        <p>Here you can see what customer's buy along with their vehicle</p>
+      </mode-text>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-chart id="Attachments"></mode-chart>
+      <div id="Attachments_Data"></div>
+    </div>
+  </div>
+</div>
+<script>
+  var roadsterdx = {
+    version: 1,
+    getDataSource: function(queryName) {
+      // find the right data on the page, by name
+      var ii = 0;
+      var theSet = null;
+      for (ii = 0; ii < datasets.length; ii++) {
+        if (datasets[ii].queryName == queryName) {
+          theSet = datasets[ii].content;
+          break;
+        }
+      }
+      if (!theSet) {
+        //console.log('did not find data ' + queryName);
+        // make an empty data array
+        theSet = [];
+      }
+      //console.log('returning data');
+      return theSet;
+      /*
+      return new DevExpress.data.DataSource({
+        // array of data
+        store: theSet,
+        // additional configuration options
+        // sort: "name",
+        // pageSize: 10
+      });
+      */
+    },
+  };
+
+  $(function() {
+    var prospects = roadsterdx.getDataSource('Base Lead Data');
+    var prospects_basic = roadsterdx.getDataSource('Basic Prospect Information');
+    var orders = roadsterdx.getDataSource('Order');
+    var attachments = roadsterdx.getDataSource('Service Plan Data');
+
+    var drillDownDataSource = {};
+    var drillDownDataSource_basic = {};
+    var drillDownDataSource_order = {};
+    var drillDownDataSource_attach = {};
+
+    $('#prospect_basic').dxPivotGrid({
+      allowSortingBySummary: true,
+      allowFiltering: true,
+      showBorders: true,
+      showColumnGrandTotals: false,
+      showRowGrandTotals: false,
+      showRowTotals: false,
+      showColumnTotals: false,
+      fieldChooser: {
+        enabled: true,
+        height: 400
+      },
+      "export": {
+        enabled: true,
+        fileName: "propects_basic"
+      },
+      onCellClick: function(e) {
+        if (e.area == "data") {
+          var pivotGridDataSource_basic = e.component.getDataSource();
+
+          drillDownDataSource_basic = pivotGridDataSource_basic.createDrillDownDataSource(e.cell);
+          prospect_specific_info.option("title", 'General Prospect Information');
+          prospect_specific_info.show();
+        }
+      },
+      dataSource: {
+        store: prospects_basic,
+        retrieveFields: false,
+        fields: [{
+            caption: "Month & Year",
+            dataField: 'mth_yr',
+            dataType: 'date',
+            format: 'monthAndYear',
+            area: 'row',
+            width: 110
+          },
+          {
+            caption: "Prospects",
+            dataField: "type",
+            area: "column",
+          },
+          {
+            dataField: 'exists_now',
+            summaryType: 'sum',
+            area: 'data'
+          }
+
+        ]
+      },
+    }).dxPivotGrid("instance");
+
+    var pivot1 = $('#prospect').dxPivotGrid({
+      allowSortingBySummary: true,
+      allowFiltering: true,
+      showBorders: true,
+      showColumnGrandTotals: false,
+      showRowGrandTotals: false,
+      showRowTotals: true,
+      showColumnTotals: false,
+      fieldChooser: {
+        enabled: true,
+        height: 400
+      },
+      "export": {
+        enabled: true,
+        fileName: "prospects"
+      },
+      // How to add drill down
+      onCellClick: function(e) {
+        if (e.area == "data") {
+          var pivotGridDataSource = e.component.getDataSource(),
+            rowPathLength = e.cell.rowPath.length,
+            rowPathName = e.cell.rowPath[rowPathLength - 1],
+            popupTitle = (rowPathName ? rowPathName : "Total") + " Drill Down Data";
+
+          drillDownDataSource = pivotGridDataSource.createDrillDownDataSource(e.cell);
+          lead_specific_info.option("title", 'Lead Specific Information');
+          lead_specific_info.show();
+        }
+      },
+      dataSource: {
+        store: prospects,
+        retrieveFields: false,
+        fields: [{
+            caption: '',
+            dataField: "instore_name",
+            area: 'row',
+            width: 80,
+            allowExpandAll: true
+          },
+
+          {
+            caption: "Prospects",
+            dataField: "type_to_use",
+            area: "row",
+            width: 215
+
+          },
+          {
+            caption: "Month & Year",
+            dataField: 'mth_yr',
+            dataType: 'date',
+            format: 'monthAndYear',
+            area: 'column'
+          },
+
+          {
+            caption: "Date",
+            dataField: 'dt',
+            area: 'column'
+          },
+          {
+            caption: "Hour of Day",
+            dataField: "hr",
+            area: "column",
+          },
+          {
+            caption: "Total",
+            dataField: "exists",
+            area: "data",
+            dataType: "number",
+            summaryType: "sum",
+          },
+        ],
+      },
+    }).dxPivotGrid("instance");
+
+    var pivot_order = $('#orders').dxPivotGrid({
+      allowSortingBySummary: true,
+      allowFiltering: true,
+      showBorders: true,
+      showColumnGrandTotals: false,
+      showRowGrandTotals: false,
+      showRowTotals: true,
+      showColumnTotals: false,
+      fieldChooser: {
+        enabled: false,
+        height: 400
+      },
+      "export": {
+        enabled: true,
+        fileName: "orders"
+      },
+      onCellClick: function(e) {
+        if (e.area == "data") {
+          var pivotGridDataSource_order = e.component.getDataSource();
+          drillDownDataSource_order = pivotGridDataSource_order.createDrillDownDataSource(e.cell);
+          order_specific_info.option("title", 'General Order Information');
+          order_specific_info.show();
+        }
+      },
+      // How to add drill down
+      dataSource: {
+        store: orders,
+        retrieveFields: false,
+        fields: [{
+            caption: 'Status',
+            dataField: 'Order Status',
+            area: 'row',
+            width: 80,
+            allowExpandAll: true
+          },
+
+          {
+            caption: "Most Recent Completed Step",
+            dataField: "Item Type",
+            area: "row",
+            width: 180
+          },
+          {
+            caption: "Month & Year",
+            dataField: 'mth_yr',
+            dataType: 'date',
+            format: 'monthAndYear',
+            area: 'column'
+          },
+          {
+            caption: "Total",
+            dataField: "exists_now",
+            area: "data",
+            dataType: "number",
+            summaryType: "sum",
+          },
+        ],
+      },
+    }).dxPivotGrid("instance");
+    var uniqueValues = [];
+    var attaches = $('#Attachments').dxPivotGrid({
+      allowSortingBySummary: true,
+      allowFiltering: true,
+      showBorders: true,
+      showColumnGrandTotals: false,
+      showRowGrandTotals: false,
+      showRowTotals: true,
+      showColumnTotals: false,
+
+      fieldChooser: {
+        enabled: false,
+        height: 400
+      },
+      "export": {
+        enabled: true,
+        fileName: "orders"
+      },
+      onCellClick: function(e) {
+        if (e.area == "data") {
+          var pivotGridDataSource_attach = e.component.getDataSource();
+          drillDownDataSource_attach = pivotGridDataSource_order.createDrillDownDataSource(e.cell);
+          order_specific_info.option("title", 'General Attachment Information');
+          order_specific_info.show();
+        }
+      },
+      // How to add drill down
+      dataSource: {
+        store: attachments,
+        retrieveFields: false,
+        fields: [{
+            dataField: 'Type',
+            area: 'row',
+            width: 80,
+            expanded: true
+          },
+
+          {
+            dataField: "Order Location",
+            area: "row",
+            width: 125
+          },
+          {
+            dataField: "category",
+            area: "row",
+            width: 125
+          },
+          {
+            caption: "Month & Year",
+            dataField: 'mth_yr',
+            dataType: 'date',
+            format: 'monthAndYear',
+            area: 'column'
+          },
+          {
+            caption: "Total",
+            dataField: "customer_email",
+            area: "data",
+            summaryType: "custom",
+            selector: function(data) {
+              return data;
+            },
+            calculateCustomSummary: function(options) {
+              if (options.summaryProcess == 'start') {
+                options.uniqueValues = [];
+                options.totalValue = 0;
+              } else if (options.summaryProcess == 'calculate') {
+                var WO = options.value.customer_email;
+                if (options.uniqueValues.indexOf(WO) == -1) {
+                  options.uniqueValues.push(WO);
+                  options.totalValue += 1;
+                }
+              }
+            }
+          },
+        ],
+      },
+    }).dxPivotGrid("instance");
+
+    // Add drill down data
+    var lead_specific_info = $("#lead_specific_info").dxPopup({
+      width: 1050,
+      height: 800,
+      closeOnOutsideClick: true,
+      contentTemplate: function(contentElement) {
+        $("<div />")
+          .addClass("drill-down1")
+          .dxDataGrid({
+            width: 1000,
+            height: 700,
+            columnAutoWidth: true,
+            columns: [{
+                dataField: 'timestamp',
+                caption: 'Date',
+                alignment: 'center',
+                dataType: 'date',
+                sortOrder: 'desc'
+
+              },
+              {
+                dataField: 'type_to_use',
+                caption: 'Prospect Type',
+                alignment: 'center'
+
+              },
+              {
+                dataField: 'email',
+                caption: 'Customer Email',
+                alignment: 'center'
+              },
+              {
+                dataField: 'agent_name',
+                caption: 'Agent',
+                alignment: 'center'
+              },
+              {
+                dataField: 'link_lead',
+                caption: 'Leads',
+                alignment: 'center',
+                cellTemplate: function(container, options) {
+                  $('<a>' + 'Link' + '</a>')
+                    .attr('href', options.value)
+                    .attr('target', '_blank')
+                    .appendTo(container);
+                }
+              },
+              {
+                dataField: 'link_order',
+                caption: 'Orders',
+                alignment: 'center',
+                cellTemplate: function(container, options) {
+                  if (options.value) {
+                    $('<a>' + 'Link' + '</a>')
+                      .attr('href', options.value)
+                      .attr('target', '_blank')
+                      .appendTo(container);
+                  }
+                }
+              },
+              {
+                dataField: 'order_status',
+                caption: 'Order Status',
+                alignment: 'center'
+              }
+            ]
+          }).appendTo(contentElement);
+      },
+      onShowing: function() {
+        $(".drill-down1")
+          .dxDataGrid("instance")
+          .option("dataSource", drillDownDataSource);
+      },
+      onShown: function() {
+        $(".drill-down1")
+          .dxDataGrid("instance")
+          .updateDimensions();
+      }
+    }).dxPopup("instance");
+
+    var prospect_specific_info = $("#prospect_specific_info").dxPopup({
+      width: 950,
+      height: 800,
+      closeOnOutsideClick: true,
+      contentTemplate: function(contentElement) {
+        $("<div />")
+          .addClass("drill-down2")
+          .dxDataGrid({
+            width: 900,
+            height: 700,
+            columnAutoWidth: true,
+            columns: [{
+                dataField: 'dt',
+                caption: 'Date',
+                alignment: 'center',
+                sortOrder: 'desc',
+                dataType: 'date',
+                //format: 'monthAndYear',
+              },
+              {
+                dataField: 'Customer Name',
+                caption: 'Customer Name',
+                alignment: 'center'
+              },
+              {
+                dataField: 'Customer Email',
+                caption: 'Customer Email',
+                alignment: 'center'
+              },
+              {
+                dataField: 'lead_url',
+                caption: 'Find Customer Associated Leads',
+                alignment: 'center',
+                cellTemplate: function(container, options) {
+                  if (options.value) {
+                    $('<a>' + 'Link' + '</a>')
+                      .attr('href', options.value)
+                      .attr('target', '_blank')
+                      .appendTo(container);
+                  }
+                }
+              },
+            ]
+          }).appendTo(contentElement);
+      },
+      onShowing: function() {
+        $(".drill-down2")
+          .dxDataGrid("instance")
+          .option("dataSource", drillDownDataSource_basic);
+      },
+      onShown: function() {
+        $(".drill-down2")
+          .dxDataGrid("instance")
+          .updateDimensions();
+      }
+    }).dxPopup("instance");
+
+    var order_specific_info = $("#order_specific_info").dxPopup({
+      width: 950,
+      height: 800,
+      closeOnOutsideClick: true,
+      contentTemplate: function(contentElement) {
+        $("<div />")
+          .addClass("drill-down3")
+          .dxDataGrid({
+            width: 900,
+            height: 700,
+            columnAutoWidth: true,
+            columns: [{
+                dataField: 'timestamp',
+                caption: 'Date',
+                alignment: 'center',
+                sortOrder: 'desc',
+                dataType: 'date',
+                //format: 'monthAndYear',
+              },
+              {
+                dataField: 'Customer Name',
+                caption: 'Customer Name',
+                alignment: 'center'
+              },
+              {
+                dataField: 'Customer Email',
+                caption: 'Customer Email',
+                alignment: 'center'
+              },
+              {
+                dataField: 'Agent',
+                caption: 'Agent',
+                alignment: 'center'
+              },
+              {
+                dataField: 'Order',
+                caption: 'Order Page',
+                alignment: 'center',
+                cellTemplate: function(container, options) {
+                  if (options.value) {
+                    $('<a>' + 'Link' + '</a>')
+                      .attr('href', options.value)
+                      .attr('target', '_blank')
+                      .appendTo(container);
+                  }
+                }
+              },
+            ]
+          }).appendTo(contentElement);
+      },
+      onShowing: function() {
+        $(".drill-down3")
+          .dxDataGrid("instance")
+          .option("dataSource", drillDownDataSource_order);
+      },
+      onShown: function() {
+        $(".drill-down3")
+          .dxDataGrid("instance")
+          .updateDimensions();
+      }
+    }).dxPopup("instance");
+
+    var order_specific_info = $("#order_specific_info").dxPopup({
+      width: 950,
+      height: 800,
+      closeOnOutsideClick: true,
+      contentTemplate: function(contentElement) {
+        $("<div />")
+          .addClass("drill-down3")
+          .dxDataGrid({
+            width: 900,
+            height: 700,
+            columnAutoWidth: true,
+            columns: [{
+                dataField: 'timestamp',
+                caption: 'Date',
+                alignment: 'center',
+                sortOrder: 'desc',
+                dataType: 'date',
+                //format: 'monthAndYear',
+              },
+              {
+                dataField: 'Customer Name',
+                caption: 'Customer Name',
+                alignment: 'center'
+              },
+              {
+                dataField: 'Customer Email',
+                caption: 'Customer Email',
+                alignment: 'center'
+              },
+              {
+                dataField: 'Agent',
+                caption: 'Agent',
+                alignment: 'center'
+              },
+              {
+                dataField: 'Order',
+                caption: 'Order Page',
+                alignment: 'center',
+                cellTemplate: function(container, options) {
+                  if (options.value) {
+                    $('<a>' + 'Link' + '</a>')
+                      .attr('href', options.value)
+                      .attr('target', '_blank')
+                      .appendTo(container);
+                  }
+                }
+              },
+            ]
+          }).appendTo(contentElement);
+      },
+      onShowing: function() {
+        $(".drill-down3")
+          .dxDataGrid("instance")
+          .option("dataSource", drillDownDataSource_order);
+      },
+      onShown: function() {
+        $(".drill-down3")
+          .dxDataGrid("instance")
+          .updateDimensions();
+      }
+    }).dxPopup("instance");
+
+    function expand() {
+      var dataSource = pivot1.getDataSource();
+      var dataSource2 = pivot_order.getDataSource();
+      dataSource.expandHeaderItem("row", ["In-Store"]);
+      dataSource.expandHeaderItem("row", ["Online"]);
+      dataSource2.expandHeaderItem("row", ["Open"]);
+    };
+
+    setTimeout(expand, 0);
+
+
+  });
+</script>
