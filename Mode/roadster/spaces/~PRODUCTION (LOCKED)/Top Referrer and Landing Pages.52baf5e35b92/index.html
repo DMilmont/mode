@@ -1,0 +1,440 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.common.css">
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.light.css">
+<link rel="stylesheet" media="screen" href="//d2yvqewjuuy0k6.cloudfront.net/fonts/232352/75E15E124468560E8.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdn3.devexpress.com/jslib/18.2.8/js/dx.all.js"></script>
+<style>
+  .chart-header {
+    display: none;
+  }
+
+  p {
+    font-size: medium;
+  }
+
+  BR {
+    clear: right
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  a:hover,
+  a:active,
+  a:focus {
+    color: darkred;
+    text-decoration: underline;
+  }
+
+  * {
+    font-size: 100%;
+    font-family: "Gotham SSm A", "Gotham SSm B", Georgia
+  }
+
+  .dx-icon {
+    display: inline-block;
+    font-size: inherit;
+    font-family: 'DXIcons' !important;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-transform: translate(0, 0);
+    transform: translate(0, 0);
+  }
+
+  .dx-pivotgrid .dx-expand-icon-container {
+    font-family: 'DXIcons' !important;
+  }
+</style>
+<div class="mode-header embed-hidden">
+
+  <p>{{ description }}</p>
+</div>
+<div class="mode-grid container">
+  <h1>Top Referral and Landing Pages - Express Store</h1>
+  <div class="row">
+
+    <div class="col-md-6">
+      <h3>Referrer Pages</h3>
+      <mode-chart id="chart_bbc2e4e362a6" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-6">
+      <h3>Landing Pages</h3>
+
+      <mode-chart id="chart_967916fdd280" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Top 5 Express <b>Referrer</b> Pages - Online Performance</h2>
+      <mode-chart id="express_referrer" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Top 5 Express <b>Landing</b> Pages - Online Performance</h2>
+      <mode-chart id="express_landing" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+</div>
+<script>
+  setTimeout(function() {
+
+
+    var i;
+    for (i = 0; i < Highcharts.charts.length; i++) {
+      var chart = Highcharts.charts[i];
+      if (chart.container.closest("#chart_bbc2e4e362a6") != null || chart.container.closest("#chart_967916fdd280") != null) {
+        chart.update({
+          plotOptions: {
+            series: {
+              dataLabels: {
+                enabled: true,
+
+              }
+            }
+          },
+          xAxis: {
+            minorTickLength: 0,
+            tickLength: 0,
+          },
+          yAxis: {
+            labels: {
+              enabled: false
+            },
+            gridLineColor: 'transparent'
+          }
+        });
+
+      }
+    }
+
+
+  }, 100);
+</script>
+<script>
+  var roadsterdx = {
+    version: 1,
+    getDataSource: function(queryName) {
+      // find the right data on the page, by name
+      var ii = 0;
+      var theSet = null;
+      for (ii = 0; ii < datasets.length; ii++) {
+        if (datasets[ii].queryName == queryName) {
+          theSet = datasets[ii].content;
+          break;
+        }
+      }
+      if (!theSet) {
+        //console.log('did not find data ' + queryName);
+        // make an empty data array
+        theSet = [];
+      }
+      //console.log('returning data');
+      return theSet;
+      /*
+      return new DevExpress.data.DataSource({
+        // array of data
+        store: theSet,
+        // additional configuration options
+        // sort: "name",
+        // pageSize: 10
+      });
+      */
+    },
+  };
+
+
+
+  $(function() {
+
+    var express_landing = roadsterdx.getDataSource('Express Landing Pages - UP');
+
+    var pivot1 = $('#express_landing').dxPivotGrid({
+
+      allowSortingBySummary: false,
+      allowFiltering: false,
+      showBorders: true,
+      showColumnGrandTotals: false,
+      showRowGrandTotals: false,
+      showRowTotals: false,
+      showColumnTotals: false,
+      enableInteractivity: false,
+      wordWrapEnabled: true,
+      fieldPanel: {
+        showColumnFields: false,
+        showDataFields: false,
+        showFilterFields: false,
+        showRowFields: true,
+        allowFieldDragging: false,
+        visible: true
+      },
+      fieldChooser: {
+        enabled: false,
+        height: 400
+      },
+      // onCellPrepared: function(e) {  
+      //         if (e.area == 'data' || e.area == 'row' )  
+      //               if (e.rowIndex % 2 == 0)  
+      //                       e.cellElement.css("background-color", "lightblue");  
+      // },
+      onCellClick: function(e) {
+        e.cancel = true;
+      },
+
+      "export": {
+        enabled: true,
+        fileName: "top_landing_pages"
+      },
+      dataSource: {
+        store: express_landing,
+        retrieveFields: true,
+        fields: [{
+            dataField: 'express_landing_page_path',
+            caption: 'Landing Page',
+            area: 'row',
+            width: 210,
+            expanded: true,
+            sortOrder: 'asc',
+            sortBySummaryField: 'rnk_page',
+
+            //   sortingMethod: function (c,d) {
+            //   var index3 = c.value.rnk_page
+            //   var index4 = d.value.rnk_page
+            //   if(index3 > index4)
+            //       return 1;
+            //   if(index4 > index3)    
+            //       return -1;
+            //       else 
+            //       return 0;
+
+            // }
+          },
+          {
+            dataField: 'calc_type',
+            caption: ' ',
+            area: 'row',
+            width: 190,
+
+            showInColumnChooser: false,
+            showRowFields: false,
+            allowHeaderFiltering: false,
+            disabled: false,
+            // sortBySummaryField: 'rnk_type',
+            sortingMethod: function(a, b) {
+              var index1 = a.value.rnk_type
+              var index2 = b.value.rnk_type
+              if (index1 > index2)
+                return 1;
+              if (index2 > index1)
+                return -1;
+              else
+                return 0;
+
+            }
+
+          },
+          {
+            dataField: 'month_year',
+            area: 'column',
+            caption: 'Month & Year',
+            dataType: 'date',
+            format: 'monthAndYear',
+            sortOrder: 'desc',
+
+          },
+          {
+            dataField: 'measure',
+            area: 'data',
+            summaryType: 'min',
+            alignment: 'center',
+
+          },
+
+          {
+            dataField: 'rnk_page',
+            area: 'data',
+            summaryType: 'max',
+            disabled: true,
+            visible: false,
+            autoExpandGroup: false,
+            showColumnHeaders: false,
+            showColumnLines: false,
+
+          },
+
+
+        ],
+      }
+
+
+
+    }).dxPivotGrid("instance");
+
+    var pivotGridDataSource = pivot1.getDataSource();
+    pivotGridDataSource.field("Landing Page", {
+
+      //     // sortOrder: 'desc',
+      //     // sortBySummaryField: 'measure',
+      //   //  sortBySummaryPath: ['Conversion to Prospect']['July 2019'],
+      //     // sortBySummaryPath: ['June 2019'],
+      //     // sortingMethod: function (c,d) {
+      //     //           var index3 = c.value.rnk_page
+      //     //           var index4 = d.value.rnk_page
+      //     //           if(index3 > index4)
+      //     //               return 1;
+      //     //           if(index4 > index3)    
+      //     //               return -1;
+      //     //               else 
+      //     //               return 0;
+      //     //             }
+    });
+
+
+    pivotGridDataSource.load();
+
+    var express_referrer = roadsterdx.getDataSource('Express Referrer Pages - UP');
+
+    var pivot1 = $('#express_referrer').dxPivotGrid({
+
+      allowSortingBySummary: false,
+      allowFiltering: false,
+      showBorders: true,
+      showColumnGrandTotals: false,
+      showRowGrandTotals: false,
+      showRowTotals: false,
+      showColumnTotals: false,
+      enableInteractivity: false,
+      fieldPanel: {
+        showColumnFields: false,
+        showDataFields: false,
+        showFilterFields: false,
+        showRowFields: true,
+        allowFieldDragging: false,
+        visible: true
+      },
+      fieldChooser: {
+        enabled: false,
+        height: 400
+      },
+
+      onCellClick: function(e) {
+        e.cancel = true;
+      },
+
+      "export": {
+        enabled: true,
+        fileName: "top_referrer_pages"
+      },
+      dataSource: {
+        store: express_referrer,
+        retrieveFields: true,
+        fields: [{
+            dataField: 'express_referrer',
+            caption: 'Referrer Page',
+            area: 'row',
+            width: 120,
+            expanded: true,
+
+            sortBySummaryField: 'rnk_page',
+
+            //   sortingMethod: function (c,d) {
+            //   var index3 = c.value.rnk_page
+            //   var index4 = d.value.rnk_page
+            //   if(index3 > index4)
+            //       return 1;
+            //   if(index4 > index3)    
+            //       return -1;
+            //       else 
+            //       return 0;
+
+            // }
+          },
+          {
+            dataField: 'calc_type',
+            caption: ' ',
+            area: 'row',
+            width: 190,
+            showInColumnChooser: false,
+            showRowFields: false,
+            allowHeaderFiltering: false,
+            disabled: false,
+            // sortBySummaryField: 'rnk_type',
+            sortingMethod: function(a, b) {
+              var index1 = a.value.rnk_type
+              var index2 = b.value.rnk_type
+              if (index1 > index2)
+                return 1;
+              if (index2 > index1)
+                return -1;
+              else
+                return 0;
+
+            }
+
+          },
+          {
+            dataField: 'month_year',
+            area: 'column',
+            caption: 'Month & Year',
+            dataType: 'date',
+            format: 'monthAndYear',
+            sortOrder: 'desc',
+
+          },
+          {
+            dataField: 'measure',
+            area: 'data',
+            summaryType: 'min',
+            alignment: 'center',
+
+          },
+
+          {
+            dataField: 'rnk_page',
+            area: 'data',
+            summaryType: 'max',
+            disabled: true,
+            visible: false,
+            autoExpandGroup: false,
+            showColumnHeaders: false,
+            showColumnLines: false,
+
+          },
+
+
+        ],
+      }
+
+
+
+    }).dxPivotGrid("instance");
+
+    var pivotGridDataSource = pivot1.getDataSource();
+
+    pivotGridDataSource.field("Referrer Page", {
+
+      //     // sortOrder: 'desc',
+      //     // sortBySummaryField: 'measure',
+      //   //  sortBySummaryPath: ['Conversion to Prospect']['July 2019'],
+      //     // sortBySummaryPath: ['June 2019'],
+      //     // sortingMethod: function (c,d) {
+      //     //           var index3 = c.value.rnk_page
+      //     //           var index4 = d.value.rnk_page
+      //     //           if(index3 > index4)
+      //     //               return 1;
+      //     //           if(index4 > index3)    
+      //     //               return -1;
+      //     //               else 
+      //     //               return 0;
+      //     //             }
+    });
+
+
+    pivotGridDataSource.load();
+
+
+  });
+</script>
