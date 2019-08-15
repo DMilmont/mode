@@ -39,6 +39,7 @@ SELECT DISTINCT dp.dpid
 FROM fact.salesforce_dealer_info di
 LEFT JOIN public.dealer_partners dp ON di.dpid = dp.dpid
 WHERE primary_make IN ({{ primary_make }})
+AND dp.state IN ({{ state }})
 ), 
 
 base_agent_data as (

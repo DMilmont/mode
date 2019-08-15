@@ -40,6 +40,7 @@ SELECT DISTINCT di.dpid, dealer_group, dp.tableau_secret
 FROM fact.salesforce_dealer_info di
 LEFT JOIN public.dealer_partners dp ON di.dpid = dp.dpid
 WHERE primary_make in ({{ primary_make }})
+AND dp.state IN ({{ state }})
 ),
 
 date_dpid as (
