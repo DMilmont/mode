@@ -58,8 +58,7 @@
   <div class="row">
     <div class="col-md-12">
       <mode-text id="text_ea82726d-3f75-4537-d183-094509322155" dataset="dataset" options="text_options">
-        <h4>Lead Types </h4>
-        <p><em>What are the leads your rooftop is generating?</em></p>
+        <h4>Lead Types</h4>
       </mode-text>
     </div>
   </div>
@@ -74,8 +73,8 @@
   <div class="row">
     <div class="col-md-12">
       <mode-text id="text_ea82726d-3f75-4537-d183-094509322168" dataset="dataset" options="text_options">
-        <h4>Lead Types</h4>
-        <p><em>What kind of prospects are being generated? Hint: Click a cell!</em></p>
+        <h4>Data Table</h4>
+        <p><em style="font-size: 16px; color: rgb(51, 51, 51);">What kind of prospects are being generated? Hint: Click a cell to see your actual prospects! </em></p>
       </mode-text>
     </div>
   </div>
@@ -88,8 +87,7 @@
   <div class="row">
     <div class="col-md-12">
       <mode-text id="text_ea82726d-3f75-4537-d183-094509322102" dataset="dataset" options="text_options">
-        <h4>Orders by the numbers</h4>
-        <p><em>What is the health of your rooftop?</em></p>
+        <h4>Orders</h4>
       </mode-text>
     </div>
   </div>
@@ -273,25 +271,16 @@
             dataField: 'mth_yr',
             dataType: 'date',
             format: 'monthAndYear',
-            area: 'column'
+            area: 'column',
+            sortOrder: 'desc',
+            expanded: 'true'
           },
           {
-            caption: '',
+            caption: 'Location',
             dataField: "instore_name",
             area: 'column',
             width: 80,
             allowExpandAll: true
-          },
-
-          {
-            caption: "Date",
-            dataField: 'dt',
-            area: 'column'
-          },
-          {
-            caption: "Hour of Day",
-            dataField: "hr",
-            area: "column",
           },
           {
             caption: "Total",
@@ -337,7 +326,10 @@
             dataField: 'Order Status',
             area: 'row',
             width: 60,
-            allowExpandAll: true
+            allowExpandAll: true,
+            sortingMethod: function(a,b) {
+              if(a == 'Canceled') return -1;
+            },
           },
 
           {
@@ -352,7 +344,9 @@
             dataType: 'date',
             format: 'monthAndYear',
             area: 'column',
-            width: 100
+            width: 100,
+            sortOrders: 'desc',
+            expanded: true
           },
           {
             caption: "Location",
@@ -405,12 +399,6 @@
             width: 80,
             expanded: true
           },
-
-          {
-            dataField: "Order Location",
-            area: "row",
-            width: 125
-          },
           {
             dataField: "category",
             area: "row",
@@ -421,7 +409,12 @@
             dataField: 'mth_yr',
             dataType: 'date',
             format: 'monthAndYear',
-            area: 'column'
+            area: 'column',
+            sortOrder: 'desc'
+          },
+          {
+            dataField: "Order Location",
+            area: "column",
           },
           {
             caption: "Total",
@@ -589,11 +582,11 @@
       width: 950,
       height: 800,
       closeOnOutsideClick: true,
-      position: {  
-          my: 'center',  
-          at: 'center',  
-          of: '#orders'  
-      } ,
+      position: {
+        my: 'center',
+        at: 'center',
+        of: '#orders'
+      },
       contentTemplate: function(contentElement) {
         $("<div />")
           .addClass("drill-down3")
@@ -656,11 +649,11 @@
       width: 950,
       height: 800,
       closeOnOutsideClick: true,
-      position: {  
-          my: 'center',  
-          at: 'center',  
-          of: '#Attachments'  
-      } ,
+      position: {
+        my: 'center',
+        at: 'center',
+        of: '#Attachments'
+      },
       contentTemplate: function(contentElement) {
         $("<div />")
           .addClass("drill-down4")
@@ -668,8 +661,7 @@
             width: 900,
             height: 700,
             columnAutoWidth: true,
-            columns: [
-              {
+            columns: [{
                 dataField: 'customer_email',
                 caption: 'Customer Email',
                 alignment: 'center'
