@@ -77,15 +77,14 @@
   <div class="row">
     <div class="col-md-12">
       <mode-text id="text_1a38d606-2f60-4f0a-9892-569db3842b15" dataset="dataset" options="text_options">
-        <p><strong>TEST</strong> <strong>REPORT</strong> for Primary Makes</p>
+        <p><strong>TEST</strong> <strong>REPORT</strong> for OEM</p>
         <p>Quick Facts:</p>
-        <p><br></p>
-        <p><br></p>
         <ol>
-          <li>By selecting a given make this report should display all rooftops related to that dealer. We use SalesForce for this record keeping. If you don't see the correct dpids. Please let me know.</li>
-          <li>This data should match closely to the benchmark report located <a href="https://tableau.roadster.com/views/BenchmarkMetrics/Benchmark?iframeSizedToWindow=true&amp;:embed=y&amp;:showAppBanner=false&amp;:display_count=no&amp;:showVizHome=no" target="_blank">here</a>.</li>
-          <li>The drop-downs on each row give you more information on how the metrics have moved over time. And match to the data summarized in the tables themselves.</li>
-          <li>Under dealer attributes, I have made a few choices for what you might want to see. If there other things you need to know about those dealers please let me know!</li>
+          <li>Selecting "Primary Make" will grab all rooftops with that OEM set in our dealer properties. That data will show up under "OEM Rooftop" in our tables below. </li>
+          <li>Choose your Date Range is at the Monthly Level. </li>
+          <li>"State" can narrow down your Primary Make data to certain areas of the country</li>
+          <li>"Dpid" is a new parameter which lets you select custom dealers for comparison. These will show up in the table as "Custom Group". Each table lets you click the arrows to breakout the data at the Rooftop level. </li>
+          <li>Each table can be downloaded to excel by clicking the icon on the left. Click the arrows before downloading to get the breakouts of the dataset by rooftop. </li>
         </ol>
         <p><br></p>
       </mode-text>
@@ -242,10 +241,12 @@
 
     $('#dealer_properties').dxDataGrid({
       dataSource: dealer_attributes,
-      filterRow: { visible: true },
+      filterRow: {
+        visible: true
+      },
       headerFilter: {
-            visible: true
-        },
+        visible: true
+      },
       onCellPrepared: function(e) {
         if (e.rowType == "header") {
           e.cellElement.css('background', 'black')
@@ -592,97 +593,100 @@
     });
     // Order Funnel Summarized
     $('#order_funnel_summ').dxPivotGrid({
-     allowSortingBySummary: true,
+      allowSortingBySummary: true,
       allowFiltering: true,
       showBorders: true,
       showColumnGrandTotals: false,
       showRowGrandTotals: false,
       showRowTotals: false,
       showColumnTotals: false,
+      "export": {
+        enabled: true,
+        fileName: "orderstep_metrics"
+      },
       dataSource: {
         store: order_funnel_sum,
-        fields: [
-          {
+        fields: [{
             dataField: 'grouper',
-            caption: 'DataGroup', 
+            caption: 'DataGroup',
             area: 'row',
             width: 120
           },
           {
             dataField: 'Dealership',
-            area:'row'
+            area: 'row'
           },
           {
             dataField: 'Measures',
             area: 'column',
           },
           {
-           dataField: 'Total Orders Submitted',
-           caption: 'Total Orders Submitted',
-           area:'data',
-           summaryType: 'sum', 
-           format: {
+            dataField: 'Total Orders Submitted',
+            caption: 'Total Orders Submitted',
+            area: 'data',
+            summaryType: 'sum',
+            format: {
               type: "fixedPoint",
               precision: 1
             }
           },
           {
-           dataField: 'Deal Sheet Accepted Rate',
-           area:'data',
-           summaryType: 'avg',
-           format: {
+            dataField: 'Deal Sheet Accepted Rate',
+            area: 'data',
+            summaryType: 'avg',
+            format: {
               type: "percent",
               precision: 1
             }
           },
           {
-           dataField: 'Trade-In Completed Rate',
-           area:'data',
-           summaryType: 'avg',
-           format: {
+            dataField: 'Trade-In Completed Rate',
+            area: 'data',
+            summaryType: 'avg',
+            format: {
               type: "percent",
               precision: 1
             }
           },
           {
-           dataField: 'Credit Completed Rate',
-           area:'data',
-           summaryType: 'avg',
-           format: {
+            dataField: 'Credit Completed Rate',
+            area: 'data',
+            summaryType: 'avg',
+            format: {
               type: "percent",
               precision: 1
             }
           },
           {
-           dataField: 'Service Plans Completed Rate',
-           area:'data',
-           summaryType: 'avg',
-           format: {
+            dataField: 'Service Plans Completed Rate',
+            area: 'data',
+            summaryType: 'avg',
+            format: {
               type: "percent",
               precision: 1
             }
           },
           {
-           dataField: 'Accessories Completed Rate',
-           area:'data',
-           summaryType: 'avg',
-           format: {
+            dataField: 'Accessories Completed Rate',
+            area: 'data',
+            summaryType: 'avg',
+            format: {
               type: "percent",
               precision: 1
             }
           },
-           {
-           dataField: 'Final Deal Sent Rate',
-           area:'data',
-           summaryType: 'avg',
-           format: {
+          {
+            dataField: 'Final Deal Sent Rate',
+            area: 'data',
+            summaryType: 'avg',
+            format: {
               type: "percent",
               precision: 1
             }
           },
-          ]
+        ]
       },
-      
+
     });
   });
 </script>
