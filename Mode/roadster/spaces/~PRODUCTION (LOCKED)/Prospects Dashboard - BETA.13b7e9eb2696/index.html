@@ -326,11 +326,9 @@
             dataField: 'Order Status',
             area: 'row',
             width: 60,
-            allowExpandAll: true,
-            sortingMethod: function(a,b) {
-              if(a == 'Canceled') return -1;
-            },
+            sortOrder: 'desc',
           },
+          
 
           {
             caption: "Most Recent Completed Step",
@@ -345,7 +343,7 @@
             format: 'monthAndYear',
             area: 'column',
             width: 100,
-            sortOrders: 'desc',
+            sortOrder: 'desc',
             expanded: true
           },
           {
