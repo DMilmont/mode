@@ -10,6 +10,7 @@ dpid:
   default: ' '
   options:
         values: "dpid"
-  description: Select your Dpids. Make sure you put a single quote around each dpid. 
+        label: "Choose DPIDs for Custom Grouping here"
+  description: Select your Dpids. These will appear under your custom group heading in the tables below
 
 {% endform %}

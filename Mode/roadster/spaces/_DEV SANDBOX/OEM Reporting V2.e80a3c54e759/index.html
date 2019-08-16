@@ -1,6 +1,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.common.css">
 <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.light.css">
+<link rel="stylesheet" media="screen" href="//d2yvqewjuuy0k6.cloudfront.net/fonts/232352/75E15E124468560E8.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
 <script type="text/javascript" src="https://cdn3.devexpress.com/jslib/18.2.8/js/dx.all.js"></script>
 <style>
   .fixed-nav-bar {
@@ -314,52 +316,7 @@
         },
       ],
     });
-    // $('#agent_certification').dxDataGrid({
-    //   dataSource: agent_certs,
-    //   showColumnLines: false,
-    //   showRowLines: true,
-    //   showBorders: true,
-    //   grouping: {
-    //     autoExpandAll: false
-    //   },
-    //   onCellPrepared: function(e) {
-    //     if (e.rowType == "header") {
-    //       e.cellElement.css('background', 'black')
-    //       e.cellElement.css('color', 'white')
-    //     }
-    //   },
-    //   columns: [{
-    //       dataField: 'Rooftop',
-    //       caption: 'Rooftop',
-    //       alignment: 'center',
-    //       dataType: 'string',
-    //       groupIndex: 0,
-    //       sortOrder: 'desc'
-    //     },
-    //     {
-    //       dataField: 'Agent Name',
-    //       alignment: 'center',
-    //       height: 100,
-    //     },
-    //     {
-    //       dataField: 'Roadster Certifications',
-    //       alignment: 'center'
-    //     },
-    //   ],
-    //   summary: {
-    //     groupItems: [{
-    //         column: 'Agent Name',
-    //         summaryType: 'count',
-    //         displayFormat: '{0} Total Active Agents',
-    //       },
-    //       {
-    //         column: 'Any Roadster Certifications',
-    //         summaryType: 'sum',
-    //         displayFormat: '{0} Total Certifications'
-    //       },
-    //     ]
-    //   },
-    // });
+
     $('#online_metrics_summ').dxPivotGrid({
       allowSortingBySummary: true,
       allowFiltering: true,
@@ -368,6 +325,10 @@
       showRowGrandTotals: false,
       showRowTotals: false,
       showColumnTotals: false,
+      "export": {
+        enabled: true,
+        fileName: "online_metrics"
+      },
       dataSource: {
         store: online_metrics_sum,
         fields: [{
@@ -505,6 +466,10 @@
       showRowGrandTotals: false,
       showRowTotals: false,
       showColumnTotals: false,
+      "export": {
+        enabled: true,
+        fileName: "instore_metrics"
+      },
       dataSource: {
         store: instore_metrics_sum,
         fields: [{
