@@ -208,5 +208,5 @@ order_type "Order Type",
 
 FROM almost
 WHERE pick_most_recent = 1
-and timestamp >= '2019-01-01'
+and timestamp >= (date_trunc('month', now()) - '6 months'::interval)
 ORDER BY timestamp desc

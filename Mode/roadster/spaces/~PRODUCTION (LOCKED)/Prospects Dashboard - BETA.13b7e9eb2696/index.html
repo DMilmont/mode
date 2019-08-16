@@ -35,8 +35,6 @@
     <div class="col-md-12">
       <mode-text id="text_80045e99-4135-4b91-ec49-ec2721db270a" dataset="dataset" options="text_options">
         <p>Manage your Leads &amp; Orders here</p>
-        <p><br></p>
-        <p>ALPHA</p>
       </mode-text>
     </div>
   </div>
@@ -60,8 +58,8 @@
   <div class="row">
     <div class="col-md-12">
       <mode-text id="text_ea82726d-3f75-4537-d183-094509322155" dataset="dataset" options="text_options">
-        <h4>6 Month Lookback</h4>
-        <p><em>How have your lead types changed over time?</em></p>
+        <h4>Lead Types </h4>
+        <p><em>What are the leads your rooftop is generating?</em></p>
       </mode-text>
     </div>
   </div>
@@ -261,13 +259,7 @@
       dataSource: {
         store: prospects,
         retrieveFields: false,
-        fields: [{
-            caption: '',
-            dataField: "instore_name",
-            area: 'row',
-            width: 80,
-            allowExpandAll: true
-          },
+        fields: [
 
           {
             caption: "Prospects",
@@ -282,6 +274,13 @@
             dataType: 'date',
             format: 'monthAndYear',
             area: 'column'
+          },
+          {
+            caption: '',
+            dataField: "instore_name",
+            area: 'column',
+            width: 80,
+            allowExpandAll: true
           },
 
           {
@@ -337,7 +336,7 @@
             caption: 'Status',
             dataField: 'Order Status',
             area: 'row',
-            width: 80,
+            width: 60,
             allowExpandAll: true
           },
 
@@ -345,13 +344,19 @@
             caption: "Most Recent Completed Step",
             dataField: "Item Type",
             area: "row",
-            width: 180
+            width: 110
           },
           {
             caption: "Month & Year",
             dataField: 'mth_yr',
             dataType: 'date',
             format: 'monthAndYear',
+            area: 'column',
+            width: 100
+          },
+          {
+            caption: "Location",
+            dataField: 'in_store_type',
             area: 'column'
           },
           {
@@ -385,9 +390,9 @@
       onCellClick: function(e) {
         if (e.area == "data") {
           var pivotGridDataSource_attach = e.component.getDataSource();
-          drillDownDataSource_attach = pivotGridDataSource_order.createDrillDownDataSource(e.cell);
-          order_specific_info.option("title", 'General Attachment Information');
-          order_specific_info.show();
+          drillDownDataSource_attach = pivotGridDataSource_attach.createDrillDownDataSource(e.cell);
+          attach_specific_info.option("title", 'General Attachment Information');
+          attach_specific_info.show();
         }
       },
       // How to add drill down
@@ -584,6 +589,11 @@
       width: 950,
       height: 800,
       closeOnOutsideClick: true,
+      position: {  
+          my: 'center',  
+          at: 'center',  
+          of: '#orders'  
+      } ,
       contentTemplate: function(contentElement) {
         $("<div />")
           .addClass("drill-down3")
@@ -642,38 +652,30 @@
       }
     }).dxPopup("instance");
 
-    var order_specific_info = $("#order_specific_info").dxPopup({
+    var attach_specific_info = $("#Attachments_Data").dxPopup({
       width: 950,
       height: 800,
       closeOnOutsideClick: true,
+      position: {  
+          my: 'center',  
+          at: 'center',  
+          of: '#Attachments'  
+      } ,
       contentTemplate: function(contentElement) {
         $("<div />")
-          .addClass("drill-down3")
+          .addClass("drill-down4")
           .dxDataGrid({
             width: 900,
             height: 700,
             columnAutoWidth: true,
-            columns: [{
-                dataField: 'timestamp',
-                caption: 'Date',
-                alignment: 'center',
-                sortOrder: 'desc',
-                dataType: 'date',
-                //format: 'monthAndYear',
-              },
+            columns: [
               {
-                dataField: 'Customer Name',
-                caption: 'Customer Name',
-                alignment: 'center'
-              },
-              {
-                dataField: 'Customer Email',
+                dataField: 'customer_email',
                 caption: 'Customer Email',
                 alignment: 'center'
               },
               {
-                dataField: 'Agent',
-                caption: 'Agent',
+                dataField: 'Order Location',
                 alignment: 'center'
               },
               {
@@ -693,12 +695,12 @@
           }).appendTo(contentElement);
       },
       onShowing: function() {
-        $(".drill-down3")
+        $(".drill-down4")
           .dxDataGrid("instance")
-          .option("dataSource", drillDownDataSource_order);
+          .option("dataSource", drillDownDataSource_attach);
       },
       onShown: function() {
-        $(".drill-down3")
+        $(".drill-down4")
           .dxDataGrid("instance")
           .updateDimensions();
       }

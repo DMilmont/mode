@@ -50,8 +50,8 @@ AND dpid = '{{ dpid }}'
 )
 
 SELECT date_trunc('month', ts_prospects) dt,
-SUM(CASE WHEN in_store = True THEN exists END) online,
-SUM(CASE WHEN in_store <> True THEN exists END) in_store,
+SUM(CASE WHEN in_store = True THEN exists END) in_store,
+SUM(CASE WHEN in_store <> True THEN exists END) online,
 ROUND((SUM(CASE WHEN in_store = True THEN exists END)::decimal / SUM(exists))*100, 1)|| ' %' online_perc,
 SUM(exists) total
 

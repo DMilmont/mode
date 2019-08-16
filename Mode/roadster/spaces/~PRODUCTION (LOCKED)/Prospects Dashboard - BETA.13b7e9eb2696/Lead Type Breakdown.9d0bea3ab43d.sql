@@ -22,7 +22,7 @@ user_id,
 u.first_name,
 u.last_name,
 u.email,
-1 "exists",
+1 "Count",
 a.first_name || ' ' || a.last_name agent_name,
 regexp_replace(type, '([a-z])([A-Z])', '\1 \2','g') type_to_use,
 CASE WHEN os.status IS NULL AND ls.order_id IS NOT NULL THEN 'Open'
@@ -47,8 +47,6 @@ LEFT JOIN orders o ON ls.order_id = o.id
 LEFT JOIN order_status os ON ls.order_id = os.order_id
 WHERE 
 (
-date_trunc('month', ls.timestamp) = (date_trunc('month', now()) - '6 months'::interval)
-OR
 date_trunc('month', ls.timestamp) = (date_trunc('month', now()) - '1 month'::interval)
 )
 AND 
