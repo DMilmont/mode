@@ -1,4 +1,3 @@
-
 SELECT distinct     dp.dpid,    sf.success_manager, sf.account_executive, sf.integration_manager
   
 FROM public.crm_records crm

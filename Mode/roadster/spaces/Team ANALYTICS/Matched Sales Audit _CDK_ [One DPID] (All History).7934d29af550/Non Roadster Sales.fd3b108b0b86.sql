@@ -53,6 +53,7 @@ SELECT
     case when s.first_lead_timestamp = s.last_lead_timestamp then null else s.days_to_close_from_last_lead end "Days to close from last lead",
     s.days_to_close_from_first_lead - s.days_to_close_from_last_lead "Days using Roadster",
     s.count_matched_leads "Total Roadster leads submitted",
+    dp.primary_make as "Rooftop Primary Make",
     to_char(sf.actual_live_date,'YYYY-MM-DD') "Go Live Date"
 
 FROM public.crm_records crm
@@ -62,11 +63,11 @@ left join fact.salesforce_dealer_info sf on sf.dpid = dp.dpid
 left join fact.f_sale s on  s.crm_record_id = crm.id 
 
 
-where dp.dpid = '{{ dpid }}'
+where  dp.dpid = '{{ dpid }}'
   and crm_type = 'cdk'
   and crm.status = 'Sold'
-  and item_type <> 'Matched Sale'
+  and item_type = 'Matched Sale'
   and crm.sold_at > sf.actual_live_date
-  and crm.sold_at > now() - '3 months'::interval
+  --and crm.sold_at > now() - '3 months'::interval
 
 order by /*s.item_type asc,*/ crm.sold_at desc
