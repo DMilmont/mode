@@ -328,7 +328,7 @@
             width: 60,
             sortOrder: 'desc',
           },
-          
+
 
           {
             caption: "Most Recent Completed Step",
@@ -445,6 +445,11 @@
       width: 1050,
       height: 800,
       closeOnOutsideClick: true,
+      position: {
+        my: 'center',
+        at: 'center',
+        of: '#lead_specific_info'
+      },
       contentTemplate: function(contentElement) {
         $("<div />")
           .addClass("drill-down1")
