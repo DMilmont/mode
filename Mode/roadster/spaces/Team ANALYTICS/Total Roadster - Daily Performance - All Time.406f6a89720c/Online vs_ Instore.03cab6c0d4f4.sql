@@ -1,10 +1,3 @@
--- Returns first 100 rows from fact.f_prospect
-SELECT * FROM fact.f_prospect LIMIT 100;
-
-
--- Returns first 100 rows from fact.f_traffic
-SELECT * FROM fact.f_traffic LIMIT 100;
-
 
 
 with date_dpid as (
