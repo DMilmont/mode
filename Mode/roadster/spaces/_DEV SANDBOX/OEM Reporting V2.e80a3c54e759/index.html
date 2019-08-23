@@ -48,10 +48,10 @@
     fill: #fff !important;
   }
 
-  * {
+  /** {*/
     /*font-family: 'Helvetica Neue', 'Segoe UI', Helvetica, Verdana, sans-serif !important;*/
-    vertical-align: middle !important;
-  }
+  /*  vertical-align: middle !important;*/
+  /*}*/
 </style>
 <div class="row" data-row-height="small">
   <div class="col-md-4">
@@ -355,6 +355,14 @@
             dataType: 'number',
             summaryType: 'avg',
             area: 'data',
+            customizeText: function (cellInfo) {
+                if(cellInfo.valueText == 'NaN') {
+                  v = '';
+                } else {
+                  v = cellInfo.valueText;
+                }
+                return v;
+            },
             format: {
               type: "fixedPoint",
               precision: 1
@@ -366,6 +374,14 @@
             dataType: 'number',
             summaryType: 'avg',
             area: 'data',
+                        customizeText: function (cellInfo) {
+                if(cellInfo.valueText == 'NaN') {
+                  v = '';
+                } else {
+                  v = cellInfo.valueText;
+                }
+                return v;
+            },
             format: {
               type: "fixedPoint",
               precision: 1
@@ -382,6 +398,14 @@
                 return e.value('Express Visitors') / e.value('Dealer Visitors');
               }
             },
+                        customizeText: function (cellInfo) {
+                if(cellInfo.valueText == 'NaN') {
+                  v = '';
+                } else {
+                  v = cellInfo.valueText;
+                }
+                return v;
+            },
             format: {
               precision: 1,
               type: 'percent'
@@ -391,6 +415,14 @@
             dataField: 'Online Prospects',
             area: 'data',
             summaryType: 'avg',
+                        customizeText: function (cellInfo) {
+                if(cellInfo.valueText == 'NaN') {
+                  v = '';
+                } else {
+                  v = cellInfo.valueText;
+                }
+                return v;
+            },
             format: {
               type: 'fixedPoint',
               precision: 1
@@ -407,6 +439,14 @@
                 return e.value('Online Prospects') / e.value('Express Visitors');
               }
             },
+                        customizeText: function (cellInfo) {
+                if(cellInfo.valueText == 'NaN') {
+                  v = '';
+                } else {
+                  v = cellInfo.valueText;
+                }
+                return v;
+            },
             format: {
               precision: 1,
               type: 'percent'
@@ -415,6 +455,14 @@
           {
             dataField: 'Online Shares',
             area: 'data',
+                        customizeText: function (cellInfo) {
+                if(cellInfo.valueText == 'NaN') {
+                  v = '';
+                } else {
+                  v = cellInfo.valueText;
+                }
+                return v;
+            },
             format: {
               type: 'fixedPoint',
               precision: 1
@@ -424,6 +472,14 @@
           {
             dataField: 'Online Orders',
             area: 'data',
+                        customizeText: function (cellInfo) {
+                if(cellInfo.valueText == 'NaN') {
+                  v = '';
+                } else {
+                  v = cellInfo.valueText;
+                }
+                return v;
+            },
             format: {
               type: 'fixedPoint',
               precision: 1
@@ -433,6 +489,14 @@
           {
             dataField: 'Roadster Matched Sales',
             area: 'data',
+                        customizeText: function (cellInfo) {
+                if(cellInfo.valueText == 'NaN') {
+                  v = '';
+                } else {
+                  v = cellInfo.valueText;
+                }
+                return v;
+            },
             format: {
               type: 'fixedPoint',
               precision: 1
@@ -442,6 +506,14 @@
           {
             caption: 'Close Rate',
             area: 'data',
+                        customizeText: function (cellInfo) {
+                if(cellInfo.valueText == 'NaN') {
+                  v = '';
+                } else {
+                  v = cellInfo.valueText;
+                }
+                return v;
+            },
             format: {
               type: 'percent',
               precision: 1
@@ -720,3 +792,4 @@
     }, speed);
   }
 </script>
+
