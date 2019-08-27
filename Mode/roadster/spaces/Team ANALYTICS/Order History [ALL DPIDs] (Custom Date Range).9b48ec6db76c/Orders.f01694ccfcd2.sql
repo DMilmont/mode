@@ -204,6 +204,7 @@ select
   dp.dpid as "DPID"
   --,os.cancelled,os.complete 
   ,case when os.cancelled = 'Cancelled' then 'Cancelled' when os.complete = 'Complete' then 'Complete' else 'Open' end as "Status"
+  ,o.order_type "Order Type"
   ,o.order_dbid as "Application Order ID"
   ,os.order_id as "order_id"
   ,case when u.in_store = true then 'In Store' else 'Online' end as "Source"
@@ -242,9 +243,9 @@ select
   ,ti.model "TradeIn Model"
   ,ti.year "TradeIn year"
   ,ti.mileage "TradeIn Mileage"
-  ,tio.timestamp "TradeOffer Timestamp"
-  ,tio.trade_in_offer_dbid "TradeOffer ID"
-  ,tio.source "TradeOffer Source"
+  --,tio.timestamp "TradeOffer Timestamp"
+  --,tio.trade_in_offer_dbid "TradeOffer ID"
+  --,tio.source "TradeOffer Source"
   ,tc.timestamp "TradeComplete Timestamp"
   ,tc.duration "TradeComplete Duration"
 
@@ -259,7 +260,7 @@ left join public.dealer_partners dp on dp.id = os.dealer_partner_id
 left join accessories on accessories.order_id = os.order_id 
 left join serviceplans on serviceplans.order_id = os.order_id
 left join public.trade_ins ti on ti.order_id = os.order_id 
-left join public.trade_in_offer tio on tio.order_id = os.order_id
+--left join public.trade_in_offer tio on tio.order_id = os.order_id
 left join public.trade_in_completed tc on tc.order_id = os.order_id  
 
 
@@ -276,12 +277,13 @@ order by os.orderstart desc
 
 start_date:
   type: date
-  default: {{ 'now' | date: '%s' | minus: 716400 | date: '%Y-%m-%d' }}
+  default: {{ 'now' | date: '%s' | minus: 2678400 | date: '%Y-%m-%d' }}
   description: Order-Start Date
 
 end_date: 
   type: date
-  default: {{ 'now' | date: '%s' | minus: 111600 | date: '%Y-%m-%d' }}
+  default: {{ 'now' | date: '%s' | minus: 86400 | date: '%Y-%m-%d' }}
   description: Order-Start date 
 
 {% endform %}
+
