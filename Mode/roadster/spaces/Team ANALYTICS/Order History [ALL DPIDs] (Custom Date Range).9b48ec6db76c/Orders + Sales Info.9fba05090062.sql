@@ -1,7 +1,7 @@
 
-with 
+with
 order_steps as (
-SELECT 
+SELECT
         (order_submitted.order_step_dbid) :: text AS order_step_id,
          'Order Submitted' :: text                 AS "Item Type",
          order_submitted."timestamp",
@@ -182,7 +182,7 @@ SELECT
      ,max(case when "Item Type" = 'Final Deal Accepted' then 'fda' end) as "fda"
      ,max(case when "Item Type" = 'Order Completed' then 'Complete' end) as "complete"
      ,max(case when "Item Type" = 'Order Cancelled' then 'Cancelled' end) as "cancelled"
-     
+
      from order_steps
 
      group by 1,2
@@ -199,22 +199,39 @@ SELECT
     FROM public.plans
     group by 1)
 
+, matched_sales as (
+  SELECT
+  DISTINCT
+  dpid,
+  initcap(coalesce(agent1, agent2)) agent_name,
+  first_name buyer_first_name,
+  last_name buyer_last_name,
+  initcap(first_name) || ' ' || initcap(last_name) buyer_full_name,
+  vin,
+  1 exist
+  FROM crm_records crm
+  LEFT JOIN dealer_partners dp ON crm.dealer_partner_id = dp.id
+  WHERE sold_at IS NOT NULL
+  and vin is not null
+  and coalesce(agent1, agent2) is not null
+  and initcap(first_name) || ' ' || initcap(last_name) is not null
+)
 
-select  
+, base_order_data as (
+select
+  row_number() OVER (ORDER BY os.orderstart) ind,
   dp.dpid as "DPID"
-  --,os.cancelled,os.complete 
   ,case when os.cancelled = 'Cancelled' then 'Cancelled' when os.complete = 'Complete' then 'Complete' else 'Open' end as "Status"
   ,o.order_type "Order Type"
   ,o.order_dbid as "Application Order ID"
   ,os.order_id as "order_id"
   ,case when u.in_store = true then 'In Store' else 'Online' end as "Source"
-  ,agent.first_name || ' ' || agent.last_name as "Agent (bug... this isnt right)"
+  ,initcap(agent.first_name) || ' ' || initcap(agent.last_name) as "Agent"
   ,os.os
   ,os.ds
   ,os.da
   ,COALESCE(ti.status, case when tc.is_final = true then 'notrade' else '' end) "ts"
-  --,tc.is_final "Trade Complete Final?"
-  ,os.sp 
+  ,os.sp
   ,serviceplans.count as "sp#"
   ,to_char(serviceplans.amt,'L999,999') as "sp$"
   ,os.ac
@@ -225,9 +242,9 @@ select
   ,os.fda
   ,to_char(os.orderstart, 'YYYY_MM_DD Dy HH:MM:SSam') "Order Start"
   ,to_char(os.laststep, 'YYYY_MM_DD Dy HH:MM:SSam') "Last Step"
-  ,u.first_name || ' ' || u.last_name as "Customer"
-  ,o.vin as "VIN"
-  ,o.grade 
+  ,initcap(u.first_name) || ' ' || initcap(u.last_name) as "Customer"
+  ,o.vin
+  ,o.grade
   ,o.year
   ,o.model
   ,o.deal_type
@@ -239,13 +256,10 @@ select
   ,o.mileage_limit as "Mile Lmt"
   ,ti.vin "TradeIn VIN"
   ,ti.source "TradeIn Source"
-  ,ti.trade_in_dbid "TradeIn ID" 
+  ,ti.trade_in_dbid "TradeIn ID"
   ,ti.model "TradeIn Model"
   ,ti.year "TradeIn year"
   ,ti.mileage "TradeIn Mileage"
-  --,tio.timestamp "TradeOffer Timestamp"
-  --,tio.trade_in_offer_dbid "TradeOffer ID"
-  --,tio.source "TradeOffer Source"
   ,tc.timestamp "TradeComplete Timestamp"
   ,tc.duration "TradeComplete Duration"
 from order_status os
@@ -253,33 +267,70 @@ left join public.orders o on o.id = os.order_id
 left join public.users u on u.id = os.user_id
 left join public.agents agent on agent.id = os.agent_id
 left join public.dealer_partners dp on dp.id = os.dealer_partner_id
-left join accessories on accessories.order_id = os.order_id 
+left join accessories on accessories.order_id = os.order_id
 left join serviceplans on serviceplans.order_id = os.order_id
-left join public.trade_ins ti on ti.order_id = os.order_id 
---left join public.trade_in_offer tio on tio.order_id = os.order_id
-left join public.trade_in_completed tc on tc.order_id = os.order_id  
-
-
+left join public.trade_ins ti on ti.order_id = os.order_id
+left join public.trade_in_completed tc on tc.order_id = os.order_id
 where orderstart >= '{{start_date}}'::date 
 and orderstart <= '{{end_date}}'::date 
---and fds is not null
---and os.cancelled is null 
+order by os.orderstart desc
+)
 
---and dpid is not null 
-order by os.orderstart desc 
+--- Final Data Triple Join
+, everything_match as (
+SELECT
+DISTINCT
+ind,
+exist "Bought This Car"
+FROM base_order_data bod
+LEFT JOIN matched_sales ms ON
+  bod."Customer" = ms.buyer_full_name AND
+  bod.vin = ms.ViN AND
+  bod."Agent" = ms.agent_name
+)
 
+, diff_vin as (
+SELECT
+DISTINCT
+ind,
+exist "Bought Different Car"
+FROM base_order_data bod
+LEFT JOIN matched_sales ms ON
+  bod."Customer" = ms.buyer_full_name AND
+  bod.vin <> ms.ViN AND
+  bod."Agent" = ms.agent_name
+)
 
-{% form %}
+, diff_agent as (
+SELECT
+DISTINCT
+ind,
+exist "Bought This Car - Different Agent"
+FROM base_order_data bod
+LEFT JOIN matched_sales ms ON
+  bod."Customer" = ms.buyer_full_name AND
+  bod.vin = ms.ViN AND
+  bod."Agent" <> ms.agent_name
+)
 
-start_date:
-  type: date
-  default: {{ 'now' | date: '%s' | minus: 2678400 | date: '%Y-%m-%d' }}
-  description: Order-Start Date
-
-end_date: 
-  type: date
-  default: {{ 'now' | date: '%s' | minus: 86400 | date: '%Y-%m-%d' }}
-  description: Order-Start date 
-
-{% endform %}
-
+, sales_match_exists as (
+SELECT
+DISTINCT
+ind,
+exist "Sales Match Exists"
+FROM base_order_data bod
+LEFT JOIN matched_sales ms ON
+  bod."DPID" = ms.dpid
+)
+--
+ SELECT
+ "Bought This Car",
+ "Bought Different Car",
+ "Bought This Car - Different Agent",
+ "Sales Match Exists",
+ bod.*
+ FROM base_order_data bod
+ LEFT JOIN everything_match em ON bod.ind = em.ind
+ LEFT JOIN diff_vin dv ON bod.ind = dv.ind
+ LEFT JOIN diff_agent da ON bod.ind = da.ind
+ LEFT JOIN sales_match_exists sme ON bod.ind = sme.ind
