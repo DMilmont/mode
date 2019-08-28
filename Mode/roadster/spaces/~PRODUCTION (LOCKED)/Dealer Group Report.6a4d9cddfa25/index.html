@@ -478,7 +478,14 @@
           }).appendTo(container);
         }
       },
-      columns: [{
+      columns: [
+        {
+          dataField: 'Title',
+          groupIndex: 0,
+          expanded: true,
+          sortOrder: 'desc'
+        },
+        {
           dataField: 'Dealership',
           caption: 'Rooftop',
           alignment: 'center',
@@ -570,6 +577,84 @@
           headerCellTemplate: $('<p style="color: white">Close Rate</p>')
         },
       ],
+      summary: {
+        groupItems: [
+          {
+            column: "Dealership",
+            valueFormat: 'Summary Data:',
+            showInGroupFooter: true
+          },
+          {  
+            column: "Dealer Visitors (text)",
+            summaryType: "sum",
+            alignByColumn: true,
+            showInGroupFooter: true,
+            displayFormat: '{0}'
+          }, 
+          {  
+            column: "Express Visitors",
+            summaryType: "sum",
+            alignByColumn: true,
+            showInGroupFooter: true,
+            displayFormat: '{0}'
+          }, 
+         {  
+            column: "Online Express Ratio",
+            summaryType: "avg",
+            alignByColumn: true,
+            valueFormat: 'percent',
+            showInGroupFooter: true,
+            displayFormat: '{0}'
+          }, 
+          {  
+            column: "Online Prospects",
+            summaryType: "sum",
+            alignByColumn: true,
+            showInGroupFooter: true,
+            displayFormat: '{0}'
+          }, 
+          {  
+            column: "Prospect Conversion",
+            summaryType: "avg",
+            alignByColumn: true,
+            valueFormat: 'percent',
+            showInGroupFooter: true,
+            displayFormat: '{0}'
+          }, 
+          {  
+            column: "Online Shares",
+            summaryType: "sum",
+            alignByColumn: true,
+            showInGroupFooter: true,
+            displayFormat: '{0}'
+          },
+          {  
+            column: "Online Orders",
+            summaryType: "sum",
+            alignByColumn: true,
+            showInGroupFooter: true,
+            displayFormat: '{0}'
+          },
+           {  
+            column: "Roadster Matched Sales",
+            summaryType: "sum",
+            alignByColumn: true,
+            showInGroupFooter: true,
+            displayFormat: '{0}'
+          },
+          {  
+            column: "Close Rate",
+            summaryType: "avg",
+            alignByColumn: true,
+            valueFormat: 'percent',
+            showInGroupFooter: true,
+            displayFormat: '{0}'
+          },
+            ],
+        },
+      grouping: {
+        expandMode: 'rowClick'
+      }
     }).dxDataGrid("instance");
     // In-Store Data Grid
     var summ2 = $('#in_store_metrics_summ').dxDataGrid({

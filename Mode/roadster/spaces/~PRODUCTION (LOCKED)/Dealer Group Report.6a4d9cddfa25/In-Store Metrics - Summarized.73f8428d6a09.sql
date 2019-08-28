@@ -26,6 +26,7 @@ AND "Date"  >= (date_trunc('month', now()) - '2 months'::interval)
 )
 
 SELECT
+CASE WHEN "Dealership" ILIKE '%Percentile%' THEN 'Top Dealers' ELSE 'Your Rooftops' END as "Title",
 "Dealership", 
 "Date"::text,
 SUM("In-Store Prospects") "In-Store Prospects",
@@ -39,5 +40,5 @@ MIN("Active Agents") "Active Agents",
 MIN("Certified Agents") "Certified Agents", 
 MIN("Activity w/n 3 Days") "Activity w/n 3 Days"
 FROM instore_data
-GROUP BY 1,2
-ORDER BY 1,2
+GROUP BY 1,2,3
+ORDER BY 2,3

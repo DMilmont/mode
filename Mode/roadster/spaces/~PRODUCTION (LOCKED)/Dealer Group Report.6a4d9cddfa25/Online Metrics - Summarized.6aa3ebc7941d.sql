@@ -42,6 +42,7 @@ ORDER BY "Dealership", "Date"::text
 )
 
 SELECT
+CASE WHEN "Dealership" ILIKE '%Percentile%' THEN 'Top Dealers' ELSE 'Your Rooftops' END as "Title",
 "Dealership", 
 "Date"::text, 
 CASE WHEN "Dealer Visitors" = 0 OR "Dealer Visitors" IS NULL THEN 'Traffic Unavailable' ELSE "Dealer Visitors"::text END "Dealer Visitors (text)", 
