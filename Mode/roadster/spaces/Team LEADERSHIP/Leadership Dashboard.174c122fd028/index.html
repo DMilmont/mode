@@ -37,9 +37,12 @@
       <mode-chart id="chart_a58559f3633f" dataset="dataset" options="chart_options"></mode-chart>
     </div>
   </div>
-  <div class="row" data-row-height="large">
-    <div class="col-md-12">
-      <mode-chart id="chart_21fd6611c800" dataset="dataset" options="chart_options"></mode-chart>
+  <div class="row" data-row-height="extra-large">
+    <div class="col-md-6">
+      <mode-chart id="chart_2843b6dc7b54" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-6">
+      <mode-chart id="chart_def8114b683d" dataset="dataset" options="chart_options"></mode-chart>
     </div>
   </div>
 </div>
@@ -76,7 +79,7 @@
     }
 
 
-    var chart = Highcharts.charts[4]; //Primary Make Chart
+    var chart = Highcharts.charts[4]; //Primary Manufacturer Chart
 
     chart.update({
 
@@ -99,6 +102,49 @@
     });
 
 
+    var chart = Highcharts.charts[5]; //Primary Make Chart
+
+    chart.update({
+
+      xAxis: {
+
+        minorTickLength: 0, //hide the little ticks on the Vertical Axis
+        tickLength: 0, //hide the little ticks on the Vertical Axis
+        lineColor: "#FFFFFF", //make the vertical axis white <<<< DOESN'T Work for some reason
+        lineWidth: 0, //make the vertical axis 0 pixels wide
+      },
+
+      yAxis: {
+
+        labels: {
+          enabled: false
+        },
+        gridLineColor: 'transparent' // hide vertical gridlines
+      }
+
+    });
+
+    var chart = Highcharts.charts[6]; // Make Success Chart
+
+    chart.update({
+
+      xAxis: {
+
+        minorTickLength: 0, //hide the little ticks on the Vertical Axis
+        tickLength: 0, //hide the little ticks on the Vertical Axis
+        lineColor: "#FFFFFF", //make the vertical axis white <<<< DOESN'T Work for some reason
+        lineWidth: 0, //make the vertical axis 0 pixels wide
+      },
+
+      yAxis: {
+
+        labels: {
+          enabled: false
+        },
+        gridLineColor: 'transparent' // hide vertical gridlines
+      }
+
+    });
 
 
   }, 200);
