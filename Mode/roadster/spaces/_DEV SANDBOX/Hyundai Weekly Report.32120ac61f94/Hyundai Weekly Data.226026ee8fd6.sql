@@ -25,3 +25,4 @@ LEFT JOIN dealer_partners dp ON tab1.dpid = dp.dpid
 LEFT JOIN dts ON tab1."Rolling 7 Day Window" = dts."Rolling 7 Day Window"
 INNER JOIN fact.hyundai_shopper_assurance hsa ON tab1.dpid = hsa.dpid
 WHERE tab1."Rolling 7 Day Window" = (SELECT max("Rolling 7 Day Window")-1 FROM dts)
+AND hsa.shopper_assurance = 'Y'
