@@ -64,26 +64,29 @@
       },
       dataSource: {
         store: weekly,
-        fields: [{
-            dataField: 'dpid',
-            caption: 'Dealer',
-            area: 'row',
-            width: 120
-          },
+        fields: [
           {
-            dataField: 'Title',
-            caption: 'Dealer',
+            dataField: 'dealer_code', 
+            caption: 'Code',
             area: 'row',
-            width: 120,
-            sortOrder: 
-          },
-          {
-            dataField: 'Measures',
-            area: 'column',
             expanded: true
           },
           {
+            dataField: 'name',
+            caption: 'Dealer',
+            area: 'row',
+            width: 120,
+            expanded: true,
+          },
+          {
+            dataField: 'Title',
+            area: 'column',
+            expanded: true
+          },
+          
+          {
             dataField: 'ct_dealer_visitors',
+            caption: 'Tier 3 Visitors',
             alignment: 'center',
             dataType: 'number',
             summaryType: 'sum',
@@ -103,6 +106,7 @@
           },
           {
             dataField: 'ct_express_visitors',
+            caption: 'Express Visitors',
             alignment: 'center',
             dataType: 'number',
             summaryType: 'sum',
@@ -132,7 +136,7 @@
               }
             },
             customizeText: function(cellInfo) {
-              if (cellInfo.valueText == 'NaN') {
+              if (cellInfo.value >  1) {
                 v = '';
               } else {
                 v = cellInfo.valueText;
@@ -146,6 +150,7 @@
           },
           {
             dataField: 'ct_leads',
+            caption: 'Tier 3 Leads',
             area: 'data',
             summaryType: 'sum',
             customizeText: function(cellInfo) {
@@ -163,6 +168,7 @@
           },
           {
             dataField: 'ct_trade_in_started',
+            caption: 'Trade-In Started',
             area: 'data',
             customizeText: function(cellInfo) {
               if (cellInfo.valueText == 'NaN') {
@@ -180,6 +186,7 @@
           },
           {
             dataField: 'ct_trade_in_completed',
+            caption: 'Trade-In Completed',
             area: 'data',
             customizeText: function(cellInfo) {
               if (cellInfo.valueText == 'NaN') {
@@ -196,7 +203,32 @@
             summaryType: 'sum'
           },
           {
+            caption: "Trade-In Ratio",
+            area: "data",
+            summaryType: "custom",
+            calculateSummaryValue: e => {
+              if (e.value('ct_trade_in_started') == 0) {
+                return 0;
+              } else {
+                return e.value('ct_trade_in_completed') / e.value('ct_trade_in_started');
+              }
+            },
+            customizeText: function(cellInfo) {
+              if (cellInfo.value >  1) {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
+            },
+            format: {
+              precision: 1,
+              type: 'percent'
+            },
+          },
+          {
             dataField: 'ct_test_drive_start',
+            caption: 'Test Drive Started',
             area: 'data',
             customizeText: function(cellInfo) {
               if (cellInfo.valueText == 'NaN') {
@@ -214,6 +246,7 @@
           },
           {
             dataField: 'ct_test_drive_completed',
+            caption: 'Test Drive Completed',
             area: 'data',
             customizeText: function(cellInfo) {
               if (cellInfo.valueText == 'NaN') {
@@ -230,7 +263,50 @@
             summaryType: 'sum'
           },
           {
+            caption: "Test Drive Ratio",
+            area: "data",
+            summaryType: "custom",
+            calculateSummaryValue: e => {
+              if (e.value('ct_test_drive_start') == 0) {
+                return 0;
+              } else {
+                return e.value('ct_test_drive_completed') / e.value('ct_test_drive_start');
+              }
+            },
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
+            },
+            format: {
+              precision: 1,
+              type: 'percent'
+            },
+          },
+          {
             dataField: 'ct_pre_approval_started',
+            caption: 'Pre-Approval Started',
+            area: 'data',
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
+            },
+            format: {
+              type: 'fixedPoint',
+              precision: 1
+            },
+            summaryType: 'sum'
+          },
+          {
+            dataField: 'ct_soft_credit_start',
+            caption: 'Soft-Credit Started',
             area: 'data',
             customizeText: function(cellInfo) {
               if (cellInfo.valueText == 'NaN') {
@@ -248,6 +324,7 @@
           },
           {
             dataField: 'ct_soft_credit_completed',
+            caption: 'Soft-Credit Completed',
             area: 'data',
             customizeText: function(cellInfo) {
               if (cellInfo.valueText == 'NaN') {
@@ -262,6 +339,30 @@
               precision: 1
             },
             summaryType: 'sum'
+          },
+          {
+            caption: "Soft-Credit Ratio",
+            area: "data",
+            summaryType: "custom",
+            calculateSummaryValue: e => {
+              if (e.value('ct_soft_credit_start') == 0) {
+                return 0;
+              } else {
+                return e.value('ct_soft_credit_completed') / e.value('ct_soft_credit_start');
+              }
+            },
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
+            },
+            format: {
+              precision: 1,
+              type: 'percent'
+            },
           },
 
         ],

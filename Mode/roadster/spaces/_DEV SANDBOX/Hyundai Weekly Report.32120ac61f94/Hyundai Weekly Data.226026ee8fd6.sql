@@ -1,6 +1,6 @@
 WITH tab1 as (
 SELECT DISTINCT *
-FROM report_layer.hyundai_weekly_report
+FROM report_layer.hyundai_weekly_report_2
 ORDER BY dpid, "Rolling 7 Day Window" DESC
 ),
 
@@ -15,8 +15,13 @@ GROUP BY 1
 SELECT
 start_date, 
 end_date, 
+dp.name,
+dealer_code,
 'Week of ' ||  (EXTRACT(MONTH FROM start_date)) || '/' || (EXTRACT(DAY FROM start_date))  || ' - ' || (EXTRACT(MONTH FROM end_date)) || '/' || (EXTRACT(DAY FROM end_date)) "Title",
 tab1.*,
 'Measures' "Measures"
 FROM tab1
+LEFT JOIN dealer_partners dp ON tab1.dpid = dp.dpid
 LEFT JOIN dts ON tab1."Rolling 7 Day Window" = dts."Rolling 7 Day Window"
+INNER JOIN fact.hyundai_shopper_assurance hsa ON tab1.dpid = hsa.dpid
+WHERE tab1."Rolling 7 Day Window" = (SELECT max("Rolling 7 Day Window")-1 FROM dts)
