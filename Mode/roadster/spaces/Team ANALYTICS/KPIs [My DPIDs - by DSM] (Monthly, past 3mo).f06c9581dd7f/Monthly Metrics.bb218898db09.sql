@@ -205,6 +205,9 @@ LEFT JOIN sale_data_daily sdd ON dd.month_year = sdd.month_year AND dd.dpid = sd
 LEFT JOIN pivot_orders_agg poa ON dd.month_year = poa.month_year AND dd.dpid = poa.dpid
 LEFT JOIN in_store_shares iss ON dd.month_year = iss.month_year AND dd.dpid = iss.dpid
 LEFT JOIN in_store_prospects isp ON dd.month_year = isp.month_year AND dd.dpid = isp.dpid
-left join report_layer.vw_share_open_rate sor on dd.month_year=sor.month_year and dd.dpid= sor.dpid 
+left join report_layer.vw_share_open_rate sor on dd.month_year=sor.month_year and dd.dpid= sor.dpid
+where case when '{{dsm}}'='ALL' then 1
+           when success_manager='{{dsm}}' then 1
+           else 0 end =1
 group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25, 26, 27, 28, 29,30,31,32,33,34,35,36
 ORDER BY dd.month_year::date desc, COALESCE(sdd."MATCHED SALE", 0) desc
