@@ -10,109 +10,111 @@ WHERE date > (date_trunc('day', now()) - INTERVAL '1 day')
 
 
 ,date_dpid as (
-select c.month_year, dp.dpid, sf.status, dp.status dp_status, sf.success_manager, sf.actual_live_date, sf.dealer_group, dp.name, dp.tableau_secret as dpsk
-from fact.d_cal_month c
-cross join (
-  select distinct dpid, tableau_secret, name, status from dealer_partners
-  ) dp
+select DISTINCT 'Past 30 Days' month_year, dp.dpid, sf.status, 
+dp.status dp_status, sf.success_manager, sf.actual_live_date, sf.dealer_group, dp.name, dp.tableau_secret as dpsk
+FROM dealer_partners dp
 left join fact.salesforce_dealer_info sf on sf.dpid = dp.dpid
-where c.month_year >= (date_trunc('day', now()) - INTERVAL '91 days')
-and (sf.status = 'Live' or dp.status = 'Live')
-group by 1,2,3,4,5,6,7,8,9
+where 
+(sf.status = 'Live' or dp.status = 'Live')
+
 )
 
 ,in_store_shares as (
-SELECT date_trunc('month', cohort_date_utc) month_year,
+SELECT 'Past 30 Days' month_year,
       dpid,
       count( f_prospect.customer_email) "In-Store Shares"
 FROM fact.f_prospect
 WHERE item_type = 'SharedExpressVehicle'
 AND source = 'Lead Type'
---AND is_in_store = True
-GROUP BY date_trunc('month', cohort_date_utc), dpid
+AND is_in_store = True
+GROUP BY 1,2
 )
 
 ,online_express_traffic as (
 select
-  date_trunc('month', date) month_year
+'Past 30 Days' month_year
 , dpid
 , dpsk
 , sum(count) online_express_visitors
 from fact.mode_agg_daily_traffic_and_prospects
 where type = 'Online Express Traffic'
-and date >= (date_trunc('day', now()) - INTERVAL '91 days')
+and date >= (date_trunc('day', now()) - INTERVAL '31 days')
 group by 1,2,3
     )
 
 ,online_express_srp_traffic as (
 select
-  date_trunc('month', date) month_year
+'Past 30 Days' month_year
 , dpid
 , dpsk
 , sum(count) as online_express_srp_visitors
 from fact.mode_agg_daily_traffic_and_prospects
 where type = 'Online Express SRP Traffic'
-AND date >= (date_trunc('day', now()) - INTERVAL '91 days')
+AND date >= (date_trunc('day', now()) - INTERVAL '31 days')
 group by 1,2,3
 )
 
 
 ,online_express_vdp_traffic as (
 select
-  date_trunc('month', date) month_year
+'Past 30 Days' month_year
 , dpid
 , dpsk
 , sum(count) as online_express_vdp_visitors
 from fact.mode_agg_daily_traffic_and_prospects
 where type = 'Online Express VDP Traffic'
-AND date >= (date_trunc('day', now()) - INTERVAL '91 days')
-group by 1,2,3)
+AND date >= (date_trunc('day', now()) - INTERVAL '31 days')
+group by 1,2,3
+)
 
 ,online_prospects as (
 select
-  date_trunc('month', date) month_year
+'Past 30 Days' month_year
 , dpid
 , dpsk
 , sum(count) online_prospects
 from fact.mode_agg_daily_traffic_and_prospects
 where type = 'Online Prospects'
-AND date >= (date_trunc('day', now()) - INTERVAL '91 days')
-group by 1,2,3)
+AND date >= (date_trunc('day', now()) - INTERVAL '31 days')
+group by 1,2,3
+)
 
 , in_store_prospects as (
-  SELECT date_trunc('month', f_prospect.cohort_date_utc)                AS month_year,
+  SELECT 'Past 30 Days' month_year,
         f_prospect.dpid,
         f_prospect.dpsk,
         'In-Store Prospects' :: text                AS type,
         count(DISTINCT f_prospect.customer_email) AS sum_in_store_prospects
  FROM fact.f_prospect
- WHERE ((f_prospect.cohort_date_utc >= date_trunc('month' :: text, (CURRENT_DATE - '91 days' :: interval))) AND
+ WHERE ((f_prospect.cohort_date_utc >= date_trunc('month' :: text, (CURRENT_DATE - '31 days' :: interval))) AND
         (f_prospect.is_in_store IS TRUE))
- GROUP BY date_trunc('month', f_prospect.cohort_date_utc), f_prospect.dpid, f_prospect.dpsk, 'Online Prospects' :: text
+ GROUP BY 1,2,3,4
 
 ),
 
 raw_sale_data as (
 SELECT DISTINCT sold_date::date, item_type, dpid, vin, days_to_close_from_last_lead
 FROM fact.f_sale
-WHERE sold_date >= (date_trunc('day', now()) - INTERVAL '91 days')
-),
+WHERE sold_date >= (date_trunc('day', now()) - INTERVAL '31 days')
+)
 
-sale_data_daily as (
-SELECT date_trunc('month', sold_date) month_year, dpid,
+,sale_data_daily as (
+SELECT 'Past 30 Days' month_year
+, dpid,
 COUNT (DISTINCT CASE WHEN item_type = 'Sale' THEN vin ELSE NULL END) AS "ALL SALES",
 COUNT (DISTINCT CASE WHEN item_type = 'Matched Sale' AND days_to_close_from_last_lead < 91 THEN vin ELSE NULL END) AS "MATCHED SALE"
 FROM raw_sale_data
-GROUP BY date_trunc('month', sold_date), dpid
-), 
+GROUP BY 1,2
+)
 
-base_order_data as (
+,base_order_data as (
     SELECT cohort_date_utc, dpid, item_type, order_step_id
     FROM fact.f_prospect
     WHERE source = 'Order Step'
-),
+    AND cohort_date_utc >= (date_trunc('day', now()) - INTERVAL '31 days')
+)
 
-pivot_orders as (
+,pivot_orders as (
       SELECT base_order_data.*,
              CASE WHEN item_type = 'Service Plans Completed' THEN 1 ELSE 0 END AS "Service Plans Completed",
              CASE WHEN item_type = 'Credit Completed' THEN 1 ELSE 0 END        AS "Credit Completed",
@@ -128,7 +130,7 @@ pivot_orders as (
   ), 
   
 pivot_orders_agg as (
-SELECT date_trunc('month', cohort_date_utc) month_year,
+SELECT 'Past 30 Days' month_year,
        dpid,
        SUM("Service Plans Completed") AS "Service Plans Completed",
         SUM("Credit Completed") AS "Credit Completed",
@@ -141,15 +143,14 @@ SELECT date_trunc('month', cohort_date_utc) month_year,
         SUM("Accessories Attached") AS "Accessories Attached",
         SUM("Final Deal Sent") AS "Final Deal Sent"
 FROM pivot_orders
-GROUP BY date_trunc('month', cohort_date_utc), dpid
+GROUP BY 1,2
 )
 
 
 select
-  to_char(dd.month_year, 'Month') || ' ' || to_char(dd.month_year, 'YYYY') as "Month"
-
-
-, dd.name as "Dealership"
+DISTINCT 
+dd.month_year,
+dd.name as "Dealership"
 , dd.dealer_group as "Dealer Group"
 , dd.status as "SF Status"
 , dd.dp_status as "DA Status"
@@ -185,15 +186,13 @@ select
 , COALESCE("Service Plans Attached", 0) AS "Service Plans Attached"
 , COALESCE("Service Plans Completed", 0) AS "Service Plans Completed"
 , COALESCE("Final Deal Sent", 0) AS "Final Deal Sent"
-, dd.month_year::date as "Date"
-
-
 from date_dpid dd
 left join online_express_traffic et on et.month_year = dd.month_year and et.dpid = dd.dpid
 left join (
-  SELECT dpid, date_trunc('month', date) month_year, SUM(visitors) visitors
+  SELECT dpid,'Past 30 Days' month_year, SUM(visitors) visitors
   FROM fact.agg_daily_dealer_traffic
-  GROUP BY dpid, date_trunc('month', date)
+  WHERE date  >= (date_trunc('day', now()) - INTERVAL '31 days')
+  GROUP BY 1,2
   ) dt on dt.dpid = dd.dpid and dt.month_year = dd.month_year
 left join cdk_api ca on ca.dpid = dd.dpid
 LEFT JOIN dealer_partners dp  ON dd.dpid = dp.dpid
@@ -205,9 +204,5 @@ LEFT JOIN sale_data_daily sdd ON dd.month_year = sdd.month_year AND dd.dpid = sd
 LEFT JOIN pivot_orders_agg poa ON dd.month_year = poa.month_year AND dd.dpid = poa.dpid
 LEFT JOIN in_store_shares iss ON dd.month_year = iss.month_year AND dd.dpid = iss.dpid
 LEFT JOIN in_store_prospects isp ON dd.month_year = isp.month_year AND dd.dpid = isp.dpid
-left join report_layer.vw_share_open_rate sor on dd.month_year=sor.month_year and dd.dpid= sor.dpid
-where case when '{{dsm}}'='ALL' then 1
-           when success_manager='{{dsm}}' then 1
-           else 0 end =1
-group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25, 26, 27, 28, 29,30,31,32,33,34,35,36
-ORDER BY dd.month_year::date desc, COALESCE(sdd."MATCHED SALE", 0) desc
+LEFT JOIN report_layer.vw_share_open_rate_past_30 sor on dd.month_year=sor.ddate and dd.dpid= sor.dpid
+ORDER BY COALESCE(sdd."MATCHED SALE", 0) desc
