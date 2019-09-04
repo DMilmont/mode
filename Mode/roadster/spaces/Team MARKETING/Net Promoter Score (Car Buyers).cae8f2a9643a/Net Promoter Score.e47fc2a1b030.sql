@@ -14,7 +14,7 @@ WITH basic_data as (
 
 SELECT
 name,
-SUM(TOTAL) "CT Reponses",
+SUM(TOTAL) "Reponses",
 ROUND(SUM("Promoter")::decimal / SUM(total), 2) "% Promoter",
 ROUND(SUM("Detractor")::decimal / SUM(total), 2) "% Detractor",
 100*ROUND((SUM("Promoter")::decimal / SUM(total)) - (SUM("Detractor")::decimal / SUM(total)), 2) "Net Promoter Score"
