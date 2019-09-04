@@ -19,4 +19,5 @@ FROM fact.mode_agg_daily_traffic_and_prospects ft
 LEFT JOIN dealer_partners dp ON ft.dpid = dp.dpid
 WHERE  name IN (SELECT initcap(name) FROM dpids)
 AND type in ('Online Express SRP Traffic', 'Online Express VDP Traffic')
+AND date > date_trunc('month', NOW() - '2 months'::interval)
 ORDER BY date
