@@ -1,0 +1,259 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.common.css">
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.light.css">
+<link rel="stylesheet" media="screen" href="//d2yvqewjuuy0k6.cloudfront.net/fonts/232352/75E15E124468560E8.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdn3.devexpress.com/jslib/18.2.8/js/dx.all.js"></script>
+<style>
+  .chart-header {
+    display: none;
+  }
+
+  p {
+    font-size: medium;
+  }
+
+  BR {
+    clear: right
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  a:hover,
+  a:active,
+  a:focus {
+    color: darkred;
+    text-decoration: underline;
+  }
+
+  * {
+    font-size: 100%;
+    font-family: "Gotham SSm A", "Gotham SSm B", Georgia
+  }
+
+  .dx-icon {
+    display: inline-block;
+    font-size: inherit;
+    font-family: 'DXIcons' !important;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-transform: translate(0, 0);
+    transform: translate(0, 0);
+  }
+
+  .dx-pivotgrid .dx-expand-icon-container {
+    font-family: 'DXIcons' !important;
+  }
+</style>
+<div class="mode-header embed-hidden">
+  <h1>{{ title }}</h1>
+  <p>{{ description }}</p>
+</div>
+<div class="mode-grid container">
+  <mode-chart id="Summary_Pivot"></mode-chart>
+
+  <p>• Opportunity Rate = Opportunity / Leads </p>
+  <p>• Closed/Won Rate = Closed/Won / Leads </p>
+  <p><u>Lead Segmentation Logic </u></p>
+<a href="https://ibb.co/LrR6D3q"><img src="https://i.ibb.co/vhqmCSr/Screen-Shot-2019-09-04-at-4-38-48-PM.png" alt="Screen-Shot-2019-09-04-at-4-38-48-PM" border="0"></a><br />
+</div>
+<script>
+  var roadsterdx = {
+    version: 1,
+    getDataSource: function(queryName) {
+      // find the right data on the page, by name
+      var ii = 0;
+      var theSet = null;
+      for (ii = 0; ii < datasets.length; ii++) {
+        if (datasets[ii].queryName == queryName) {
+          theSet = datasets[ii].content;
+          break;
+        }
+      }
+      if (!theSet) {
+        theSet = [];
+      }
+
+      return theSet;
+
+    },
+  };
+  $(function() {
+    /*     var pivotGridChart = $("#pivotgrid-chart").dxChart({
+            dataSource: summary,
+            commonSeriesSettings: {
+                type: "bar",
+                argumentField:"date",
+            },
+     
+        }).dxChart("instance");
+       */
+    var summary = roadsterdx.getDataSource('Details');
+    var zip = new JSZip();
+
+
+
+    var pivotGrid = $("#Summary_Pivot").dxPivotGrid({
+      allowSortingBySummary: true,
+      allowFiltering: true,
+      showBorders: true,
+      showColumnGrandTotals: false,
+      showRowGrandTotals: false,
+      showRowTotals: false,
+      showColumnTotals: false,
+      fieldPanel: {
+        showColumnFields: false,
+        showDataFields: false,
+        showFilterFields: true,
+        showRowFields: true,
+        allowFieldDragging: true,
+        visible: true
+      },
+      headerFilter: {
+        allowSearch: true,
+        showRelevantValues: true,
+        width: 300,
+        height: 400
+      },
+      // fieldChooser: {
+      //   enabled: true,
+      //   height: 400
+      // },
+      "export": {
+        enabled: true,
+        fileName: "Lead_Segmentation"
+      },
+      //         onCellPrepared: function(e) {  
+      //             if (DevExpress.devices.current().deviceType === "phone" ) {  
+      //                 e.cellElement.css({ 'font-size': '10px' });
+
+      //                 // pivotGridInstance.getDataSource().field(1, { area: 'filter'} );
+      //             }  
+      // },
+
+      dataSource: {
+        retrieveFields: false,
+        export: {
+          enable: true
+        },
+        fields: [{
+            caption: "New/Expansion",
+            dataField: "new_expansion",
+            area: "row",
+            width: 100,
+            alignment: 'center',
+            sortBySummaryField: 'Leads',
+            sortOrder: 'desc',
+            allowFiltering: true,
+          },
+          {
+            caption: "Lead Origination",
+            dataField: "lead_origination",
+               sortBySummaryField: 'Leads',
+            sortOrder: 'desc',
+            area: "row",
+
+          }, {
+            caption: "Month",
+            dataField: "month",
+
+            area: "filter",
+            filterType: 'include',
+            filterValues: ['August   2019'],
+            sortingMethod: function(a, b) {
+              var index1 = a.value.rnk
+              var index2 = b.value.rnk
+              if (index1 > index2)
+                return 1;
+              if (index2 > index1)
+                return -1;
+              else
+                return 0;
+
+            }
+
+          },
+          {
+            caption: "Totals",
+            dataField: "title",
+            area: "column"
+          },
+          {
+            dataField: "lead_count",
+            caption: "Leads",
+            area: "data",
+            summaryType: "sum",
+            allowFiltering: false,
+            format: {
+              type: "fixedPoint",
+              precision: 0
+            }
+          }, {
+            dataField: "opportunity_count",
+            caption: "Opportunity",
+            area: "data",
+            summaryType: "sum",
+            format: {
+              type: "fixedPoint",
+              precision: 0
+            }
+          }, {
+            caption: "Opportunity Rate",
+            area: "data",
+            summaryType: "custom",
+            calculateSummaryValue: e => {
+              if (e.value('lead_count') == 0) {
+                return 0;
+              } else {
+                return e.value('opportunity_count') / e.value('lead_count');
+              }
+
+            },
+
+            format: {
+              precision: 1,
+              type: 'percent'
+            },
+          }, {
+            dataField: "closed_won_count",
+            caption: "Closed/Won",
+            area: "data",
+            summaryType: "sum",
+            format: {
+              type: "fixedPoint",
+              precision: 0
+            }
+          },
+          {
+            caption: "Closed/Won Rate",
+            area: "data",
+            summaryType: "custom",
+            calculateSummaryValue: e => {
+              if (e.value('lead_count') == 0) {
+                return 0;
+              } else {
+                return e.value('closed_won_count') / e.value('lead_count');
+              }
+
+            },
+
+            format: {
+              precision: 1,
+              type: 'percent'
+            },
+          },
+
+        ],
+        store: summary
+      }
+    }).dxPivotGrid("instance");
+
+
+
+
+
+  });
+</script>
