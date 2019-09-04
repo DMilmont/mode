@@ -89,18 +89,3 @@ select
   
   from agtbl
 
-
-
-{% form %}
-
-start_date:
-  type: date
-  default: {{ 'now' | date: '%s' | minus: 716400 | date: '%Y-%m-%d' }}
-  description: Data available for previous 3 months
-
-end_date: 
-  type: date
-  default: {{ 'now' | date: '%s' | minus: 111600 | date: '%Y-%m-%d' }}
-  description: Data available for previous 3 months
-
-{% endform %}

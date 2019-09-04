@@ -4,10 +4,12 @@ with date_dpid as (
 select c.date, dp.dpid, dp.name, dp.tableau_secret as dpsk
 from fact.d_cal_date as c
 cross join (
-  select distinct dpid, tableau_secret, name from dealer_partners  ) dp
---  where dpid not like '%demo%')dp 
+  select distinct dpid, tableau_secret, name,status from dealer_partners  ) dp
+left join fact.salesforce_dealer_info sf on  dp.dpid=sf.dpid 
 where c.date >= '{{ start_date }}'  
 and c.date <= '{{ end_date }}'
+and (sf.status='Live' or dp.status='Live')
+--and dp.dpid not like '%demo%'
 group by 1,2,3,4)
 
 
