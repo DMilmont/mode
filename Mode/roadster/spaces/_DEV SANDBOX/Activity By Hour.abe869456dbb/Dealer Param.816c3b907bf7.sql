@@ -7,7 +7,7 @@ ORDER BY name
 
 dealer_name:
     type: multiselect
-    default: 'Longo Toyota'
+    default: 'Longo Lexus'
     options:
         labels: name
         values: name
