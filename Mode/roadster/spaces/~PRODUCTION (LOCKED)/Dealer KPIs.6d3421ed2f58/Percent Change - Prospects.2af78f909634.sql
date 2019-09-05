@@ -47,13 +47,21 @@ LEFT JOIN order_status os ON ls.order_id = os.order_id
 WHERE timestamp >= (date_trunc('month', now()) - '6 months'::interval)
 AND dpid = '{{ dpid }}'
 
-)
+),
 
-SELECT case when ts_prospects>= (date_trunc('day', now()) - INTERVAL '7 Days') and ts_prospects< (date_trunc('day', now())) then 'Current 7 Days'
+output as ( SELECT case when ts_prospects>= (date_trunc('day', now()) - INTERVAL '7 Days') and ts_prospects< (date_trunc('day', now())) then 'Current 7 Days'
             when ts_prospects>= (date_trunc('day', now()) - INTERVAL '14 Days') then 'Past 7 Days' end as timeframe
 ,SUM(exists ) prospect_Count
 
 FROM tab2
 WHERE   ts_prospects>= (date_trunc('day', now()) - INTERVAL '14 Days')
-GROUP BY 1
+GROUP BY 1)
+
+select * from output
+union 
+select 'Current 7 Days', 0
+where case when 'Current 7 Days' in (select timeframe from output) then 0 else 1 end =1
+union
+select 'Past 7 Days', 0
+where case when 'Past 7 Days' in (select timeframe from output) then 0 else 1 end =1
 

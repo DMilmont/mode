@@ -124,9 +124,9 @@ totals as (
             GROUP BY 1
 )
 
-select COALESCE(department,'Not Entered') as department
+select COALESCE(department,'Not <br>Entered') as department
       ,sum(total_shares) as "Total Shares"
-, COALESCE(department,'Not Entered') || ' ('|| sum(total_shares)  ||')' as label
+, COALESCE(department,'Not <br>Entered') || '<br> ('|| sum(total_shares)  ||')' as label
 FROM totals t
 group by 1
 order by department desc   

@@ -2,7 +2,7 @@
 with date_dpid as (
         select DISTINCT date(c.date) as date,dp.id ,dp.dpid, dp.name, primary_make
         ,CASE WHEN  c.date >= (date_trunc('day', now()) - interval '7 days') then 'Current 7 Days'
-              WHEN  c.date >= (date_trunc('day', now()) - interval '14 days') then 'Previous 14 Days'
+              WHEN  c.date >= (date_trunc('day', now()) - interval '14 days') then 'Past 7 Days'
               END as time_frame
         from fact.d_cal_date c
                cross join (
@@ -120,14 +120,23 @@ totals as (
                   ,sum(case when "E-Mail Status"='4. Clicked' then net_cnt else 0 end) as Total_Clicked
             FROM agent_metrics
             GROUP BY 1
-)
+),
 
-select t.time_frame as "Time Frame"
+output as (select t.time_frame as "Time Frame"
       ,sum(total_shares) as "Total Shares"
 
 FROM totals t
 group by 1
-      
+  )
+select * from output
+union 
+select 'Current 7 Days', 0
+where case when 'Current 7 Days' in (select "Time Frame" from output) then 0 else 1 end =1
+union
+select 'Past 7 Days', 0
+where case when 'Past 7 Days' in (select "Time Frame" from output) then 0 else 1 end =1
+
+
       
 
 

@@ -51,7 +51,7 @@ AND dpid = '{{ dpid }}'
 
 SELECT instore_name
 ,SUM(exists ) prospect_Count
-, instore_name || ' ('|| SUM(exists )  ||')' as label
+, instore_name || '<br> ('|| SUM(exists )  ||')' as label
 FROM tab2
 WHERE   ts_prospects>= (date_trunc('day', now()) - INTERVAL '7 Days')
 and ts_prospects< (date_trunc('day', now()))
