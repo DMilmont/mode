@@ -1,32 +1,198 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.common.css">
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.light.css">
+<link rel="stylesheet" media="screen" href="//d2yvqewjuuy0k6.cloudfront.net/fonts/232352/75E15E124468560E8.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdn3.devexpress.com/jslib/18.2.8/js/dx.all.js"></script>
+<style>
+  .chart-header {
+    display: none;
+  }
+
+  p,
+  th {
+    font-size: medium;
+  }
+
+  BR {
+    clear: right
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  a:hover,
+  a:active,
+  a:focus {
+    color: darkred;
+    text-decoration: underline;
+  }
+
+  * {
+    font-size: 100%;
+    font-family: "Gotham SSm A", "Gotham SSm B", Georgia
+  }
+
+  .dx-icon {
+    display: inline-block;
+    font-size: inherit;
+    font-family: 'DXIcons' !important;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-transform: translate(0, 0);
+    transform: translate(0, 0);
+  }
+
+  .dx-pivotgrid .dx-expand-icon-container {
+    font-family: 'DXIcons' !important;
+  }
+
+  #chart-demo {
+    height: 440px;
+    width: 100%;
+  }
+
+  .demo-table {
+    margin-top: 80px;
+    width: 100%;
+    border: 1px solid #c2c2c2;
+    border-collapse: collapse;
+  }
+
+  .demo-table th,
+  .demo-table td {
+    font-weight: 400;
+    width: 200px;
+    padding: 25px 10px 5px 10px;
+    border: 1px solid #e5e5e5;
+  }
+
+  .demo-table th {
+    padding: 25px 15px 20px 15px;
+    border: 1px solid #c2c2c2;
+  }
+
+  .demo-table tr:nth-child(2) td {
+    border-top: 1px solid #c2c2c2;
+  }
+
+  .demo-table td:first-of-type {
+    border-left: 1px solid #c2c2c2;
+  }
+
+  .demo-table .bullet {
+    width: 200px;
+    height: 30px;
+  }
+
+  .long-title h3 {
+    font-family: 'Segoe UI Light', 'Helvetica Neue Light', 'Segoe UI', 'Helvetica Neue', 'Trebuchet MS', Verdana;
+    font-weight: 200;
+    font-size: 28px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+</style>
 <div class="mode-header embed-hidden">
   <h1>{{ title }}</h1>
   <p>{{ description }}</p>
 </div>
 <div class="mode-grid container">
+  <h2>Session Metrics - Past 30 Days</h2>
+
+  <p id="de_duration"></p>
+  <table class="demo-table">
+    <tbody>
+      <tr>
+        <th>
+        </th>
+        <th><br> Average Session Duration
+          <p style="font-size:85%;color: rgba(0, 0, 0, 0.5)">(min::sec)</p>
+        </th>
+        <th>Average Pages Per Session</th>
+        <th>Bounce Rate</th>
+      </tr>
+      <tr>
+        <th>Dealer + Expresss Site</th>
+        <td>
+          <div style="float:left" class="bullet de_duration"></div>
+          <p style="float:right;" id="de_duration_v"></p>
+        </td>
+        <td>
+          <div style="float:left" class="bullet de_pages"></div>
+          <p style="float:right" id="de_pages_v"></p>
+          <p></p>
+        </td>
+        <td>
+          <div class="bullet de_bounce"></div>
+        </td>
+      </tr>
+      <tr>
+        <th>Dealer Main Site Only</th>
+        <td>
+          <div style="float:left" class="bullet d_duration"></div>
+          <p style="float:right" id="d_duration_v"></p>
+        </td>
+        <td>
+          <div style="float:left" class="bullet d_pages"></div>
+          <p style="float:right" id="d_pages_v"></p>
+        </td>
+        <td>
+          <div style="float:left" class="bullet d_bounce"></div>
+          <p style="float:right" id="d_bounce_v"></p>
+        </td>
+      </tr>
+      <tr>
+        <th>Express Site Only</th>
+        <td>
+          <div style="float:left" class="bullet e_duration"></div>
+          <p style="float:right" id="e_duration_v"></p>
+        </td>
+        <td>
+          <div style="float:left" class="bullet e_pages"></div>
+          <p style="float:right" id="e_pages_v"></p>
+        </td>
+        <td>
+          <div style="float:left" class="bullet e_bounce"></div>
+          <p style="float:right" id="e_bounce_v"></p>
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
   <div class="row">
-    <div class="col-md-6">
-      <mode-chart id="chart_bdeb38ccc2a1" dataset="dataset" options="chart_options"></mode-chart>
-    </div>
-    <div class="col-md-6">
-      <mode-chart id="chart_20d07a21cd8c" dataset="dataset" options="chart_options"></mode-chart>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-6">
+    <h2>Session Metrics - Historic</h2>
+
+    <div class="col-md-4">
+      <h3>Average Session Duration</h3>
       <mode-chart id="chart_4f5ffe51dc50" dataset="dataset" options="chart_options"></mode-chart>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
+      <h3>Average Pages per Session</h3>
       <mode-chart id="chart_46eefa0907b7" dataset="dataset" options="chart_options"></mode-chart>
     </div>
+
+    <div class="col-md-4">
+      <h3>Bounce Rate</h3>
+      <mode-chart id="chart_bdeb38ccc2a1" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <a href="https://imgbb.com/"><img src="https://i.ibb.co/JqBK3GM/Screen-Shot-2019-09-03-at-5-39-58-PM.png" alt="Screen-Shot-2019-09-03-at-5-39-58-PM" border="0"></a>
   </div>
+  <h2><u>Notes</u></h2>
+  <p> • Session metrics are available across the four differeent categories - update 'Segment' parameter then run</p>
+  <p> • Session data is available after May 10th </p>
 </div>
+
 <script>
-setTimeout(function() {  
+  
+  setTimeout(function() {  
   var i;
   for (i=0; i < Highcharts.charts.length; i++)
     {
      var chart = Highcharts.charts[i];
-    if (chart.container.closest("#chart_bdeb38ccc2a1") != null || chart.container.closest("#chart_20d07a21cd8c") != null ) 
+    if (chart.container.closest("#chart_bdeb38ccc2a1") != null ) 
       {
           chart.update({
           plotOptions: {
@@ -35,7 +201,7 @@ setTimeout(function() {
                 enabled: true,
                formatter: function() {
                    return ''+
-                (this.y*100).toFixed(1) +'%';
+                (this.y*100).toFixed(0) +'%';
          }
             }
         }
@@ -66,7 +232,6 @@ setTimeout(function() {
         series: {
             dataLabels: {
                 enabled: true,
-
             }
         }
     },
@@ -83,8 +248,32 @@ setTimeout(function() {
       });
     
     }
-  }  
+  }
+  
+      var i;
+    for (i = 0; i < Highcharts.charts.length; i++) {
+      var chart = Highcharts.charts[i];
+      if (chart.container.closest("#chart_4f5ffe51dc50") != null) {
+        chart.update({
+          plotOptions: {
+            series: {
+
+              dataLabels: {
+                enabled: true,
+                formatter: function() {
+                  var time = this.y;
+                  console.log(time)
+                  var mins1 = parseInt(time / 60);
+                  var seconds = parseInt((parseInt(time % 60)));
+                  return (mins1 < 10 ?  mins1 : mins1) + ':' + (seconds < 10 ? '0' + seconds : seconds);
+                },
+              }
+            }
+          },
+        });
+
+      }
+    }
   
   },100);
-  
-  </script>
+</script>
