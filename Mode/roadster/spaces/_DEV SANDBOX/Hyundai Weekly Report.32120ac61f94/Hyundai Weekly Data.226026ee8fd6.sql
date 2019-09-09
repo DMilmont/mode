@@ -1,6 +1,6 @@
 WITH tab1 as (
 SELECT DISTINCT *
-FROM report_layer.hyundai_weekly_report_2
+FROM report_layer.hyundai_weekly_report2
 ORDER BY dpid, "Rolling 7 Day Window" DESC
 ),
 
@@ -23,6 +23,5 @@ tab1.*,
 FROM tab1
 LEFT JOIN dealer_partners dp ON tab1.dpid = dp.dpid
 LEFT JOIN dts ON tab1."Rolling 7 Day Window" = dts."Rolling 7 Day Window"
-INNER JOIN fact.hyundai_shopper_assurance hsa ON tab1.dpid = hsa.dpid
-WHERE tab1."Rolling 7 Day Window" = (SELECT max("Rolling 7 Day Window")-1 FROM dts)
-AND hsa.shopper_assurance = 'Y'
+LEFT JOIN fact.hyundai_shopper_assurance hsa ON tab1.dpid = hsa.dpid
+WHERE tab1."Rolling 7 Day Window" = (SELECT max("Rolling 7 Day Window") FROM dts)

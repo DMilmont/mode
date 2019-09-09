@@ -66,12 +66,6 @@
         store: weekly,
         fields: [
           {
-            dataField: 'dealer_code', 
-            caption: 'Code',
-            area: 'row',
-            expanded: true
-          },
-          {
             dataField: 'name',
             caption: 'Dealer',
             area: 'row',
@@ -349,6 +343,66 @@
                 return 0;
               } else {
                 return e.value('ct_soft_credit_completed') / e.value('ct_soft_credit_start');
+              }
+            },
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
+            },
+            format: {
+              precision: 1,
+              type: 'percent'
+            },
+          },
+          {
+            dataField: 'ct_payment_calc_starts',
+            caption: 'Payment Calculator Started',
+            area: 'data',
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
+            },
+            format: {
+              type: 'fixedPoint',
+              precision: 1
+            },
+            summaryType: 'sum'
+          },
+          {
+            dataField: 'ct_payment_calc_complete',
+            caption: 'Payment Calculator Completed',
+            area: 'data',
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
+            },
+            format: {
+              type: 'fixedPoint',
+              precision: 1
+            },
+            summaryType: 'sum'
+          },
+          {
+            caption: "Payment Calculator Ratio",
+            area: "data",
+            summaryType: "custom",
+            calculateSummaryValue: e => {
+              if (e.value('ct_payment_calc_starts') == 0) {
+                return 0;
+              } else {
+                return e.value('ct_payment_calc_complete') / e.value('ct_payment_calc_starts');
               }
             },
             customizeText: function(cellInfo) {
