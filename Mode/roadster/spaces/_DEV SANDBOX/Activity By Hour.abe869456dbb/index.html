@@ -8,10 +8,45 @@
   <h1>{{ title }}</h1>
   <p>{{ description }}</p>
 </div>
+
 <div class="mode-grid container">
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <mode-python id="python_919803a7015c" options="python_options"></mode-python>
+    </div>
+  </div>
   <div class="row" data-row-height="extra-large">
     <div class="col-md-12">
-      <mode-python id="python_c2b3fd29a1ea" options="python_options"></mode-python>
+      <mode-python id="python_0e02a91d2d26" options="python_options"></mode-python>
     </div>
   </div>
 </div>
+
+<script>
+$(function() {
+    var data = datasets.filter(function(d) {
+      return d.queryName == "Data";
+    })[0].content;
+
+    var data2 = datasets.filter(function(d) {
+      return d.queryName == "Hours Data";
+    })[0].content;
+
+    if (data.length == 0) {
+      $('.row').remove();
+      $('.mode-header').empty();
+      $('<h2>1. No User Event data was found for your dealer</h2>').appendTo('.mode-header');
+      
+    }
+    if (data2.length == 0) {
+      $('.row').remove();
+      $('.mode-header').empty();
+      $('<h2>2. Please update the "Hours of Operations" in the Admin Page</h2>').appendTo('.mode-header');
+    }
+    
+    if (data2[0][5] == null && data2[0][1] == null) {
+      $('.mode-header').empty();
+      $('<h2>2. Please update the "Hours of Operations" in the Admin Page</h2>').appendTo('.mode-header');
+    }
+    });
+</script>

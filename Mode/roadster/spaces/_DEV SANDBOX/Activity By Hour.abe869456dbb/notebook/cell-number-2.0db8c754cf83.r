@@ -33,4 +33,4 @@ hours <- hourly %>%
          s_Sunday = map(s_Sunday, dt_fix))
 
 
-
+hourly

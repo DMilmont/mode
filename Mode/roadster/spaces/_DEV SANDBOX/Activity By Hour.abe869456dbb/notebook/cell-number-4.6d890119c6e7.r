@@ -58,9 +58,6 @@ p <- data %>%
   guides(fill=FALSE) + 
   theme(text = element_text(family="Gotham")) +
   theme_minimal() + 
-  scale_fill_gradient2(low = 'blue', mid = 'white', high = 'steelblue') +
+  scale_fill_gradient2(low = 'blue', mid = 'white', high = 'red') +
   geom_text(aes(label = char_perc_hour)) +
   geom_tile(data = data_open_hours, alpha=0, color = 'black', size = .5)
-  
-p
-
