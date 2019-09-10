@@ -64,9 +64,9 @@
 document.getElementById("link_h").href = link_h;
 </script>
 <h1>Traffic Report - Behavior</h1>
-  <h4>Click <a href="" id="link_p"> Here</a> to view historic user metrics.</h4>
-  <h4>Click <a href="" id="link_h"> Here</a> to view session metrics broken out by segments.</h4>
-  <h4>Please provide any feedback <a href="https://roadsterteam.atlassian.net/wiki/spaces/AN/pages/350388229/Traffic+Reporting+2.0+Feedback" target="_blank" >Here </a></h4>
+  <!--<h4>Click <a href="" id="link_p"> Here</a> to view historic user metrics.</h4>-->
+  <!--<h4>Click <a href="" id="link_h"> Here</a> to view session metrics broken out by segments.</h4>-->
+  <!--<h4>Please provide any feedback <a href="https://roadsterteam.atlassian.net/wiki/spaces/AN/pages/350388229/Traffic+Reporting+2.0+Feedback" target="_blank" >Here </a></h4>-->
 <div class="row">
   <div class="col-md-12">
     <mode-chart id="chart_4e68869e7b1c" dataset="dataset" options="chart_options"></mode-chart>
@@ -76,11 +76,11 @@ document.getElementById("link_h").href = link_h;
 <mode-chart id="Summary_Pivot"></mode-chart>
   </div>
   <h2><u>Notes</u></h2>
-   <p> ▶ Data table is Pivot-Grid which is meant to mimic functionality from Pivot Table. All fields are customizable. <a href="https://roadsterteam.atlassian.net/wiki/spaces/AN/pages/350388225/Pivot+Grid+Walkthrough" >See Tutorial.</a></p>
-   <p> ▶ Sessions are segmented using categories on field panel. Field Panel is draggable and can be reordered/used as filters in order to analyze desired grouping</p>
-   <p> ▶ Sessions are most granular way of classifying behavior. Users with multiple sessions - we capture all sessions but only count the user once (earliest session)</p>
-   <p> ▶ Prospect sessions are defined as any sessions started by a User who becomes a Prospect in any of their sessions</p>
-    <p>▶ Session data is available after May 10th </p>
+   <!--<p> • Data table is Pivot-Grid which is meant to mimic functionality from Pivot Table. All fields are customizable. <a href="https://roadsterteam.atlassian.net/wiki/spaces/AN/pages/350388225/Pivot+Grid+Walkthrough" >See Tutorial.</a></p>-->
+   <p> • Sessions are segmented using categories on field panel. Field Panel is draggable and can be reordered/used as filters in order to analyze desired grouping</p>
+   <p> • Sessions are most granular way of classifying behavior. Users with multiple sessions - we capture all sessions but only count the user once (earliest session)</p>
+   <p> • Prospect sessions are defined as any sessions started by a User who becomes a Prospect in any of their sessions</p>
+    <p>• Session data is available after May 10th </p>
 </div>
 <script>
   var roadsterdx = {
@@ -115,6 +115,8 @@ document.getElementById("link_h").href = link_h;
        */
     var summary = roadsterdx.getDataSource('GA Metrics');
     var zip = new JSZip();
+    
+    
 
     var pivotGrid = $("#Summary_Pivot").dxPivotGrid({
       allowSortingBySummary: true,
@@ -146,6 +148,14 @@ document.getElementById("link_h").href = link_h;
             enabled: true,
             fileName: "traffic_users"
         },
+//         onCellPrepared: function(e) {  
+//             if (DevExpress.devices.current().deviceType === "phone" ) {  
+//                 e.cellElement.css({ 'font-size': '10px' });
+     
+//                 // pivotGridInstance.getDataSource().field(1, { area: 'filter'} );
+//             }  
+// },
+
       dataSource: {
         retrieveFields: false,
         export: {
@@ -161,6 +171,11 @@ document.getElementById("link_h").href = link_h;
             sortOrder: 'desc',
             allowFiltering: true,
           },
+                    {
+            caption: "Medium",
+            dataField: "medium",
+            area: "row"
+          },
           {
             caption: "Session Type",
             dataField: "session_type",
@@ -174,23 +189,19 @@ document.getElementById("link_h").href = link_h;
           {
             caption: "SRP/VDP",
             dataField: "srp_vdp",
-            area: "row"
+            area: "filter"
           },
           {
             caption: "Prospect",
             dataField: "prospect_flag",
-            area: "row"
+            area: "filter"
           },
-          {
-            caption: "Medium",
-            dataField: "medium",
-            area: "row"
-          },
+
           {
             caption: "Source",
             dataField: "source",
 
-            area: "row"
+            area: "filter"
           }, {
             caption: "In-Store",
             dataField: "in_store_flag",
@@ -260,6 +271,7 @@ document.getElementById("link_h").href = link_h;
           {
             dataField: "pageviews",
             caption: "Pageviews",
+            visible: false,
             area: "data",
             summaryType: "sum",
             format: {
@@ -339,11 +351,24 @@ document.getElementById("link_h").href = link_h;
         store: summary
       }
     }).dxPivotGrid("instance");
-    /*    pivotGrid.bindChart(pivotGridChart, {
-       //     dataFieldsDisplayMode: "splitPanes",
-            alternateDataFields: true,
-        });
-        */
+
+
+//   var pivot = $("#pivotGridContainer").dxPivotGrid("instance");
+//                               var ds = pivot.getDataSource();
+        
+//           onCellPrepared: function(e) {  
+//             if (DevExpress.devices.current().deviceType === "phone" ) { 
+//                               // e.cellElement.css({ 'font-size': '10px' });
+                            
+//                               ds.field("Source", { area: "filter" });
+//                               ds.load();
+
+//             }  
+// },
+                
+
+
+
   });
 </script>
 <script>
