@@ -1,0 +1,347 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.common.css">
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.light.css">
+<link rel="stylesheet" media="screen" href="//d2yvqewjuuy0k6.cloudfront.net/fonts/232352/75E15E124468560E8.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdn3.devexpress.com/jslib/18.2.8/js/dx.all.js"></script>
+<div class="mode-header embed-hidden">
+  <h1>{{ title }}</h1>
+  <p>{{ description }}</p>
+</div>
+<div class="mode-grid container">
+  <div class="row">
+    <div class="col-md-12">
+      <mode-table id="pivot1" dataset="dataset" options="table_options"></mode-table>
+    </div>
+  </div>
+</div>
+<script>
+  var roadsterdx = {
+    version: 1,
+    getDataSource: function(queryName) {
+      // find the right data on the page, by name
+      var ii = 0;
+      var theSet = null;
+      for (ii = 0; ii < datasets.length; ii++) {
+        if (datasets[ii].queryName == queryName) {
+          theSet = datasets[ii].content;
+          break;
+        }
+      }
+      if (!theSet) {
+        //console.log('did not find data ' + queryName);
+        // make an empty data array
+        theSet = [];
+      }
+      //console.log('returning data');
+      return theSet;
+      /*
+      return new DevExpress.data.DataSource({
+        // array of data
+        store: theSet,
+        // additional configuration options
+        // sort: "name",
+        // pageSize: 10
+      });
+      */
+    },
+  };
+
+  $(function() {
+    var weekly = roadsterdx.getDataSource('Hyundai Weekly Data');
+
+    $('#pivot1').dxPivotGrid({
+      allowSortingBySummary: true,
+      allowFiltering: true,
+      showBorders: true,
+      showColumnGrandTotals: false,
+      showRowGrandTotals: false,
+      showRowTotals: false,
+      showColumnTotals: false,
+      "export": {
+        enabled: true,
+        fileName: "hyundai_weekly_data"
+      },
+      dataSource: {
+        store: weekly,
+        fields: [
+          {
+            dataField: 'dealer_code', 
+            caption: 'Code',
+            area: 'row',
+            expanded: true
+          },
+          {
+            dataField: 'name',
+            caption: 'Dealer',
+            area: 'row',
+            width: 120,
+            expanded: true,
+          },
+          {
+            dataField: 'Title',
+            area: 'column',
+            expanded: true
+          },
+          
+          {
+            dataField: 'Tier 3 Visitors',
+            caption: 'Tier 3 Visitors',
+            alignment: 'center',
+            dataType: 'number',
+            summaryType: 'sum',
+            area: 'data',
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
+            },
+            format: {
+              type: "fixedPoint",
+              precision: 1
+            }
+          },
+          {
+            dataField: 'Tier 3 Leads',
+            caption: 'Tier 3 Leads',
+            alignment: 'center',
+            dataType: 'number',
+            summaryType: 'sum',
+            area: 'data',
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
+            },
+            format: {
+              type: "fixedPoint",
+              precision: 1
+            }
+          },
+          {
+            caption: "Tier 3 Leads per Visitor",
+            area: "data",
+            summaryType: "custom",
+            calculateSummaryValue: e => {
+              if (e.value('Tier 3 Visitors') == 0) {
+                return 0;
+              } else {
+                return e.value('Tier 3 Leads') / e.value('Tier 3 Visitors');
+              }
+            },
+            customizeText: function(cellInfo) {
+              if (cellInfo.value >  1) {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
+            },
+            format: {
+              precision: 1,
+              type: 'percent'
+            },
+          },
+          {
+            dataField: 'Test Drive Leads',
+            caption: 'Test Drive Leads',
+            area: 'data',
+            summaryType: 'sum',
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
+            },
+            format: {
+              type: 'fixedPoint',
+              precision: 1
+            }
+          },
+          {
+            dataField: 'Finance App Started',
+            caption: 'Finance App Started',
+            area: 'data',
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
+            },
+            format: {
+              type: 'fixedPoint',
+              precision: 1
+            },
+            summaryType: 'sum'
+          },
+          {
+            dataField: 'Finance App Completed',
+            caption: 'Finance App Completed',
+            area: 'data',
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
+            },
+            format: {
+              type: 'fixedPoint',
+              precision: 1
+            },
+            summaryType: 'sum'
+          },
+          {
+            dataField: 'Trade-In Started',
+            caption: 'Trade-In Started',
+            area: 'data',
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
+            },
+            format: {
+              type: 'fixedPoint',
+              precision: 1
+            },
+            summaryType: 'sum'
+          },
+          {
+            dataField: 'Trade-In Completed',
+            caption: 'Trade-In Completed',
+            area: 'data',
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
+            },
+            format: {
+              type: 'fixedPoint',
+              precision: 1
+            },
+            summaryType: 'sum'
+          },
+          {
+            dataField: 'Express VDP Visitors',
+            caption: 'Express VDP Visitors',
+            area: 'data',
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
+            },
+            format: {
+              type: 'fixedPoint',
+              precision: 1
+            },
+            summaryType: 'sum'
+          },
+          {
+            caption: "Express VDP Views per Visitor",
+            area: "data",
+            summaryType: "custom",
+            calculateSummaryValue: e => {
+              if (e.value('Tier 3 Visitors') == 0) {
+                return 0;
+              } else {
+                return e.value('Express VDP Visitors') / e.value('Tier 3 Visitors');
+              }
+            },
+            customizeText: function(cellInfo) {
+              if (cellInfo.value >  1) {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
+            },
+            format: {
+              precision: 1,
+              type: 'percent'
+            },
+          },
+          {
+            dataField: 'Total Cars Sold',
+            caption: 'Total Cars Sold',
+            area: 'data',
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
+            },
+            format: {
+              type: 'fixedPoint',
+              precision: 1
+            },
+            summaryType: 'sum'
+          },
+          {
+            caption: "Close Rate",
+            area: "data",
+            summaryType: "custom",
+            calculateSummaryValue: e => {
+              if (e.value('Tier 3 Leads') == 0) {
+                return 0;
+              } else {
+                return (e.value('Total Cars Sold')) / e.value('Tier 3 Leads');
+              }
+            },
+            customizeText: function(cellInfo) {
+              if (cellInfo.value >  1) {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
+            },
+            format: {
+              precision: 1,
+              type: 'percent'
+            },
+          },
+          {
+            dataField: 'NPS',
+            caption: 'NPS',
+            area: 'data',
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
+            },
+            format: {
+              type: 'fixedPoint',
+              precision: 1
+            },
+            summaryType: 'max'
+          },
+        ],
+      },
+    });
+  })
+</script>
