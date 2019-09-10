@@ -1,6 +1,6 @@
 WITH tab1 as (
 SELECT DISTINCT *
-FROM report_layer.hyundai_weekly_report2
+FROM report_layer.hyundai_weekly_report
 ORDER BY dpid, "Rolling 7 Day Window" DESC
 ),
 
