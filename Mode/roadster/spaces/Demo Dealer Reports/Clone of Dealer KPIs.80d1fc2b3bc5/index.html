@@ -1,0 +1,145 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.common.css">
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.light.css">
+<link rel="stylesheet" media="screen" href="//d2yvqewjuuy0k6.cloudfront.net/fonts/232352/75E15E124468560E8.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdn3.devexpress.com/jslib/18.2.8/js/dx.all.js"></script>
+<style>
+  * {
+    font-size: 95%;
+    font-family: "Gotham SSm A", "Gotham SSm B", Georgia;
+  }
+
+  p {
+    font-size: medium;
+  }
+</style>
+<div class="mode-header embed-hidden">
+  
+  <h1>{{ title }}</h1>
+  <p>{{ description }}</p>
+</div>
+<div class="mode-grid container">
+  <div class="row" data-row-height="small">
+    <div class="col-md-3">
+      <mode-chart id="chart_b47846fe0f0a" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-3">
+      <mode-chart id="chart_af33a3072704" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-3">
+      <mode-chart id="chart_3b724f01a760" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-3">
+      <mode-chart id="chart_b4298a92a652" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row" data-row-height="medium">
+    <div class="col-md-3">
+      <mode-chart id="chart_b6eccd717a73" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-3">
+      <mode-chart id="chart_5165e64cf38e" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-3">
+      <mode-chart id="chart_8dc11ad2067a" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-3">
+      <mode-chart id="chart_5873d849fc65" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <p> </p>
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <mode-chart id="chart_5e9617d8a9dc" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <h2><u>Notes</u></h2>
+  <p> • Express Visitors - Unique count of online visitors to the Express Website or Express Overlay</p>
+  <p> • Prospects - Unique count of online visitors that submitted PII (lead)</p>
+  <p> • Orders - Unique count of orders where an order step was completed and the order status is open or completed</p>
+  <p> • Shares - Count of in-store shares sent by agents to customers</p>
+</div>
+<script>
+  $('*[class^="col-md-3"]').css("padding", -200);
+  $('*[class^="col-md-3"]').css("margin", -1);
+
+  $('.mode-embed .mode-object.editor-chart').css('border', 0);
+
+
+  for (i = 0; i < Highcharts.charts.length; i++) {
+    var chart = Highcharts.charts[i];
+    if (chart.container.closest("#chart_e384ffe606f7") != null || chart.container.closest("#chart_e694308a8ddd") != null || chart.container.closest("#chart_cc7209e1c2ee") != null || chart.container.closest("#chart_8d0e51084f0a") != null) {
+
+      chart.update({
+        plotOptions: {
+          pie: {
+            dataLabels: {
+              // enabled: true,
+              // borderWidth: 2,
+              // borderColor: '#000000',
+              // padding: 5,
+              // borderRadius: 5,
+              // distance: 1,
+              overflow: 'none',
+              crop: false,
+              // color: '#333333',
+              // formatter: function() {
+              //     return '<b>'+ this.point.name +'</b>: '+ this.point.y;
+              // }
+            },
+
+          }
+        },
+        series: [{
+          size: '60%'
+        }]
+      })
+
+    }
+  }
+</script>
+<script>
+  setTimeout(function() {
+    for (i = 0; i < Highcharts.charts.length; i++) {
+
+      /* Focus on Chart # i */
+      var chart = Highcharts.charts[i];
+      if (chart.container.closest("#chart_7c5e35e3f108") != null) {
+        chart.update({
+          chart: {
+            borderColor: '#FFFFFF',
+          },
+          plotOptions: {
+            series: {
+
+              dataLabels: {
+                enabled: true,
+
+              }
+            }
+          },
+          xAxis: {
+
+            type: 'date', //this forces the xAxis to be a 'date type'
+            labels: {
+              formatter: function() {
+                return Highcharts.dateFormat('%a %e %b', this.value);
+              }
+            }, // Make the date format "Sun Mar 6"
+
+            minorTickLength: 0, //hide the little ticks on the Vertical Axis
+            tickLength: 0, //hide the little ticks on the Vertical Axis
+            lineWidth: 0, //make the vertical axis 0 pixels wide
+          },
+          yAxis: {
+            labels: {
+              enabled: false
+            },
+            gridLineColor: 'transparent'
+          }
+        });
+      }
+    }
+  }, 100);
+</script>
