@@ -31,18 +31,11 @@
   <p>{{ description }}</p>
 </div>
 <div class="mode-grid container">
-  <div class="row">
-    <div class="col-md-12">
-      <mode-text id="text_80045e99-4135-4b91-ec49-ec2721db270a" dataset="dataset" options="text_options">
-        <p>Manage your Leads &amp; Orders here</p>
-      </mode-text>
-    </div>
-  </div>
   <div></div>
   <div class="row">
     <div class="col-md-12">
       <mode-text id="text_ea82726d-3f75-4537-d183-094509322100" dataset="dataset" options="text_options">
-        <h4>Lead Movement</h4>
+        <h4>Prospect Movement</h4>
         <p><em>Are customers interacting with you differently over time?</em></p>
       </mode-text>
     </div>
@@ -58,7 +51,8 @@
   <div class="row">
     <div class="col-md-12">
       <mode-text id="text_ea82726d-3f75-4537-d183-094509322155" dataset="dataset" options="text_options">
-        <h4>Lead Types</h4>
+        <h4>Prospect Types</h4>
+        <p><br></p>
       </mode-text>
     </div>
   </div>
@@ -328,7 +322,6 @@
             width: 60,
             sortOrder: 'desc',
           },
-
 
           {
             caption: "Most Recent Completed Step",
@@ -651,7 +644,7 @@
 
     var attach_specific_info = $("#Attachments_Data").dxPopup({
       width: 950,
-      height: 600,
+      height: 500,
       closeOnOutsideClick: true,
       position: {
         my: 'center',
@@ -663,7 +656,7 @@
           .addClass("drill-down4")
           .dxDataGrid({
             width: 900,
-            height: 500,
+            height: 400,
             columnAutoWidth: true,
             columns: [{
                 dataField: 'customer_email',

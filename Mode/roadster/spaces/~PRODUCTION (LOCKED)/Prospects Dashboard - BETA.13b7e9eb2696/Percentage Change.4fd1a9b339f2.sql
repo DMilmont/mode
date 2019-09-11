@@ -24,6 +24,7 @@ ls.user_contact_dbid,
 user_id,
 u.first_name,
 u.last_name,
+u.distinct_id,
 u.email,
 1 "exists",
 a.first_name || ' ' || a.last_name agent_name,
@@ -50,10 +51,10 @@ AND dpid = '{{ dpid }}'
 )
 
 SELECT date_trunc('month', ts_prospects) dt,
-SUM(CASE WHEN in_store = True THEN exists END) in_store,
-SUM(CASE WHEN in_store <> True THEN exists END) online,
-ROUND((SUM(CASE WHEN in_store = True THEN exists END)::decimal / SUM(exists))*100, 1)|| ' %' online_perc,
-SUM(exists) total
+COUNT(DISTINCT CASE WHEN in_store = True THEN distinct_id END) in_store,
+COUNT(DISTINCT CASE WHEN in_store <> True THEN distinct_id END) online,
+ROUND((COUNT(DISTINCT CASE WHEN in_store = True THEN distinct_id END)::decimal / COUNT(DISTINCT distinct_id))*100, 1)|| ' %' online_perc,
+COUNT(DISTINCT distinct_id) total
 
 FROM tab2
 WHERE day_of_month <= EXTRACT(DAY FROM NOW())
