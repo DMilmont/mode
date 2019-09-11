@@ -31,7 +31,7 @@ bd.month_date,
 COALESCE(SUM(CASE WHEN in_store = true THEN ct_orders_mtd ELSE NULL END), 0) "In-Store Orders",
 COALESCE(SUM(CASE WHEN in_store = false THEN ct_orders_mtd ELSE NULL END), 0) "Online Orders",
 COALESCE(SUM(ct_online_prospects), 0) "Online Prospects",
-COALESCE(SUM(CASE WHEN in_store = true THEN ct_orders_mtd ELSE NULL END) + SUM(CASE WHEN in_store = false THEN ct_orders_mtd ELSE NULL END), 0) "Total Orders",
+COALESCE(COALESCE(SUM(CASE WHEN in_store = true THEN ct_orders_mtd ELSE NULL END), 0) + COALESCE(SUM(CASE WHEN in_store = false THEN ct_orders_mtd ELSE NULL END), 0), 0) "Total Orders",
 SUM(CASE WHEN in_store = false THEN ct_orders_mtd ELSE NULL END)::decimal / SUM(ct_online_prospects) "Order Ratio"
 FROM base_data bd
 
