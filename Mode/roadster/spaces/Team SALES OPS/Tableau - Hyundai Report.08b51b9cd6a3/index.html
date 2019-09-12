@@ -64,9 +64,8 @@
       },
       dataSource: {
         store: weekly,
-        fields: [
-          {
-            dataField: 'dealer_code', 
+        fields: [{
+            dataField: 'dealer_code',
             caption: 'Code',
             area: 'row',
             expanded: true
@@ -83,7 +82,7 @@
             area: 'column',
             expanded: true
           },
-          
+
           {
             dataField: 'Tier 3 Visitors',
             caption: 'Tier 3 Visitors',
@@ -136,7 +135,7 @@
               }
             },
             customizeText: function(cellInfo) {
-              if (cellInfo.value >  1) {
+              if (cellInfo.value > 1) {
                 v = '';
               } else {
                 v = cellInfo.valueText;
@@ -268,7 +267,7 @@
               }
             },
             customizeText: function(cellInfo) {
-              if (cellInfo.value >  1) {
+              if (cellInfo.value > 1) {
                 v = '';
               } else {
                 v = cellInfo.valueText;
@@ -310,7 +309,7 @@
               }
             },
             customizeText: function(cellInfo) {
-              if (cellInfo.value >  1) {
+              if (cellInfo.value > 1) {
                 v = '';
               } else {
                 v = cellInfo.valueText;

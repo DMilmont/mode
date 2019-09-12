@@ -1,7 +1,7 @@
 with base_data as (
 SELECT *
-FROM report_layer.tableau_hyundai_kpis_2
-WHERE date >= (date_trunc('day', now()) - '8 days'::interval) and date < (date_trunc('day', now()))
+FROM report_layer.shopper_assurance_program_kpis
+WHERE date >= '{{ start_date }}' and date <= '{{ end_date }}'
 ),
 
 almost_data as (
@@ -20,7 +20,6 @@ COUNT(DISTINCT CASE WHEN is_in_store = 'false' and source = 'Sales' and item_typ
 COUNT(DISTINCT CASE WHEN is_in_store = 'true' and source = 'Sales' and item_type = 'Roadster Sales (Cohort)' THEN unique_visitor_id ELSE NULL END) "Cars Sold In-Store",
 max(nps) "NPS"
 FROM base_data
-WHERE date >= (date_trunc('day', now()) - '8 days'::interval) and date < (date_trunc('day', now()))
 GROUP BY 1
 )
 
