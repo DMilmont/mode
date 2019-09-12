@@ -17,7 +17,7 @@ WITH base_data as (
   ) t ON os.order_id = t.order_id
   LEFT JOIN orders o ON os.order_id = o.id
   WHERE timestamp > date_trunc('month', now()) - '2 months'::interval
-  AND extract(days from timestamp) <= extract(days from now() AT time zone 'UTC')
+  AND extract(day from timestamp) <= extract(day from now() AT time zone 'UTC')
   AND EXTRACT(month from min_timestamp) = EXTRACT(month from timestamp)
   AND dp.status = 'Live'
   AND dp.dpid = '{{ dpid }}'
@@ -45,7 +45,7 @@ LEFT JOIN (
       WHERE
         in_store = false AND
         timestamp > date_trunc('month', now()) - '2 months'::interval
-        AND extract(days from timestamp) <= extract(days from now() AT time zone 'UTC')
+        AND extract(day from timestamp) <= extract(day from now() AT time zone 'UTC')
         AND dp.status = 'Live'
         AND dp.dpid = '{{ dpid }}'
         AND  tableau_secret = '{{ dpsk }}'
