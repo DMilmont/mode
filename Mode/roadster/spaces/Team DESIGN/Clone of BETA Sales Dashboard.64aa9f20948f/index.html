@@ -1,0 +1,341 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.common.css">
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.light.css">
+<link rel="stylesheet" media="screen" href="//d2yvqewjuuy0k6.cloudfront.net/fonts/232352/75E15E124468560E8.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdn3.devexpress.com/jslib/18.2.8/js/dx.all.js"></script>
+<style>
+  * {
+    font-size: 100%;
+    font-family: "Gotham SSm A", "Gotham SSm B", Georgia;
+  }
+
+  .b {
+    text-algin: left !important;
+  }
+
+  .right-side {
+    position: absolute;
+    right: 7px;
+    top: 3px;
+    margin-bottom: 40px;
+    margin-top: 30px;
+  }
+
+  .highcharts-grid {
+    display: none;
+  }
+</style>
+<div id="t_1" class="mode-grid container">
+  <div id="report_t">
+  <div class="row">
+    <div class="col-md-12">
+      <mode-chart id="chart_321e07898417" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <mode-text id="text_042b2503-64ae-4d64-d1e8-62842cdb6a54" dataset="dataset" options="text_options">
+      <p>Understand how your Close Rate varies by Lead Location.</p>
+    </mode-text>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-chart id="matched_sales" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_ea82726d-3f75-4537-d183-094509322100" dataset="dataset" options="text_options">
+        <h4>Prospects by Sale</h4>
+        <p><em>Understand which prospects generate sales</em></p>
+      </mode-text>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-chart id="Sales_vs_Prospect_Type" dataset="dataset" options="chart_options"></mode-chart>
+      <div id="lead_specific_info"></div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<script>
+      setTimeout(function() {
+        var data = datasets.filter(function(d) {
+          return d.queryName == "Sales Information";
+        })[0].content;
+          
+        if (data.length == 0) {
+            $('#report_t').empty();
+            $('#t_1').prepend("<h1><b>No Matched Sales</b></h1>");
+            $('#report_t').remove();
+          }
+        }, 5);
+</script>
+
+<script>
+  var roadsterdx = {
+    version: 1,
+    getDataSource: function(queryName) {
+      // find the right data on the page, by name
+      var ii = 0;
+      var theSet = null;
+      for (ii = 0; ii < datasets.length; ii++) {
+        if (datasets[ii].queryName == queryName) {
+          theSet = datasets[ii].content;
+          break;
+        }
+      }
+      if (!theSet) {
+        //console.log('did not find data ' + queryName);
+        // make an empty data array
+        theSet = [];
+      }
+      //console.log('returning data');
+      return theSet;
+      /*
+      return new DevExpress.data.DataSource({
+        // array of data
+        store: theSet,
+        // additional configuration options
+        // sort: "name",
+        // pageSize: 10
+      });
+      */
+    },
+  };
+  
+  
+
+  $(function() {
+    var matched_sales = roadsterdx.getDataSource('Matched Sales - Table');
+    
+    var sales_info = roadsterdx.getDataSource('Sales Information');
+
+    var pivot1 = $('#matched_sales').dxPivotGrid({
+
+      allowSortingBySummary: true,
+      allowFiltering: true,
+      showBorders: true,
+      showColumnGrandTotals: false,
+      showRowGrandTotals: true,
+      showRowTotals: false,
+      showColumnTotals: false,
+      fieldChooser: {
+        enabled: true,
+        height: 400
+      },
+      "export": {
+        enabled: true,
+        fileName: "matched_sales_information"
+      },
+      dataSource: {
+        store: matched_sales,
+        retrieveFields: false,
+        fields: [{
+            dataField: 'mth_yr',
+            caption: 'Month & Year',
+            dataType: 'date',
+            format: 'monthAndYear',
+            area: 'row',
+            width: 150,
+            sortOrder: 'desc',
+            expanded: true
+          },
+          {
+            dataField: 'in_store_flag',
+            Caption: 'In-Store . or Online?',
+            area: 'row',
+            width: 80
+          },
+          {
+            dataField: 'title',
+            area: 'column'
+          },
+          {
+            dataField: 'ct_prospects',
+            caption: 'Unique prospects',
+            area: 'data',
+            summaryType: 'sum',
+            alignment: 'center',
+          },
+          {
+            dataField: 'Total Matched Sales (90 Days)',
+            caption: 'Total Matched Sales (90 Days)',
+            area: 'data',
+            summaryType: 'sum'
+          },
+          {
+            caption: 'Close Rate',
+            area: "data",
+            summaryType: "custom",
+            calculateSummaryValue: e => {
+              if (e.value('ct_prospects') == 0) {
+                return 0;
+              } else {
+                return e.value('Total Matched Sales (90 Days)') / e.value('ct_prospects');
+              }
+
+            },
+            format: {
+              precision: 1,
+              type: 'percent'
+            },
+          },
+
+        ],
+      },
+    }).dxPivotGrid("instance");
+
+
+    var drillDownDataSource = {};
+    var pivot2 = $('#Sales_vs_Prospect_Type').dxPivotGrid({
+      allowSortingBySummary: true,
+      allowFiltering: true,
+      showBorders: true,
+      showColumnGrandTotals: true,
+      showRowGrandTotals: false,
+      showRowTotals: false,
+      showColumnTotals: false,
+      fieldChooser: {
+        enabled: true,
+        height: 400
+      },
+      "export": {
+        enabled: true,
+        fileName: "matched_sales_information"
+      },
+      onCellClick: function(e) {
+        if (e.area == "data") {
+          var pivotGridDataSource = e.component.getDataSource(),
+            rowPathLength = e.cell.rowPath.length,
+            rowPathName = e.cell.rowPath[rowPathLength - 1],
+            popupTitle = (rowPathName ? rowPathName : "Total") + " Drill Down Data";
+          drillDownDataSource = pivotGridDataSource.createDrillDownDataSource(e.cell);
+          lead_specific_info.option("title", 'Matched Sale Specific Information');
+          lead_specific_info.show();
+        }
+      },
+      dataSource: {
+        store: sales_info,
+        retrieveFields: false,
+        fields: [{
+            dataField: 'mth_yr',
+            caption: 'Month & Year',
+            dataType: 'date',
+            format: 'monthAndYear',
+            area: 'row',
+            width: 150,
+            sortOrder: 'desc',
+            expanded: true
+          },
+          {
+            dataField: 'Prospect Type',
+            area: 'column'
+          },
+          {
+            dataField: 'exists_now',
+            caption: 'Count',
+            area: 'data',
+            summaryType: 'sum',
+            alignment: 'center',
+          },
+        ],
+      },
+    }).dxPivotGrid("instance");
+
+    var lead_specific_info = $("#lead_specific_info").dxPopup({
+      width: 1050,
+      height: 800,
+      closeOnOutsideClick: true,
+      contentTemplate: function(contentElement) {
+        $("<div />")
+          .addClass("drill-down1")
+          .dxDataGrid({
+            width: 1000,
+            height: 700,
+            columnAutoWidth: true,
+            columns: [{
+                dataField: 'Sell Date',
+                alignment: 'center',
+                dataType: 'date',
+                sortOrder: 'desc'
+
+              },
+              {
+                dataField: 'VIN',
+                caption: 'VIN',
+                alignment: 'center'
+
+              },
+              {
+                dataField: 'Customer Email',
+                caption: 'Customer Email',
+                alignment: 'center'
+              },
+              {
+                dataField: 'Prospect Type',
+                caption: 'Prospect Type',
+                alignment: 'center'
+              },
+              {
+                dataField: 'Link to lead',
+                caption: 'Leads',
+                alignment: 'center',
+                cellTemplate: function(container, options) {
+                  $('<a>' + 'Link' + '</a>')
+                    .attr('href', options.value)
+                    .attr('target', '_blank')
+                    .appendTo(container);
+                }
+              },
+            ]
+          }).appendTo(contentElement);
+      },
+      onShowing: function() {
+        $(".drill-down1")
+          .dxDataGrid("instance")
+          .option("dataSource", drillDownDataSource);
+      },
+      onShown: function() {
+        $(".drill-down1")
+          .dxDataGrid("instance")
+          .updateDimensions();
+      }
+    }).dxPopup("instance");
+
+  })
+</script>
+<script>
+  setTimeout(function() {
+    var i;
+    for (i = 0; i < Highcharts.charts.length; i++) {
+      var chart = Highcharts.charts[i];
+
+      chart.update({
+        xAxis: {
+          minorTickLength: 0,
+          tickLength: 0,
+        },
+      });
+
+      chart.series[0].update({
+        dataLabels: {
+          enabled: true
+        },
+      });
+
+      chart.series[1].update({
+        dataLabels: {
+          enabled: true,
+          color: '#456E9C',
+          padding: 15,
+          formatter: function() {
+            return (this.y * 100).toFixed(1) + ' %';
+          }
+        },
+      });
+    }
+  });
+</script>
