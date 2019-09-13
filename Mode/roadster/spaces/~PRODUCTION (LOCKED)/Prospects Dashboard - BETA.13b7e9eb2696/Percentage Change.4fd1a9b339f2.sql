@@ -51,10 +51,10 @@ AND dpid = '{{ dpid }}'
 )
 
 SELECT date_trunc('month', ts_prospects) dt,
-COUNT(DISTINCT CASE WHEN in_store = True THEN distinct_id END) in_store,
-COUNT(DISTINCT CASE WHEN in_store <> True THEN distinct_id END) online,
-ROUND((COUNT(DISTINCT CASE WHEN in_store = True THEN distinct_id END)::decimal / COUNT(DISTINCT distinct_id))*100, 1)|| ' %' online_perc,
-COUNT(DISTINCT distinct_id) total
+COUNT(CASE WHEN in_store = True THEN distinct_id END) in_store,
+COUNT(CASE WHEN in_store <> True THEN distinct_id END) online,
+ROUND((COUNT(CASE WHEN in_store = True THEN distinct_id END)::decimal / COUNT(distinct_id))*100, 1)|| ' %' online_perc,
+COUNT(distinct_id) total
 
 FROM tab2
 WHERE day_of_month <= EXTRACT(DAY FROM NOW())

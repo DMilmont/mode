@@ -168,45 +168,56 @@ order_steps as (
       JOIN users b ON ((order_cancelled.user_id = b.id)))
       JOIN orders c ON ((order_cancelled.order_id = c.id)))
 
-)
+),
+
+    max_order_steps as (
+     SELECT os.*
+     FROM order_steps os
+     INNER JOIN (
+         SELECT order_id, user_id, max(timestamp) mx
+         FROM order_steps
+         GROUP BY 1, 2
+      ) t ON os.order_id = t.order_id AND os.user_id = t.user_id AND os.timestamp = t.mx
+    )
+
 
 ,almost as (
 
-SELECT order_steps.*,
-CASE WHEN order_status.status IS NULL THEN 'Open' ELSE initcap(order_status.status) END current_order_status,
-o.order_dbid,
-dpid,
-initcap(a.first_name) || ' ' || initcap(a.last_name) "Agent",
-u.email "Customer Email", 
-initcap(u.first_name || ' ' || u.last_name) "Customer Name",
-CASE WHEN o.in_store = True THEN 'In-Store' ELSE 'Online' END in_store_type,
-row_number() OVER(PARTITION BY order_steps.order_id ORDER BY "Step Rank" DESC) pick_most_recent
-FROM order_steps
-LEFT JOIN order_status ON order_steps.order_id = order_status.order_id
-LEFT JOIN dealer_partners dp ON order_steps.dealer_partner_id = dp.id
-LEFT JOIN orders o ON order_steps.order_id = o.id
-LEFT JOIN agents a ON order_steps.agent_id = a.id
-LEFT JOIN users u ON order_steps.user_id = u.id
-WHERE dpid = '{{ dpid }}'
-AND  tableau_secret = '{{ dpsk }}'
+ SELECT max_order_steps.*,
+ CASE WHEN order_status.status IS NULL THEN 'Open' ELSE initcap(order_status.status) END current_order_status,
+ o.order_dbid,
+ dpid,
+ initcap(a.first_name) || ' ' || initcap(a.last_name) "Agent",
+ u.email "Customer Email",
+ initcap(u.first_name || ' ' || u.last_name) "Customer Name",
+ CASE WHEN o.in_store = True THEN 'In-Store' ELSE 'Online' END in_store_type
+ FROM max_order_steps
+ LEFT JOIN order_status ON max_order_steps.order_id = order_status.order_id
+ LEFT JOIN dealer_partners dp ON max_order_steps.dealer_partner_id = dp.id
+ LEFT JOIN orders o ON max_order_steps.order_id = o.id
+ LEFT JOIN agents a ON max_order_steps.agent_id = a.id
+ LEFT JOIN users u ON max_order_steps.user_id = u.id
+ WHERE 
+  dp.dpid = '{{ dpid }}'
+  AND  tableau_secret = '{{ dpsk }}'
+ ORDER BY timestamp desc
 )
 
-SELECT 
-timestamp,
-to_char(timestamp, 'Month YYYY') mth_yr,
---almost."Item Type",
-LEFT("Step Rank"::text, 1) || '. ' || "Item Type" "Item Type", 
-current_order_status "Order Status",
-dpid, 
-in_store_type,
-order_type "Order Type",
-"Customer Email",
-"Customer Name",
-"Agent",
-'https://dealers.roadster.com/' || dpid || '/orders/' || order_dbid "Order",
-1 exists_now
+ SELECT
+ timestamp,
+ to_char(timestamp, 'Month YYYY') mth_yr,
+ --almost."Item Type",
+ LEFT("Step Rank"::text, 1) || '. ' || "Item Type" "Item Type",
+ current_order_status "Order Status",
+ dpid,
+ in_store_type,
+ order_type "Order Type",
+ "Customer Email",
+ "Customer Name",
+ "Agent",
+ 'https://dealers.roadster.com/' || dpid || '/orders/' || order_dbid "Order",
+ 1 exists_now
 
-FROM almost
-WHERE pick_most_recent = 1
-and timestamp >= (date_trunc('month', now()) - '6 months'::interval)
-ORDER BY timestamp desc
+ FROM almost
+ WHERE timestamp >= (date_trunc('month', now()) - '6 months'::interval)
+ ORDER BY timestamp desc

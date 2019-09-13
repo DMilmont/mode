@@ -4,7 +4,7 @@ WITH base_data as (
   dpid,
   date_trunc('month', timestamp) month_date,
   in_store,
-  COUNT(DISTINCT distinct_id) ct_orders_mtd
+  COUNT(distinct_id) ct_orders_mtd
   FROM order_steps os
   LEFT JOIN dealer_partners dp ON os.dealer_partner_id = dp.id
   LEFT JOIN (
