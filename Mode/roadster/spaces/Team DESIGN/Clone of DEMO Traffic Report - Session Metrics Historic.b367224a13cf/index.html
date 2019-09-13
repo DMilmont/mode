@@ -1,0 +1,376 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.common.css">
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.light.css">
+<link rel="stylesheet" media="screen" href="//d2yvqewjuuy0k6.cloudfront.net/fonts/232352/75E15E124468560E8.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdn3.devexpress.com/jslib/18.2.8/js/dx.all.js"></script>
+<style>
+  .chart-header {
+    display: none;
+  }
+
+  p,
+  th {
+    font-size: medium;
+  }
+
+  BR {
+    clear: right
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  a:hover,
+  a:active,
+  a:focus {
+    color: darkred;
+    text-decoration: underline;
+  }
+
+  * {
+    font-size: 100%;
+    font-family: "Gotham SSm A", "Gotham SSm B", Georgia
+  }
+
+  .dx-icon {
+    display: inline-block;
+    font-size: inherit;
+    font-family: 'DXIcons' !important;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-transform: translate(0, 0);
+    transform: translate(0, 0);
+  }
+
+  .dx-pivotgrid .dx-expand-icon-container {
+    font-family: 'DXIcons' !important;
+  }
+
+  #chart-demo {
+    height: 440px;
+    width: 100%;
+  }
+
+  .demo-table {
+    margin-top: 80px;
+    width: 100%;
+    border: 1px solid #c2c2c2;
+    border-collapse: collapse;
+  }
+
+  .demo-table th,
+  .demo-table td {
+    font-weight: 400;
+    width: 200px;
+    padding: 25px 10px 5px 10px;
+    border: 1px solid #e5e5e5;
+  }
+
+  .demo-table th {
+    padding: 25px 15px 20px 15px;
+    border: 1px solid #c2c2c2;
+  }
+
+  .demo-table tr:nth-child(2) td {
+    border-top: 1px solid #c2c2c2;
+  }
+
+  .demo-table td:first-of-type {
+    border-left: 1px solid #c2c2c2;
+  }
+
+  .demo-table .bullet {
+    width: 200px;
+    height: 30px;
+  }
+
+  .long-title h3 {
+    font-family: 'Segoe UI Light', 'Helvetica Neue Light', 'Segoe UI', 'Helvetica Neue', 'Trebuchet MS', Verdana;
+    font-weight: 200;
+    font-size: 28px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+</style>
+<div class="mode-header embed-hidden">
+  <h1>{{ title }}</h1>
+  <p>{{ description }}</p>
+</div>
+<div class="mode-grid container">
+  <h2>Session Metrics - Past 30 Days</h2>
+
+  <p id="de_duration"></p>
+  <table class="demo-table">
+    <tbody>
+      <tr>
+        <th>
+        </th>
+        <th><br> Average Session Duration
+          <p style="font-size:85%;color: rgba(0, 0, 0, 0.5)">(min::sec)</p>
+        </th>
+        <th>Average Pages Per Session</th>
+        <th>Bounce Rate</th>
+      </tr>
+      <tr>
+        <th>Dealer + Expresss Site</th>
+        <td>
+          <div style="float:left" class="bullet de_duration"></div>
+          <p style="float:right;" id="de_duration_v"></p>
+        </td>
+        <td>
+          <div style="float:left" class="bullet de_pages"></div>
+          <p style="float:right" id="de_pages_v"></p>
+          <p></p>
+        </td>
+        <td>
+          <div class="bullet de_bounce"></div>
+        </td>
+      </tr>
+      <tr>
+        <th>Dealer Main Site Only</th>
+        <td>
+          <div style="float:left" class="bullet d_duration"></div>
+          <p style="float:right" id="d_duration_v"></p>
+        </td>
+        <td>
+          <div style="float:left" class="bullet d_pages"></div>
+          <p style="float:right" id="d_pages_v"></p>
+        </td>
+        <td>
+          <div style="float:left" class="bullet d_bounce"></div>
+          <p style="float:right" id="d_bounce_v"></p>
+        </td>
+      </tr>
+      <tr>
+        <th>Express Site Only</th>
+        <td>
+          <div style="float:left" class="bullet e_duration"></div>
+          <p style="float:right" id="e_duration_v"></p>
+        </td>
+        <td>
+          <div style="float:left" class="bullet e_pages"></div>
+          <p style="float:right" id="e_pages_v"></p>
+        </td>
+        <td>
+          <div style="float:left" class="bullet e_bounce"></div>
+          <p style="float:right" id="e_bounce_v"></p>
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="row">
+    <h2>Session Metrics - Historic</h2>
+
+    <div class="col-md-4">
+      <h3>Average Session Duration</h3>
+      <mode-chart id="chart_2832b6f93a92" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-4">
+      <h3>Average Pages per Session</h3>
+      <mode-chart id="chart_75a8b375ed70" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+
+    <div class="col-md-4">
+      <h3>Bounce Rate</h3>
+      <mode-chart id="chart_afb633a58510" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <a href="https://imgbb.com/"><img src="https://i.ibb.co/JqBK3GM/Screen-Shot-2019-09-03-at-5-39-58-PM.png" alt="Screen-Shot-2019-09-03-at-5-39-58-PM" border="0"></a>
+  </div>
+  <h2><u>Notes</u></h2>
+  <p> • Session metrics are available across the four differeent categories - update 'Segment' parameter then run</p>
+  <p> • Session data is available after May 10th </p>
+</div>
+
+<script>
+  
+  setTimeout(function() {  
+  var i;
+  for (i=0; i < Highcharts.charts.length; i++)
+    {
+     var chart = Highcharts.charts[i];
+    if (chart.container.closest("#chart_c0f0030050e0") != null ) 
+      {
+          chart.update({
+          plotOptions: {
+        series: {
+            dataLabels: {
+                enabled: true,
+               formatter: function() {
+                   return ''+
+                (this.y*100).toFixed(0) +'%';
+         }
+            }
+        }
+    },
+        xAxis: {
+          minorTickLength: 0,
+          tickLength: 0,
+        },
+        yAxis: {
+          labels: {
+            enabled: false
+          },
+          gridLineColor: 'transparent'
+        }
+      });
+    
+    }
+  }  
+  
+  var i;
+  for (i=0; i < Highcharts.charts.length; i++)
+    {
+     var chart = Highcharts.charts[i];
+    if (chart.container.closest("#chart_965a5e8ceb86") != null || chart.container.closest("#chart_dbcba6c9165d") != null ) 
+      {
+          chart.update({
+          plotOptions: {
+        series: {
+            dataLabels: {
+                enabled: true,
+            }
+        }
+    },
+        xAxis: {
+          minorTickLength: 0,
+          tickLength: 0,
+        },
+        yAxis: {
+          labels: {
+            enabled: false
+          },
+          gridLineColor: 'transparent'
+        }
+      });
+    
+    }
+  }
+  
+      var i;
+    for (i = 0; i < Highcharts.charts.length; i++) {
+      var chart = Highcharts.charts[i];
+      if (chart.container.closest("#chart_965a5e8ceb86") != null) {
+        chart.update({
+          plotOptions: {
+            series: {
+
+              dataLabels: {
+                enabled: true,
+                formatter: function() {
+                  var time = this.y;
+    
+                  var mins1 = parseInt(time / 60);
+                  var seconds = parseInt((parseInt(time % 60)));
+                  return (mins1 < 10 ?  mins1 : mins1) + ':' + (seconds < 10 ? '0' + seconds : seconds);
+                },
+              }
+            }
+          },
+        });
+
+      }
+    }
+  
+  },100);
+</script>
+
+<script>
+  
+    var data = datasets.filter(function(d) {
+    return d.queryName == "Session Metrics - Past 30 Days";
+  })[0].content;
+  
+  $(function(){
+    
+    var Y_value_d = [];
+    for (index = 0; index < data.length; ++index) {
+      Y_value_d.push(data[index]['avg_session_duration_seconds']);
+    }
+    var Y_Axis_d = Math.max.apply(Math, Y_value_d) * 1;
+    
+    var Y_value_p = [];
+    for (index = 0; index < data.length; ++index) {
+      Y_value_p.push(data[index]['pageviews_per_session']);
+    }
+    var Y_Axis_p = Math.max.apply(Math, Y_value_p) * 1;
+
+    var de = data.filter(function (de_p){
+      return de_p.session_type=="Dealer + Express Site"
+    });
+    
+        var d = data.filter(function (d_p){
+      return d_p.session_type=="Dealer Main Site Only"
+    });
+    
+      var e = data.filter(function (e_p){
+      return e_p.session_type=="Express Site Only"
+    });
+    
+    document.getElementById('de_duration_v').innerHTML = de[0]['avg_session_duration_time'];
+     document.getElementById('d_duration_v').innerHTML = d[0]['avg_session_duration_time'];
+     document.getElementById('e_duration_v').innerHTML = e[0]['avg_session_duration_time'];
+     
+      document.getElementById('de_pages_v').innerHTML = de[0]['pageviews_per_session'];
+     document.getElementById('d_pages_v').innerHTML = d[0]['pageviews_per_session'];
+     document.getElementById('e_pages_v').innerHTML = e[0]['pageviews_per_session'];
+     
+    document.getElementById('d_bounce_v').innerHTML = d[0]['bounce_rate_perc'];
+    document.getElementById('e_bounce_v').innerHTML = e[0]['bounce_rate_perc'];
+    
+console.log(de)    
+      var options_d = {
+        startScaleValue: 0.1,
+        endScaleValue: Y_Axis_d,
+        showZeroLevel: false,
+           tooltip: {
+        enabled: false // false
+    },
+        };
+        var options_p = {
+        startScaleValue: 0.1,
+        endScaleValue: Y_Axis_p,
+                   tooltip: {
+        enabled: false // false
+    },
+        };
+        var options_b = {
+        startScaleValue: .00001,
+        endScaleValue: .75,
+                   tooltip: {
+        enabled: false // false
+    },
+        };
+        
+    var de_dur = $.extend({ value: de[0]['avg_session_duration_seconds'],  color: '#03367c' }, options_d),
+        d_dur = $.extend({ value: d[0]['avg_session_duration_seconds'], color: '#ff8b33' }, options_d),
+        e_dur = $.extend({ value: e[0]['avg_session_duration_seconds'],  color: '#27825c' }, options_d);
+        
+     var     de_page = $.extend({ value: de[0]['pageviews_per_session'],  color: '#03367c' }, options_p),
+        d_page = $.extend({ value: d[0]['pageviews_per_session'], color: '#ff8b33' }, options_p),
+        e_page = $.extend({ value: e[0]['pageviews_per_session'],  color: '#27825c' }, options_p);
+        
+      var de_bounce_b = $.extend({ value: 0,  color: '#03367c' }, options_b),
+        d_bounce_b = $.extend({ value: d[0]['bounce_rate'], color: '#ff8b33' }, options_b),
+        e_bounce_b = $.extend({ value: e[0]['bounce_rate'],  color: '#27825c' }, options_b);
+        
+    $('.de_duration').dxBullet(de_dur);
+    $('.d_duration').dxBullet(d_dur);
+    $('.e_duration').dxBullet(e_dur);
+    
+    
+    $('.de_pages').dxBullet(de_page);
+    $('.d_pages').dxBullet(d_page);
+    $('.e_pages').dxBullet(e_page);
+       
+    $('.de_bounce').dxBullet(de_bounce_b);
+    $('.d_bounce').dxBullet(d_bounce_b);
+    $('.e_bounce').dxBullet(e_bounce_b);
+    
+  
+  
+  });
+</script>
