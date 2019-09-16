@@ -61,19 +61,18 @@ select
   round("Prospects" / dpids,2) "Prospects per DP"
   
   from agtbl
-
+  order by date desc 
+  
 
 
 {% form %}
 
 start_date:
   type: date
-  default: {{ 'now' | date: '%s' | minus: 716400 | date: '%Y-%m-%d' }}
-  description: Data available for previous 3 months
+  default: {{ 'now' | date: '%s' | minus: 31536000 | date: '%Y-%m-%d' }}
 
 end_date: 
   type: date
-  default: {{ 'now' | date: '%s' | minus: 111600 | date: '%Y-%m-%d' }}
-  description: Data available for previous 3 months
+  default: {{ 'now' | date: '%s' | date: '%Y-%m-%d' }}
 
 {% endform %}

@@ -1,5 +1,5 @@
 
-
+/*
 with date_dpid as (
 select c.date, dp.dpid, dp.name, dp.tableau_secret as dpsk
 from fact.d_cal_date as c
@@ -9,6 +9,16 @@ cross join (
 where c.date >= '{{ start_date }}'  
 and c.date <= '{{ end_date }}'
 group by 1,2,3,4)
+*/
+
+with date_dpid as (
+select distinct date
+,dpid
+from fact.f_traffic
+where date >= '{{ start_date }}' 
+and date <= '{{ end_date }}'
+and dpid not ilike '%demo%'
+)
 
 
 ,online_express_traffic as (
