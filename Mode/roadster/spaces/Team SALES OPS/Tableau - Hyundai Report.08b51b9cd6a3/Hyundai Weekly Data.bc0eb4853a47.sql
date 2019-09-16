@@ -30,5 +30,5 @@ hsa.dealer_code,
 'Past 7 Days of Data' "Title"
 FROM almost_data
 LEFT JOIN dealer_partners dp ON almost_data.dpid = dp.dpid
-LEFT JOIN fact.hyundai_shopper_assurance hsa ON almost_data.dpid = hsa.dpid
+LEFT JOIN fact.shopper_assurance hsa ON almost_data.dpid = hsa.dpid
 WHERE hsa.shopper_assurance = 'Y'
