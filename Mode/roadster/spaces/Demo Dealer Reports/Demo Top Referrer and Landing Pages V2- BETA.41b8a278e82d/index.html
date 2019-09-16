@@ -1,0 +1,435 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.common.css">
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.light.css">
+<link rel="stylesheet" media="screen" href="//d2yvqewjuuy0k6.cloudfront.net/fonts/232352/75E15E124468560E8.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdn3.devexpress.com/jslib/18.2.8/js/dx.all.js"></script>
+<style>
+  .chart-header {
+    display: none;
+  }
+  * {
+    font-size: 100%;
+    font-family: "Gotham SSm A", "Gotham SSm B", Georgia;
+  }
+
+  .b {
+    text-algin: left !important;
+  }
+
+  .right-side {
+    position: absolute;
+    right: 3px;
+    top: 3px;
+    margin-bottom: 40px;
+    margin-top: 30px;
+  }
+
+  .left-side {
+    position: absolute;
+    right: 250px;
+    top: 3px;
+    margin-bottom: 40px;
+    margin-top: 30px;
+  }
+
+  .row {
+    margin-top: 90px !important;
+  }
+</style>
+</style>
+<div class="mode-header embed-hidden">
+
+  <p>{{ description }}</p>
+</div>
+<div class="mode-grid container">
+  <h1>Top Referral and Landing Pages - Express Store</h1>
+<h4><i> Roadster tracking was upgraded May '19 </i></h4>
+
+
+  <h2>Top 10 Express <b>Referrer</b> Pages - Online Performance</h2>
+  <div  data-row-height="large">
+  <mode-chart id="chart_1b1e8c6c9671" dataset="dataset" options="chart_options"></mode-chart>
+   </div>
+        <div class="col-md-12">
+    <div class="right-side">Month &amp; Year
+    <div id="selectStatus"></div>
+    </div>
+      <mode-chart id="express_referrer"></mode-chart>
+    </div>
+ 
+    <h2>Top 10 Express <b>Landing</b> Pages - Online Performance</h2>
+   <div  data-row-height="large">
+  <mode-chart id="chart_e024ad85cd7f" dataset="dataset" options="chart_options"></mode-chart>
+</div>
+        <div class="col-md-12">
+    <div class="right-side">Month &amp; Year
+    <div id="selectStatus2"></div>
+    </div>
+      <mode-chart id="express_landing"></mode-chart>
+    </div>
+ 
+  
+
+</div>
+<script>
+  setTimeout(function() {
+
+
+    var i;
+    for (i = 0; i < Highcharts.charts.length; i++) {
+      var chart = Highcharts.charts[i];
+   
+      if (chart.container.closest("#chart_1b1e8c6c9671") != null || chart.container.closest("#chart_e024ad85cd7f") != null) {
+        chart.update({
+
+        series: [{
+                  fillColor: 'rgba(3,54,124,.1)',
+                  color: 'rgba(3,54,124,.2)',
+                  lineColor: 'rgba(3,54,124,1)',
+                  lineWidth: .5
+            },{
+                 fillColor: 'rgba(138,26,35,.10)',
+                  color: 'rgba(138,26,35,.2)',
+                  linecolor: 'rgba(138,26,35,1)',
+                  lineWidth: .5
+            },{
+                 fillColor: 'rgba(39,130,92,.10)',
+                 color: 'rgba(39,130,92,.2)',
+                  lineColor: 'rgba(39,130,92,1)',
+                  lineWidth: .5
+            },{
+                 fillColor: 'rgba(44,5,122,.10)',
+                 color: 'rgba(44,5,122,.2)',
+                  lineColor: 'rgba(44,5,122,1)',
+                  lineWidth: .5
+            },{
+                 fillColor: 'rgba(255,139,51,.10)',
+                 color: 'rgba(255,139,51,.20)',
+                  lineColor: 'rgba(255,139,515,1)',
+                  lineWidth: .5
+            },{
+                 fillColor: 'rgba(170,171,170,.10)',
+                 color: 'rgba(170,171,170,.2)',
+                  lineColor: 'rgba(170,171,170,1)',
+                  lineWidth: .5
+            },{
+                 fillColor: 'rgba(225,211,70,.10)',
+                 color: 'rgba(225,211,70,.2)',
+                  lineColor: 'rgba(225,211,70,1)',
+                  lineWidth: .5
+            },{
+                 fillColor: 'rgba(49,170,31,.10)',
+                  color: 'rgba(49,170,31,.20)',
+                  lineColor: 'rgba(49,170,31,1)',
+                  lineWidth: .5
+            },{
+                 fillColor: 'rgba(62,69,78,.10)',
+                 color: 'rgba(62,69,78,.2)',
+                  lineColor: 'rgba(62,69,78,1)',
+                  lineWidth: .5
+            },{
+                 fillColor: 'rgba(0,178,212,.10)',
+                 color: 'rgba(0,178,212,.20)',
+                  lineColor: 'rgba(0,178,212,1)',
+                  lineWidth: .5
+            },{
+                 fillColor: 'rgba(195, 168, 136,.10)',
+                 color: 'rgba(195, 168, 136,.20)',
+                  lineColor: 'rgba(195, 168, 136,1)',
+                  lineWidth: .5
+            }
+            
+            ],
+          xAxis: {
+            minorTickLength: 0,
+            tickLength: 0,
+              plotLines: [{
+                color: 'red', // Color value
+                 dashStyle: 'longdashdot', // Style of the plot line. Default to solid
+                value:Date.UTC(2019,4,1), // Value of where the line will appear
+                width: 1, // Width of the line    
+                zindex:1,
+                	    		label: {
+                      	    			text: 'Tracking Upgrade',
+                      	    			align: 'left',
+                      	    			y: 0,
+                      	    			x: 5
+                      	    		}
+                }],
+          },
+          yAxis: {
+              
+            labels: {
+              enabled: false
+            },
+            gridLineColor: 'transparent'
+          }
+        });
+
+      }
+    }
+
+
+  }, 100);
+</script>
+<script>
+  var roadsterdx = {
+    version: 1,
+    getDataSource: function(queryName) {
+      // find the right data on the page, by name
+      var ii = 0;
+      var theSet = null;
+      for (ii = 0; ii < datasets.length; ii++) {
+        if (datasets[ii].queryName == queryName) {
+          theSet = datasets[ii].content;
+          break;
+        }
+      }
+      if (!theSet) {
+        //console.log('did not find data ' + queryName);
+        // make an empty data array
+        theSet = [];
+      }
+      //console.log('returning data');
+      return theSet;
+      /*
+      return new DevExpress.data.DataSource({
+        // array of data
+        store: theSet,
+        // additional configuration options
+        // sort: "name",
+        // pageSize: 10
+      });
+      */
+    },
+  };
+  
+  
+  
+  
+  $(function() {
+    var referrer = roadsterdx.getDataSource('Express Referrer Pages');
+    var mth = [];
+    for (i = 0; i < referrer.length; i++) {
+      mth.push(referrer[i]['Month & Year'])
+    }
+    var uniqueItems = Array.from(new Set(mth));
+    var box = roadsterdx.getDataSource('select_box');
+    
+    var mths = [];
+    for (i = 0; i < box.length; i++) {
+      mths.push(box[i]['Month & Year'])
+    }
+  
+
+    $("#selectStatus").dxSelectBox({
+      dataSource: mths,
+      value: mths[mths.length-1],
+      onValueChanged: function(data) {
+        dataGrid.filter(["Month & Year", "=", data.value]);
+      }
+    });
+
+    var dataGrid = $('#express_referrer').dxDataGrid({
+      dataSource: referrer,
+      "export": {
+        enabled: true,
+        fileName: "express_referrer",
+
+      },
+
+      showColumnLines: false,
+      showRowLines: true,
+      columnAutoWidth: true,
+      wordWrapEnabled: true,
+      allowColumnReordering: true,
+
+      onCellPrepared: function(e) {
+        if (e.rowType == "header") {
+          e.cellElement.css('background', 'black')
+        };
+        if (e.value == 0) {
+          e.cellElement.css('color', 'white')
+        }
+      },
+      columns: [{
+          dataField: 'Month & Year',
+          width: 100,
+          visible: false,
+        },
+
+        {
+          dataField: 'express_referrer',
+          width: 450,
+          headerCellTemplate: $('<p style="color: white">Referrer Page</p>'),
+          //sortOrder: 'desc',
+          alignment: 'center'
+        },
+        {
+          dataField: 'express_visitors',
+          width: 150,
+          headerCellTemplate: $('<p style="color: white">Express Visitors</p>'),
+          sortOrder: 'desc',
+          alignment: 'center'
+        },
+        {
+          calculateCellValue: function(rowData) { // combines display values
+            if (rowData.shares_express_visitors == 0) {
+              return 0;
+            } else {
+              return rowData.express_visitors / rowData.shares_express_visitors;
+            } ///summary."Dealer Visitors";
+          },
+          width: 150,
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 1,
+            type: 'percent'
+          },
+          headerCellTemplate: $('<p style="color: white">Share of Express Visitors</p>')
+        },
+        {
+          calculateCellValue: function(rowData) { // combines display values
+            if (rowData.express_visitors == 0) {
+              return 0;
+            } else {
+              return rowData.conversion_visitors / rowData.express_visitors;
+            } ///summary."Dealer Visitors";
+          },
+          width: 150,
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 1,
+            type: 'percent'
+          },
+          headerCellTemplate: $('<p style="color: white">Conversion to Prospect</p>')
+        },
+
+      ],
+
+    }).dxDataGrid("instance");
+
+  
+
+    dataGrid.filter(["Month & Year", "=",mths[mths.length-1]]);
+  });
+  
+  
+  
+  $(function() {
+    var referrer = roadsterdx.getDataSource('Express Landing Pages');
+    var mth = [];
+    for (i = 0; i < referrer.length; i++) {
+      mth.push(referrer[i]['Month & Year'])
+    }
+    var uniqueItems = Array.from(new Set(mth));
+    var box = roadsterdx.getDataSource('select_box');
+    
+    var mths = [];
+    for (i = 0; i < box.length; i++) {
+      mths.push(box[i]['Month & Year'])
+    }
+  
+
+    $("#selectStatus2").dxSelectBox({
+      dataSource: mths,
+      value: mths[mths.length-1],
+      onValueChanged: function(data) {
+        dataGrid.filter(["Month & Year", "=", data.value]);
+      }
+    });
+
+    var dataGrid = $('#express_landing').dxDataGrid({
+      dataSource: referrer,
+      "export": {
+        enabled: true,
+        fileName: "express_landing",
+
+      },
+
+      showColumnLines: false,
+      showRowLines: true,
+      columnAutoWidth: true,
+      wordWrapEnabled: true,
+      allowColumnReordering: true,
+
+      onCellPrepared: function(e) {
+        if (e.rowType == "header") {
+          e.cellElement.css('background', 'black')
+        };
+        if (e.value == 0) {
+          e.cellElement.css('color', 'white')
+        }
+      },
+      columns: [{
+          dataField: 'Month & Year',
+          width: 100,
+          visible: false,
+        },
+
+        {
+          dataField: 'express_landing_page_path',
+          width: 450,
+          headerCellTemplate: $('<p style="color: white">Landing Page</p>'),
+          //sortOrder: 'desc',
+          alignment: 'center'
+        },
+        {
+          dataField: 'express_visitors',
+          width: 150,
+          headerCellTemplate: $('<p style="color: white">Express Visitors</p>'),
+          sortOrder: 'desc',
+          alignment: 'center'
+        },
+        {
+          calculateCellValue: function(rowData) { // combines display values
+            if (rowData.shares_express_visitors == 0) {
+              return 0;
+            } else {
+              return rowData.express_visitors / rowData.shares_express_visitors;
+            } ///summary."Dealer Visitors";
+          },
+          width: 150,
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 1,
+            type: 'percent'
+          },
+          headerCellTemplate: $('<p style="color: white">Share of Express Visitors</p>')
+        },
+        {
+          calculateCellValue: function(rowData) { // combines display values
+            if (rowData.express_visitors == 0) {
+              return 0;
+            } else {
+              return rowData.conversion_visitors / rowData.express_visitors;
+            } ///summary."Dealer Visitors";
+          },
+          width: 150,
+          alignment: 'center',
+          dataType: 'number',
+          format: {
+            precision: 1,
+            type: 'percent'
+          },
+          headerCellTemplate: $('<p style="color: white">Conversion to Prospect</p>')
+        },
+
+      ],
+
+    }).dxDataGrid("instance");
+
+  
+
+    dataGrid.filter(["Month & Year", "=",mths[mths.length-1]]);
+  });
+  
+  
+  
+  
+  
+</script>

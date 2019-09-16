@@ -1,0 +1,1 @@
+select * from fact.zdemo_Traffic_Landing_Pages
