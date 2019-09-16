@@ -31,4 +31,4 @@ hsa.dealer_code,
 FROM almost_data
 LEFT JOIN dealer_partners dp ON almost_data.dpid = dp.dpid
 LEFT JOIN fact.shopper_assurance hsa ON almost_data.dpid = hsa.dpid
-WHERE hsa.shopper_assurance = 'Y'
+WHERE hsa.shopper_assurance = 'Y' and hsa.dealer_code IS NOT NULL
