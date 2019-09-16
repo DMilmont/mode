@@ -64,7 +64,7 @@ SELECT
        sum(GAday.daily_views) AS "Report Views",
 
        CASE
-           WHEN agent_email ~* '@roadster.com\M' then '.Roadster Users'
+           WHEN agent_email ~* '@roadster.com\M'  then '.Roadster Users'
            ELSE 'Customers'
        END AS "User Type"
 FROM GAday
@@ -72,6 +72,7 @@ LEFT JOIN fact.salesforce_dealer_info sf
   ON GAday.dpid = sf.dpid
   
    where sf.status = 'Live'
+   and agent_email not in ('sean.kervin@roadster.com', 'louis.bohorquez@roadster.com', 'george.jacobs@roadster.com', 'daniel.saisho@roadster.com')
   Group By "Date", "User Type"
 
   ORDER BY "Report Views" desc;

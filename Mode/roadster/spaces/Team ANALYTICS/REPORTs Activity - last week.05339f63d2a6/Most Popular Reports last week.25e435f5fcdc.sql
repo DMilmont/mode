@@ -3,9 +3,6 @@
 -- ga_pageviews
 -- fact.salesforce_dealer_info
 
-SELECT *
-FROM public.ga2_pageviews;
-
 WITH GA AS
   (
   SELECT ga2_pageviews.id,
@@ -62,25 +59,42 @@ WITH GA AS
 
 
 SELECT 
-      case when GAday.page_path_fixed = 'kpis' then 'Performance/KPIs (Default)' 
-      when GAday.page_path_fixed = 'overview' then 'Traffic/Overview' 
-      when GAday.page_path_fixed = 'summary' then 'Prospects/Summary'
-      when GAday.page_path_fixed = 'certification' then 'Agent/Certification'
-      when GAday.page_path_fixed = 'close rate' then 'Prospects/Close Rate'
-      when GAday.page_path_fixed = 'utilization' then 'Agent/Utilization'
-      when GAday.page_path_fixed = 'utilization v2' then 'Agent/Utilization (V2)'
-      when GAday.page_path_fixed = 'orders' then 'Prospects/Orders'
-      when GAday.page_path_fixed = 'details' then 'Prospects/Details'
-      when GAday.page_path_fixed = 'session level metrics bou' then 'Traffic/Bounce Rate'
-      when GAday.page_path_fixed = 'orders f i and accessorie' then 'Prospects/Orders F&I and Accessories'
+      case when GAday.page_path_fixed = 'kpis' then 'Performance/KPIs (Default) [Tableau]' 
+      when GAday.page_path_fixed = 'overview' then 'Traffic/Overview [Tableau]' 
+      when GAday.page_path_fixed = 'summary' then 'Prospects/Summary [Tableau]'
+      when GAday.page_path_fixed = 'certification' then 'Agent/Certification [Bespoke]'
+      when GAday.page_path_fixed = 'close rate' then 'Prospects/Close Rate [Tableau]'
+      when GAday.page_path_fixed = 'utilization' then 'Agent/Utilization [MODE]'
+      when GAday.page_path_fixed = 'orders' then 'Prospects/Orders [Tableau]'
+      when GAday.page_path_fixed = 'details' then 'Prospects/Details [Tableau]'
+      when GAday.page_path_fixed = 'session level metrics bou' then 'Traffic/Bounce Rate [Tablea]'
+      when GAday.page_path_fixed = 'orders f i and accessorie' then 'Prospects/Orders F&I and Accessories [Tableau]'
+      when GAday.page_path_fixed = 'referral all' then 'Traffic/Referral ALL [Tableau]'
+      when GAday.page_path_fixed = 'landing all' then 'Traffic/Landing ALL [Tableau]'
       
-      else initcap(GAday.page_path_fixed) end  "Report Type", 
-       sum(GAday.daily_views) "Report Views"
+      when GAday.page_path_fixed = 'shares open click rates' then 'Agent/Shares Open Click Rates [MODE]'
+      when GAday.page_path_fixed = 'shares open rate' then 'Agent/Shares Open Click Rates [MODE]'
+      when GAday.page_path_fixed = 'prospects dashboard' then '{BETA}/Prospects Dashboard [MODE]'
+      when GAday.page_path_fixed = 'sales dashboard' then '{BETA}/Sales Dashboard [MODE]'
+      when GAday.page_path_fixed = 'traffic users' then '{BETA}/Traffic - Users [MODE]'
+      when GAday.page_path_fixed = 'traffic behavior' then '{BETA}/Traffic - Behavior [MODE]'
+      when GAday.page_path_fixed = 'traffic session metrics s' then '{BETA}/Traffic - Session Metrics (Site Type) [MODE]'
+      when GAday.page_path_fixed = 'traffic session metrics n' then '{BETA}/Traffic - Session Metrics (New vs Used) [MODE]'
+      when GAday.page_path_fixed = 'traffic session metrics a' then '{BETA}/Traffic - Session Metrics (Acquisition Type) [MODE]'
+      when GAday.page_path_fixed = 'top referring and landing' then '{BETA}/Traffic - Top Referral and Landing Pages [MODE]'
+      when GAday.page_path_fixed = 'dealer group report' then '{BETA}/Dealer Group Report [MODE]'
+      
+      else '*' || GAday.page_path_fixed end  "Report Type", 
+       sum(GAday.daily_views) "Report Views",
+       sum(case when GAday.agent_email ilike '%roadster.com%' then GAday.daily_views else 0 end) as "1) Report Views by Roadster Employees",
+       sum(case when GAday.agent_email ilike '%roadster.com%' then 0 else GAday.daily_views end) as "2) Report Views by Customers"
+       
 
 FROM GAday
 LEFT JOIN fact.salesforce_dealer_info sf
   ON GAday.dpid = sf.dpid
   WHERE sf.status = 'Live'
+    --and GAday.dpid in('mbwestwood','applenissan','applechevrolet', 'audipasadena','hondaeastcincy', 'jimnortontoyota','legacytoyota','lexusofpleasanton','vistabmw')
 
 GROUP BY "Report Type"
 ORDER BY "Report Views" DESC;

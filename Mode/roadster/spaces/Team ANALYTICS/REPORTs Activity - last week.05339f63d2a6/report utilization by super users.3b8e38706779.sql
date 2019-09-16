@@ -1,4 +1,5 @@
-
+/* Super Users are defined as users who view at least 2 different reports per week
+for at least 6 of the past 13 weeks.  */
 
 WITH 
     GA AS ( SELECT 
@@ -26,6 +27,7 @@ WITH
    WHERE ((GA.page_path) :: text ~~* '%/reports/%' :: text)
    and sf.status is not null
    and dealertime is not null 
+   and dealertime > now() - '13 weeks'::interval
    GROUP BY 1,2,3)
 
   ,GA_user_wk as (SELECT
@@ -44,14 +46,15 @@ WITH
       avg_report_views
     from GA_user_wk guw
     left join public.agents ag on ag.user_dbid::integer = guw.agent_dbid::integer
-    where distinct_weeks >= 5 --arbitraily chosen threshold.  SuperUsers must view reports in >= 5 distinct weeks. 
+    where distinct_weeks >= 6 --arbitraily chosen threshold.  SuperUsers must view reports in >= 6 distinct weeks. 
     and avg_report_views >=2 -- arbitraily chosen threshold.  SuperUsers must view at least 2 reports per week, on average.  
     and agent_dbid ~ '^[0-9]*$' --dump all the strange user ids with characters.  
     and ag.email not ilike '%roadster%'-- exclude Roadster Employees
     and ag.email is not null 
   )
   
-    ,superuser_reports as (select 
+    ,superuser_reports as (
+    select 
         su.agent_dbid,
         su.email,
         gaw.report,
@@ -59,7 +62,7 @@ WITH
         sum(gaw.report_views) "total_report_views"
       from  superusers su
       left join GA_wk gaw on gaw.agent_dbid = su.agent_dbid
-      group by 1,2,3)
+      group by 1,2,3) --hi
 
     ,current_reports as(SELECT report from GA_wk where week >= now() - '3 weeks'::interval group by 1)
     

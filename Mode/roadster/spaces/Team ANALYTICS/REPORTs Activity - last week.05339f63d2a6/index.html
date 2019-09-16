@@ -5,7 +5,9 @@
 <div class="mode-grid container">
   <div class="row">
     <div class="col-md-12">
-      <mode-text id="text_82f557ed-335a-471d-dc05-b18d76f1cdde" dataset="dataset" options="text_options"></mode-text>
+      <mode-text id="text_82f557ed-335a-471d-dc05-b18d76f1cdde" dataset="dataset" options="text_options">
+        <p><strong>note</strong>: all reports explicitly exclude the analytics team members. </p>
+      </mode-text>
     </div>
   </div>
   <div class="row" data-row-height="large">
@@ -13,9 +15,12 @@
       <mode-chart id="chart_89f5812134e9" dataset="dataset" options="chart_options"></mode-chart>
     </div>
   </div>
-  <div class="row" data-row-height="large">
-    <div class="col-md-12">
-      <mode-chart id="chart_9fb0d8c06119" dataset="dataset" options="chart_options"></mode-chart>
+  <div class="row" data-row-height="extra-large">
+    <div class="col-md-6">
+      <mode-chart id="chart_827b548e7d51" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-6">
+      <mode-chart id="chart_1c63b21af12f" dataset="dataset" options="chart_options"></mode-chart>
     </div>
   </div>
   <div class="row" data-row-height="large">
@@ -23,7 +28,12 @@
       <mode-chart id="chart_8b49768a8c92" dataset="dataset" options="chart_options"></mode-chart>
     </div>
     <div class="col-md-6">
-      <mode-chart id="chart_1c63b21af12f" dataset="dataset" options="chart_options"></mode-chart>
+      <mode-chart id="chart_1c59ddfa59f0" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <mode-chart id="chart_9fb0d8c06119" dataset="dataset" options="chart_options"></mode-chart>
     </div>
   </div>
   <div class="row" data-row-height="extra-large">
@@ -32,14 +42,6 @@
     </div>
     <div class="col-md-6">
       <mode-chart id="chart_415ea311edf9" dataset="dataset" options="chart_options"></mode-chart>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <mode-text id="text_03859ad2-a68d-4403-a780-2e658993f3c7" dataset="dataset" options="text_options">
-        <p>This tracks user loyalty to all of our reports. If a report has at least 1 loyal user, it's valuable. If there aren't any loyal users then we should improve it, promote it or delete it.</p>
-        <p>We chose to consider someone is loyal to a report if they pull that report up on 3 distinct days in the past 6 weeks (every other week).</p>
-      </mode-text>
     </div>
   </div>
   <div class="row" data-row-height="large">
@@ -58,18 +60,25 @@
       <mode-chart id="chart_2eb19b4b224d" dataset="dataset" options="chart_options"></mode-chart>
     </div>
   </div>
-  <div class="row" data-row-height="large">
-    <div class="col-md-6">
-      <mode-chart id="chart_827b548e7d51" dataset="dataset" options="chart_options"></mode-chart>
-    </div>
-    <div class="col-md-6">
-      <mode-chart id="chart_1c59ddfa59f0" dataset="dataset" options="chart_options"></mode-chart>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_03859ad2-a68d-4403-a780-2e658993f3c7" dataset="dataset" options="text_options">
+        <p><strong><u>Loyal User per Report:</u></strong> If a report has at least 1 loyal user, it's valuable to someone. If there aren't any loyal users then we should improve it, promote it or delete it. We chose to consider someone loyal to a report
+          if they pull that report up on 3 distinct days in the past 6 weeks (every other week). This includes Roadster Employees - if a report demos well, we consider it valuable.</p>
+        <p><br></p>
+        <p><strong><u>Super Users:</u></strong><u> </u>Super User are users who are our heaviest report users. We chose a panel of users using the criteria they must have interacted with the reports in at least 6 of the past 13 weeks... and an interaction
+          must be more than 2 reports-days (2 different reports in a single day or the same report in at least 2 distinct days).</p>
+        <p><br></p>
+        <p><strong><u>Dealer Partners using the reports:</u> </strong>This is the number of Dealer Partners who have interacted with Reports</p>
+        <p><br></p>
+        <p>*Roadster Employees specifically excludes the Analytics Team. </p>
+        <p><br></p>
+        <p><br></p>
+      </mode-text>
     </div>
   </div>
 </div>
 <script>
-
-
   setTimeout(function() {
     // set the first chart to have 'SUN' in the date format
     var chart = Highcharts.charts[0];
@@ -79,130 +88,146 @@
         labels: {
           formatter: function() {
             return Highcharts.dateFormat('%a %b %e', this.value);
-           }
+          }
         }
       }
     });
 
 
-    var chart = Highcharts.charts[3];//Horizontal Bar Chart
-      chart.update({
-        xAxis: {
-          minorTickLength: 0, //hide the little ticks on the Vertical Axis
-          tickLength: 0, //hide the little ticks on the Vertical Axis
-          lineWidth: 0, //make the vertical axis 0 pixels wide
-        },
-        yAxis: {
-          labels: {enabled: false}, // get rid of Horizontal Axis Labels.  
-          gridLineColor: 'transparent' // hide vertical gridlines
-        }
-      });
-      
-    var chart = Highcharts.charts[4];//Horizontal Bar Chart
-      chart.update({
-        xAxis: {
-          minorTickLength: 0, //hide the little ticks on the Vertical Axis
-          tickLength: 0, //hide the little ticks on the Vertical Axis
-          lineWidth: 0, //make the vertical axis 0 pixels wide
-        },
-        yAxis: {
-          labels: {enabled: false}, // get rid of Horizontal Axis Labels.  
-          gridLineColor: 'transparent' // hide vertical gridlines
-        }
-      });
-      
-    var chart = Highcharts.charts[5];//Horizontal Bar Chart
-      chart.update({
-        xAxis: {
-          minorTickLength: 0, //hide the little ticks on the Vertical Axis
-          tickLength: 0, //hide the little ticks on the Vertical Axis
-          lineWidth: 0, //make the vertical axis 0 pixels wide
-        },
-        yAxis: {
-          labels: {enabled: false}, // get rid of Horizontal Axis Labels.  
-          gridLineColor: 'transparent' // hide vertical gridlines
-        }
-      });
-    
-        var chart = Highcharts.charts[6];//Horizontal Bar Chart
-      chart.update({
-        xAxis: {
-          minorTickLength: 0, //hide the little ticks on the Vertical Axis
-          tickLength: 0, //hide the little ticks on the Vertical Axis
-          lineWidth: 0, //make the vertical axis 0 pixels wide
-        },
-        yAxis: {
-          labels: {enabled: false}, // get rid of Horizontal Axis Labels.  
-          gridLineColor: 'transparent' // hide vertical gridlines
-        }
-      });
-    
-        var chart = Highcharts.charts[7];//Horizontal Bar Chart
-      chart.update({
-        xAxis: {
-          minorTickLength: 0, //hide the little ticks on the Vertical Axis
-          tickLength: 0, //hide the little ticks on the Vertical Axis
-          lineWidth: 0, //make the vertical axis 0 pixels wide
-        },
-        yAxis: {
-          labels: {enabled: false}, // get rid of Horizontal Axis Labels.  
-          gridLineColor: 'transparent' // hide vertical gridlines
-        }
-      });
-      
-          var chart = Highcharts.charts[8];//Horizontal Bar Chart
-      chart.update({
-        xAxis: {
-          minorTickLength: 0, //hide the little ticks on the Vertical Axis
-          tickLength: 0, //hide the little ticks on the Vertical Axis
-          lineWidth: 0, //make the vertical axis 0 pixels wide
-        },
-        yAxis: {
-          labels: {enabled: false}, // get rid of Horizontal Axis Labels.  
-          gridLineColor: 'transparent' // hide vertical gridlines
-        }
-      });
-      
-          var chart = Highcharts.charts[9];//Horizontal Bar Chart
-      chart.update({
-        xAxis: {
-          minorTickLength: 0, //hide the little ticks on the Vertical Axis
-          tickLength: 0, //hide the little ticks on the Vertical Axis
-          lineWidth: 0, //make the vertical axis 0 pixels wide
-        },
-        yAxis: {
-          labels: {enabled: false}, // get rid of Horizontal Axis Labels.  
-          gridLineColor: 'transparent' // hide vertical gridlines
-        }
-      });
-    
-        var chart = Highcharts.charts[10]; //Horizontal Bar Chart
-      chart.update({
-        xAxis: {
-          minorTickLength: 0, //hide the little ticks on the Vertical Axis
-          tickLength: 0, //hide the little ticks on the Vertical Axis
-          lineWidth: 0, //make the vertical axis 0 pixels wide
-        },
-        yAxis: {
-          labels: {enabled: false}, // get rid of Horizontal Axis Labels.  
-          gridLineColor: 'transparent' // hide vertical gridlines
-        }
-      });
-      
-          var chart = Highcharts.charts[11];  //Vertical Column Chart
-      chart.update({
-        xAxis: {
-          minorTickLength: 0, //hide the little ticks on the Vertical Axis
-          tickLength: 0, //hide the little ticks on the Vertical Axis
-          lineWidth: 0, //make the vertical axis 0 pixels wide
-        },
-        yAxis: {
-          labels: {enabled: false}, // get rid of Horizontal Axis Labels.  
-          gridLineColor: 'transparent' // hide vertical gridlines
-        }
-      });
-    
-  }, 100);
-  
+    var chart = Highcharts.charts[3]; //Horizontal Bar Chart
+    chart.update({
+      xAxis: {
+        minorTickLength: 0, //hide the little ticks on the Vertical Axis
+        tickLength: 0, //hide the little ticks on the Vertical Axis
+        lineWidth: 0, //make the vertical axis 0 pixels wide
+      },
+      yAxis: {
+        labels: {
+          enabled: false
+        }, // get rid of Horizontal Axis Labels.  
+        gridLineColor: 'transparent' // hide vertical gridlines
+      }
+    });
 
+    var chart = Highcharts.charts[4]; //Horizontal Bar Chart
+    chart.update({
+      xAxis: {
+        minorTickLength: 0, //hide the little ticks on the Vertical Axis
+        tickLength: 0, //hide the little ticks on the Vertical Axis
+        lineWidth: 0, //make the vertical axis 0 pixels wide
+      },
+      yAxis: {
+        labels: {
+          enabled: false
+        }, // get rid of Horizontal Axis Labels.  
+        gridLineColor: 'transparent' // hide vertical gridlines
+      }
+    });
+
+    var chart = Highcharts.charts[5]; //Horizontal Bar Chart
+    chart.update({
+      xAxis: {
+        minorTickLength: 0, //hide the little ticks on the Vertical Axis
+        tickLength: 0, //hide the little ticks on the Vertical Axis
+        lineWidth: 0, //make the vertical axis 0 pixels wide
+      },
+      yAxis: {
+        labels: {
+          enabled: false
+        }, // get rid of Horizontal Axis Labels.  
+        gridLineColor: 'transparent' // hide vertical gridlines
+      }
+    });
+
+    var chart = Highcharts.charts[6]; //Horizontal Bar Chart
+    chart.update({
+      xAxis: {
+        minorTickLength: 0, //hide the little ticks on the Vertical Axis
+        tickLength: 0, //hide the little ticks on the Vertical Axis
+        lineWidth: 0, //make the vertical axis 0 pixels wide
+      },
+      yAxis: {
+        labels: {
+          enabled: false
+        }, // get rid of Horizontal Axis Labels.  
+        gridLineColor: 'transparent' // hide vertical gridlines
+      }
+    });
+
+    var chart = Highcharts.charts[7]; //Horizontal Bar Chart
+    chart.update({
+      xAxis: {
+        minorTickLength: 0, //hide the little ticks on the Vertical Axis
+        tickLength: 0, //hide the little ticks on the Vertical Axis
+        lineWidth: 0, //make the vertical axis 0 pixels wide
+      },
+      yAxis: {
+        labels: {
+          enabled: false
+        }, // get rid of Horizontal Axis Labels.  
+        gridLineColor: 'transparent' // hide vertical gridlines
+      }
+    });
+
+    var chart = Highcharts.charts[8]; //Horizontal Bar Chart
+    chart.update({
+      xAxis: {
+        minorTickLength: 0, //hide the little ticks on the Vertical Axis
+        tickLength: 0, //hide the little ticks on the Vertical Axis
+        lineWidth: 0, //make the vertical axis 0 pixels wide
+      },
+      yAxis: {
+        labels: {
+          enabled: false
+        }, // get rid of Horizontal Axis Labels.  
+        gridLineColor: 'transparent' // hide vertical gridlines
+      }
+    });
+
+    var chart = Highcharts.charts[9]; //Horizontal Bar Chart
+    chart.update({
+      xAxis: {
+        minorTickLength: 0, //hide the little ticks on the Vertical Axis
+        tickLength: 0, //hide the little ticks on the Vertical Axis
+        lineWidth: 0, //make the vertical axis 0 pixels wide
+      },
+      yAxis: {
+        labels: {
+          enabled: false
+        }, // get rid of Horizontal Axis Labels.  
+        gridLineColor: 'transparent' // hide vertical gridlines
+      }
+    });
+
+    var chart = Highcharts.charts[10]; //Horizontal Bar Chart
+    chart.update({
+      xAxis: {
+        minorTickLength: 0, //hide the little ticks on the Vertical Axis
+        tickLength: 0, //hide the little ticks on the Vertical Axis
+        lineWidth: 0, //make the vertical axis 0 pixels wide
+      },
+      yAxis: {
+        labels: {
+          enabled: false
+        }, // get rid of Horizontal Axis Labels.  
+        gridLineColor: 'transparent' // hide vertical gridlines
+      }
+    });
+
+    var chart = Highcharts.charts[11]; //Vertical Column Chart
+    chart.update({
+      xAxis: {
+        minorTickLength: 0, //hide the little ticks on the Vertical Axis
+        tickLength: 0, //hide the little ticks on the Vertical Axis
+        lineWidth: 0, //make the vertical axis 0 pixels wide
+      },
+      yAxis: {
+        labels: {
+          enabled: false
+        }, // get rid of Horizontal Axis Labels.  
+        gridLineColor: 'transparent' // hide vertical gridlines
+      }
+    });
+
+  }, 100);
 </script>
