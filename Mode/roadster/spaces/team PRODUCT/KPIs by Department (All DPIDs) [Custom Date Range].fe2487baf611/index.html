@@ -1,0 +1,80 @@
+<div class="mode-header embed-hidden">
+  <h1>{{ title }}</h1>
+  <p>Compares engaged agent's department KPIs across all live dealerships for date range</p>
+</div>
+<div class="mode-grid container">
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_9fca4226-e3fc-4cb6-d319-ce3c8c1ff292" dataset="dataset" options="text_options">
+        <p><strong>Definitions:</strong></p>
+        <ul>
+          <li>Engaged Agents are agents with at least 3 Roadster Express Store Events time range provided</li>
+          <li>Order metrics are related to Leads where customer started the order process. </li>
+        </ul>
+
+      </mode-text>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-table id="table_ab8363ecefd3" dataset="dataset" options="table_options"></mode-table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-table id="table_fbccf821a3c4" dataset="dataset" options="table_options"></mode-table>
+    </div>
+  </div>
+</div>
+<script>
+  setTimeout(function() {
+
+    var i;
+    /// For the First 3 bar charts
+
+    for (i = 0; i < 3; i++) {
+
+      var chart = Highcharts.charts[i];
+      chart.update({
+        xAxis: {
+          minorTickLength: 0,
+          tickLength: 0,
+
+        },
+        yAxis: {
+          labels: {
+            enabled: false
+          },
+          gridLineColor: 'transparent'
+        }
+      });
+    }
+
+
+    /// For ALL charts
+    var i;
+    for (i = 0; i < 5; i++) {
+
+      var chart = Highcharts.charts[i];
+      chart.update({
+        xAxis: {
+
+          type: 'date',
+          labels: {
+            formatter: function() {
+              return Highcharts.dateFormat('%a %e %b', this.value);
+            }
+          }
+
+        },
+        yAxis: {
+
+        }
+      });
+    }
+
+
+
+
+  }, 100);
+</script>
