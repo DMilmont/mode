@@ -31,15 +31,17 @@
   <p>{{ description }}</p>
 </div>
 <div class="mode-grid container">
+  <hr>
   <div></div>
-    <div class="row">
+  <div class="row">
     <div class="col-md-12">
       <mode-text id="text_ea82726d-3f75-4537-d183-094509322106" dataset="dataset" options="text_options">
         <h4>What is a prospect?</h4>
-         <p>A prospect is a potential customer who has submitted their personal information through the Express Store. With this report, you can view your potential customers and their relevant information.</p>
-               </mode-text>
+        <p>A prospect is a potential customer who has submitted their personal information through the Express Store. With this report, you can view your potential customers and their relevant information.</p>
+      </mode-text>
     </div>
   </div>
+  <hr>
   <div class="row">
     <div class="col-md-12">
       <mode-text id="text_ea82726d-3f75-4537-d183-094509322100" dataset="dataset" options="text_options">
@@ -60,7 +62,6 @@
     <div class="col-md-12">
       <mode-text id="text_ea82726d-3f75-4537-d183-094509322155" dataset="dataset" options="text_options">
         <h4>Prospect Types</h4>
-        <p><br></p>
       </mode-text>
     </div>
   </div>
@@ -86,10 +87,21 @@
       <div id="lead_specific_info"></div>
     </div>
   </div>
+  <hr>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_ea82726d-3f75-4537-d183-094509322124" dataset="dataset" options="text_options">
+        <h4>What is an Order?</h4>
+        <p>An order is anyone who has entered into the Order Buy-Flow Process.</p>
+      </mode-text>
+    </div>
+  </div>
+  <hr>
   <div class="row">
     <div class="col-md-12">
       <mode-text id="text_ea82726d-3f75-4537-d183-094509322102" dataset="dataset" options="text_options">
         <h4>Orders</h4>
+        <p>Open &amp; Completed Order History shown here.</p>
       </mode-text>
     </div>
   </div>
@@ -122,7 +134,7 @@
     <div class="col-md-12">
       <mode-text id="text_ea82726d-3f75-4537-d183-094509322107" dataset="dataset" options="text_options">
         <h4>F&amp;I And Accessories</h4>
-        <p>Here you can see what customer's buy along with their vehicle</p>
+        <p>Here you can see what customers select along with their vehicle</p>
       </mode-text>
     </div>
   </div>
@@ -176,56 +188,56 @@
     var drillDownDataSource_order = {};
     var drillDownDataSource_attach = {};
 
-    $('#prospect_basic').dxPivotGrid({
-      allowSortingBySummary: true,
-      allowFiltering: true,
-      showBorders: true,
-      showColumnGrandTotals: false,
-      showRowGrandTotals: false,
-      showRowTotals: false,
-      showColumnTotals: false,
-      fieldChooser: {
-        enabled: true,
-        height: 400
-      },
-      "export": {
-        enabled: true,
-        fileName: "propects_basic"
-      },
-      onCellClick: function(e) {
-        if (e.area == "data") {
-          var pivotGridDataSource_basic = e.component.getDataSource();
+    // $('#prospect_basic').dxPivotGrid({
+    //   allowSortingBySummary: true,
+    //   allowFiltering: true,
+    //   showBorders: true,
+    //   showColumnGrandTotals: false,
+    //   showRowGrandTotals: false,
+    //   showRowTotals: false,
+    //   showColumnTotals: false,
+    //   fieldChooser: {
+    //     enabled: true,
+    //     height: 400
+    //   },
+    //   "export": {
+    //     enabled: true,
+    //     fileName: "propects_basic"
+    //   },
+    //   onCellClick: function(e) {
+    //     if (e.area == "data") {
+    //       var pivotGridDataSource_basic = e.component.getDataSource();
 
-          drillDownDataSource_basic = pivotGridDataSource_basic.createDrillDownDataSource(e.cell);
-          prospect_specific_info.option("title", 'General Prospect Information');
-          prospect_specific_info.show();
-        }
-      },
-      dataSource: {
-        store: prospects_basic,
-        retrieveFields: false,
-        fields: [{
-            caption: "Month & Year",
-            dataField: 'mth_yr',
-            dataType: 'date',
-            format: 'monthAndYear',
-            area: 'row',
-            width: 110
-          },
-          {
-            caption: "Prospects",
-            dataField: "type",
-            area: "column",
-          },
-          {
-            dataField: 'exists_now',
-            summaryType: 'sum',
-            area: 'data'
-          }
+    //       drillDownDataSource_basic = pivotGridDataSource_basic.createDrillDownDataSource(e.cell);
+    //       prospect_specific_info.option("title", 'General Prospect Information');
+    //       prospect_specific_info.show();
+    //     }
+    //   },
+    //   dataSource: {
+    //     store: prospects_basic,
+    //     retrieveFields: false,
+    //     fields: [{
+    //         caption: "Month & Year",
+    //         dataField: 'mth_yr',
+    //         dataType: 'date',
+    //         format: 'monthAndYear',
+    //         area: 'row',
+    //         width: 110
+    //       },
+    //       {
+    //         caption: "Prospects",
+    //         dataField: "type",
+    //         area: "column",
+    //       },
+    //       {
+    //         dataField: 'exists_now',
+    //         summaryType: 'sum',
+    //         area: 'data'
+    //       }
 
-        ]
-      },
-    }).dxPivotGrid("instance");
+    //     ]
+    //   },
+    // }).dxPivotGrid("instance");
 
     var pivot1 = $('#prospect').dxPivotGrid({
       allowSortingBySummary: true,
@@ -291,6 +303,11 @@
             dataType: "number",
             summaryType: "sum",
           },
+          {
+            caption: 'Agent Name',
+            dataField: 'agent_name',
+            area: 'filter'
+          },
         ],
       },
     }).dxPivotGrid("instance");
@@ -304,7 +321,7 @@
       showRowTotals: true,
       showColumnTotals: false,
       fieldChooser: {
-        enabled: false,
+        enabled: true,
         height: 400
       },
       "export": {
@@ -373,7 +390,7 @@
       showColumnTotals: false,
 
       fieldChooser: {
-        enabled: false,
+        enabled: true,
         height: 400
       },
       "export": {
