@@ -1,0 +1,1 @@
+select * from public.active_queries
