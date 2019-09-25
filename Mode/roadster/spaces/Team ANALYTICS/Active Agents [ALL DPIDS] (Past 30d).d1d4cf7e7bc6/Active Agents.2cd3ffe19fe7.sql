@@ -56,11 +56,11 @@ SELECT dp.dpid,
        sf.account_executive as "Sales Director",
        sf.success_manager as "Success Manager",
        sf.dealer_group,
-       case when pa.last_login_at > now() - '30 days':: interval then 'Past 30 Days'
-            when pa.last_login_at > now() - '90 days':: interval then '31 - 90 Days Ago'
-            when pa.last_login_at > now() - '365 days':: interval then '91 - 365 Days Ago'
+       case when pa.last_login_at > now() - '30 days':: interval then '1) Past 30 Days'
+            when pa.last_login_at > now() - '90 days':: interval then '2) 31 - 90 Days Ago'
+            when pa.last_login_at > now() - '365 days':: interval then '3) 91 - 365 Days Ago'
             when pa.last_login_at is null then 'Never'
-       else '>365 days' end as "Login within"
+       else '4) >365 days' end as "Login within"
        
 FROM public.agents pa
 left join public.dealer_partners dp  ON dp.id = pa.dealer_partner_id
