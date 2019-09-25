@@ -42,18 +42,19 @@ with sharecount AS
    
    
 SELECT dp.dpid,
-       pa.department,
-       pa.last_login_at ,
+       COALESCE(pa.department, '<MISSING>') as "Department",
+       COALESCE(to_char(pa.last_login_at, 'Dy Mon DD, YYYY - HH12:MIAM'), '<NEVER>') as "Last Login",
+       date_part('day' , now() - pa.last_login_at) as "days ago",
        activity.count AS "Activity(events) past 30d" ,
        sc.count AS "Shares past 30d" ,
        print.count AS "Prints/Copies past 30d" ,
-       pa.first_name,
-       pa.last_name,
+       pa.first_name as "First Name",
+       pa.last_name as "Last Name",
        pa.email,
-       pa.job_title,
+       COALESCE(pa.job_title,'<MISSING>') as "Job Title",
        pa.created_at,
-       sf.account_executive,
-       sf.success_manager
+       sf.account_executive as "Sales Director",
+       sf.success_manager as "Success Manager"
 FROM public.agents pa
 left join public.dealer_partners dp  ON dp.id = pa.dealer_partner_id
 left join fact.salesforce_dealer_info sf  ON sf.dpid = dp.dpid
