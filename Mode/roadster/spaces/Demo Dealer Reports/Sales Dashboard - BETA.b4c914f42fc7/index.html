@@ -61,20 +61,6 @@
   </div>
 </div>
 <script>
-  setTimeout(function() {
-    var data = datasets.filter(function(d) {
-      return d.queryName == "Sales Information";
-    })[0].content;
-
-    if (data.length == 0) {
-      $('#report_t').empty();
-      $('#Sales_vs_Prospect_Type').empty();
-      $('#report_t').remove();
-      $('#t_1').prepend("<h1><b>No Matched Sales</b></h1>");
-    }
-  }, 5);
-</script>
-<script>
   var roadsterdx = {
     version: 1,
     getDataSource: function(queryName) {
