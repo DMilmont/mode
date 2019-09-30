@@ -15,6 +15,6 @@ left join fact.salesforce_dealer_info sf2 on admin.name = sf2.dealer_name
 
 where sf.status is null 
 and (admin.status = 'Live' or admin.status = 'Pending')
-and admin.dpid <> 'roadster'
+and admin.dpid  not in ('roadster', 'buysidedemo', 'fergusonsubaru', 'delaneyauto')
 ;
 

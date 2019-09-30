@@ -1,4 +1,4 @@
--- Returns first 100 rows from public.dealer_partners
+
 SELECT sf2.integration_manager "Integration Manager",
       admin.name as "Admin Dealer Name", 
       case when sf2.dealer_name is null then '<<can''t find - DPID must be wrong too>>' else sf2.dealer_name END "Salesforce Dealer Name" ,
