@@ -72,6 +72,13 @@
             width: 120,
             expanded: true,
           },
+           {
+            dataField: 'dealer_code',
+            caption: 'Dealer Code',
+            area: 'row',
+            width: 45,
+            expanded: true,
+          },
           {
             dataField: 'Title',
             area: 'column',
@@ -283,6 +290,24 @@
           {
             dataField: 'ct_pre_approval_started',
             caption: 'Pre-Approval Started',
+            area: 'data',
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
+            },
+            format: {
+              type: 'fixedPoint',
+              precision: 1
+            },
+            summaryType: 'sum'
+          },
+                    {
+            dataField: 'ct_credit_apps_completed',
+            caption: 'Total Credit Apps Completed',
             area: 'data',
             customizeText: function(cellInfo) {
               if (cellInfo.valueText == 'NaN') {

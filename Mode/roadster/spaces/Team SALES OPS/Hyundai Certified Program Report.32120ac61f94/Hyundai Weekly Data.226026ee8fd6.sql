@@ -1,6 +1,6 @@
 WITH tab1 as (
 SELECT *
-FROM report_layer.general_hyundai_kpis_full_run
+FROM report_layer.general_hyundai_kpis_full_run1
 ),
 
 dts as (
