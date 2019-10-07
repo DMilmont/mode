@@ -18,6 +18,11 @@ to_char(ls.timestamp, 'HH') hr,
 ls.type,
 ls.in_store,
 ls.user_contact_dbid,
+CASE 
+  WHEN ls.grade IS NULL OR ls.grade = '' THEN 'Does not Apply' 
+  WHEN ls.grade = 'new' THEN 'New Vehicle'
+  WHEN ls.grade = 'used' THEN 'Used Vehicle'
+  ELSE NULL END as "New/Used Flag",
 user_id,
 u.first_name,
 u.last_name,

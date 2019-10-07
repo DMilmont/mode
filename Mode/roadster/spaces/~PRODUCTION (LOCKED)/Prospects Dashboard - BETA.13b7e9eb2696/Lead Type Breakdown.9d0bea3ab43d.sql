@@ -24,7 +24,7 @@ u.last_name,
 u.email,
 1 "Count",
 a.first_name || ' ' || a.last_name agent_name,
-CASE WHEN regexp_replace(type, '([a-z])([A-Z])', '\1 \2','g') = 'SATrade Started' THEN 'Stand Along Trade Started' ELSE regexp_replace(type, '([a-z])([A-Z])', '\1 \2','g') END type_to_use,
+CASE WHEN regexp_replace(type, '([a-z])([A-Z])', '\1 \2','g') = 'SATrade Started' THEN 'Stand Alone Trade Started' ELSE regexp_replace(type, '([a-z])([A-Z])', '\1 \2','g') END type_to_use,
 CASE WHEN os.status IS NULL AND ls.order_id IS NOT NULL THEN 'Open'
 ELSE initcap(os.status) END as order_status, 
 CASE 
