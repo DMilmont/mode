@@ -1,4 +1,0 @@
----
-report_description: Testing using an agent table vs the materialized view before.
-is_full_width: false
-hide_run_button: false
