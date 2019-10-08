@@ -319,36 +319,21 @@
   })
 </script>
 <script>
+  var dms = roadsterdx.getDataSource('DMS Type');
+  var raw_string = dms[0]['DMS Type'];
+  var dms_string = 'Source - ' + raw_string;
+  
+  // Display Source String Somewhere
+  
+  
+</script>
+<script>
   setTimeout(function() {
-    if (data.length == 0) {
-      var i;
-      for (i = 0; i < Highcharts.charts.length; i++) {
-        var chart = Highcharts.charts[i];
-
-        chart.update({
-          xAxis: {
-            minorTickLength: 0,
-            tickLength: 0,
-          },
+    var chart = Highcharts.charts[0];
+    chart.update({
+      title: {
+        text: dms_string
+      },
         });
-
-        chart.series[0].update({
-          dataLabels: {
-            enabled: true
-          },
-        });
-
-        chart.series[1].update({
-          dataLabels: {
-            enabled: true,
-            color: '#456E9C',
-            padding: 15,
-            formatter: function() {
-              return (this.y * 100).toFixed(1) + ' %';
-            }
-          },
-        });
-      }
-    }
   });
 </script>
