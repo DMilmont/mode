@@ -26,41 +26,54 @@
     display: none;
   }
 </style>
-<div class="mode-header embed-hidden">
-  <h1>{{ title }}</h1>
-  <p>{{ description }}</p>
+<div id="t_1" class="mode-grid container">
+  <div id="report_t">
+    <div class="row">
+      <div class="col-md-12">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <mode-chart id="chart_ae19cac42b88" dataset="dataset" options="chart_options"></mode-chart>
+      </div>
+    </div>
+    <div class="col-md-12">
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <mode-chart id="matched_sales" dataset="dataset" options="chart_options"></mode-chart>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <mode-text id="text_ea82726d-3f75-4537-d183-094509322100" dataset="dataset" options="text_options">
+          <h4>Prospects by Sale</h4>
+          <p><em>Understand which prospects generate sales</em></p>
+        </mode-text>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <mode-chart id="Sales_vs_Prospect_Type" dataset="dataset" options="chart_options"></mode-chart>
+        <div id="lead_specific_info"></div>
+      </div>
+    </div>
+  </div>
 </div>
-<div class="mode-grid container">
-  <div class="row">
-    <div class="col-md-12">
-      <mode-chart id="chart_ae19cac42b88" dataset="dataset" options="chart_options"></mode-chart>
-    </div>
-  </div>
-  <div class="col-md-12">
-    <mode-text id="text_042b2503-64ae-4d64-d1e8-62842cdb6a54" dataset="dataset" options="text_options">
-      <p>Understand how your Close Rate varies by Lead Location.</p>
-    </mode-text>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <mode-chart id="matched_sales" dataset="dataset" options="chart_options"></mode-chart>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <mode-text id="text_ea82726d-3f75-4537-d183-094509322100" dataset="dataset" options="text_options">
-        <h4>Prospects by Sale</h4>
-        <p><em>Understand which prospects generate sales</em></p>
-      </mode-text>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <mode-chart id="Sales_vs_Prospect_Type" dataset="dataset" options="chart_options"></mode-chart>
-      <div id="lead_specific_info"></div>
-    </div>
-  </div>
-</div>
+<script>
+  setTimeout(function() {
+    var data = datasets.filter(function(d) {
+      return d.queryName == "Sales Information";
+    })[0].content;
+
+    if (data.length == 0) {
+      $('#report_t').empty();
+      $('#Sales_vs_Prospect_Type').empty();
+      $('#report_t').remove();
+      $('#t_1').prepend("<img src='https://crawlerdataroadster.s3.us-east-2.amazonaws.com/Agent+Cert+IMGs/CDK+Sales+Integration'>");
+    }
+  }, 5);
+</script>
 <script>
   var roadsterdx = {
     version: 1,
@@ -93,6 +106,8 @@
     },
   };
 
+
+
   $(function() {
     var matched_sales = roadsterdx.getDataSource('Matched Sales - Table');
 
@@ -103,8 +118,8 @@
       allowSortingBySummary: true,
       allowFiltering: true,
       showBorders: true,
-      showColumnGrandTotals: false,
-      showRowGrandTotals: true,
+      showColumnGrandTotals: true,
+      showRowGrandTotals: false,
       showRowTotals: false,
       showColumnTotals: false,
       fieldChooser: {
@@ -129,14 +144,16 @@
             expanded: true
           },
           {
-            dataField: 'in_store_flag',
-            Caption: 'In-Store . or Online?',
-            area: 'row',
-            width: 80
+            dataField: 'title',
+            area: 'column',
+            expanded: true
           },
           {
-            dataField: 'title',
-            area: 'column'
+            dataField: 'in_store_flag',
+            Caption: 'In-Store . or Online?',
+            area: 'column',
+            width: 80,
+            sortOrder: 'desc'
           },
           {
             dataField: 'ct_prospects',
@@ -216,8 +233,17 @@
             expanded: true
           },
           {
+            dataField: 'in_store_flag',
+            area: 'column',
+            expanded: true,
+            sortOrder: 'desc'
+
+          },
+          {
             dataField: 'Prospect Type',
-            area: 'column'
+            area: 'column',
+            expanded: true,
+            sortOrder: 'desc'
           },
           {
             dataField: 'exists_now',
@@ -265,7 +291,7 @@
                 alignment: 'center'
               },
               {
-                dataField: 'Link to lead',
+                dataField: 'Link to Lead',
                 caption: 'Leads',
                 alignment: 'center',
                 cellTemplate: function(container, options) {
@@ -294,33 +320,35 @@
 </script>
 <script>
   setTimeout(function() {
-    var i;
-    for (i = 0; i < Highcharts.charts.length; i++) {
-      var chart = Highcharts.charts[i];
+    if (data.length == 0) {
+      var i;
+      for (i = 0; i < Highcharts.charts.length; i++) {
+        var chart = Highcharts.charts[i];
 
-      chart.update({
-        xAxis: {
-          minorTickLength: 0,
-          tickLength: 0,
-        },
-      });
+        chart.update({
+          xAxis: {
+            minorTickLength: 0,
+            tickLength: 0,
+          },
+        });
 
-      chart.series[0].update({
-        dataLabels: {
-          enabled: true
-        },
-      });
+        chart.series[0].update({
+          dataLabels: {
+            enabled: true
+          },
+        });
 
-      chart.series[1].update({
-        dataLabels: {
-          enabled: true,
-          color: '#456E9C',
-          padding: 15,
-          formatter: function() {
-            return (this.y * 100).toFixed(1) + ' %';
-          }
-        },
-      });
+        chart.series[1].update({
+          dataLabels: {
+            enabled: true,
+            color: '#456E9C',
+            padding: 15,
+            formatter: function() {
+              return (this.y * 100).toFixed(1) + ' %';
+            }
+          },
+        });
+      }
     }
   });
 </script>
