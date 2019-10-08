@@ -37,8 +37,8 @@
         <mode-chart id="chart_ae19cac42b88" dataset="dataset" options="chart_options"></mode-chart>
       </div>
     </div>
-    <div class="col-md-12">
-    </div>
+    <p id='dms_tag'></p>
+  </div>
     <div class="row">
       <div class="col-md-12">
         <mode-chart id="matched_sales" dataset="dataset" options="chart_options"></mode-chart>
@@ -59,6 +59,7 @@
       </div>
     </div>
   </div>
+
 </div>
 <script>
   setTimeout(function() {
@@ -322,18 +323,9 @@
   var dms = roadsterdx.getDataSource('DMS Type');
   var raw_string = dms[0]['DMS Type'];
   var dms_string = 'Source - ' + raw_string;
-  
+
   // Display Source String Somewhere
-  
-  
 </script>
 <script>
-  setTimeout(function() {
-    var chart = Highcharts.charts[0];
-    chart.update({
-      title: {
-        text: dms_string
-      },
-        });
-  });
+$('#dms_tag').html(dms_string);
 </script>

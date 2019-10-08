@@ -1,10 +1,10 @@
 SELECT
 dpid,
 CASE 
-  WHEN "CDK" = 1 AND "Dealer Socket" = 1 THEN 'DMS: CDK & DealerSocket'
-  WHEN "CDK" = 1 AND "Dealer Socket" = 0 THEN 'DMS: CDK'
-  WHEN "CDK" = 0 AND "Dealer Socket" = 1 THEN 'DMS: DealerSocket'
-  ELSE 'DMS: None' END AS "DMS Type"
+  WHEN "CDK" = 1 AND "Dealer Socket" = 1 THEN 'CDK & DealerSocket'
+  WHEN "CDK" = 1 AND "Dealer Socket" = 0 THEN 'CDK'
+  WHEN "CDK" = 0 AND "Dealer Socket" = 1 THEN 'DealerSocket'
+  ELSE '' END AS "DMS Type"
 FROM (
 
 SELECT
