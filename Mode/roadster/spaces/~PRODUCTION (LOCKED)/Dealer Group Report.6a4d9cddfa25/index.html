@@ -53,12 +53,13 @@
   <div class="row">
     <div class="col-md-12">
       <mode-text id="text_1a38d606-2f60-4f0a-9892-569db3842b15" dataset="dataset" options="text_options">
-        <p>Dealer-Group Report (<strong>BETA</strong>)</p>
+        <p>Dealer-Group Report </p>
+        <p><br></p>
         <ul>
           <li>If you are not seeing all the rooftops you expect, please email analytics@roadster.com</li>
-          <li>Click the little gray triangles at the beginning of each row for more details. </li>
+          <li>Click the little gray triangles at the beginning of each row for more details.</li>
           <li>Select a date range on the right.</li>
-          <li>We are still developing this report, please send feedback about what you love, what isn't useful and what is missing to analytics@roadster.com. Screen shots are very helpful. </li>
+          <li>We are still developing this report, please send feedback about what you love, what isn't useful and what is missing to analytics@roadster.com. Screen shots are very helpful.</li>
         </ul>
         <p><br></p>
       </mode-text>
@@ -250,7 +251,7 @@
       },
       masterDetail: {
         enabled: true,
-        
+
         template: function(container, options) {
           var dlr = options.data['Dealership']
           $("<div>").dxDataGrid({
@@ -318,7 +319,7 @@
           dataType: 'number',
           headerCellTemplate: $('<p style="color: white">60-Day Rolling NPS</p>'),
         },
-                {
+        {
           dataField: 'lifetime_nps',
           alignment: 'center',
           dataType: 'number',
@@ -478,8 +479,7 @@
           }).appendTo(container);
         }
       },
-      columns: [
-        {
+      columns: [{
           dataField: 'Title',
           groupIndex: 0,
           expanded: true,
@@ -491,6 +491,7 @@
           alignment: 'center',
           dataType: 'string',
           sortOrder: 'desc',
+          width: 175,
           headerCellTemplate: $('<p style="color: white">Rooftop</p>')
         },
         {
@@ -578,71 +579,70 @@
         },
       ],
       summary: {
-        groupItems: [
-          {
+        groupItems: [{
             column: "Dealership",
             valueFormat: 'Summary Data:',
             showInGroupFooter: true
           },
-          {  
+          {
             column: "Dealer Visitors (text)",
             summaryType: "sum",
             alignByColumn: true,
             showInGroupFooter: true,
             displayFormat: '{0}'
-          }, 
-          {  
+          },
+          {
             column: "Express Visitors",
             summaryType: "sum",
             alignByColumn: true,
             showInGroupFooter: true,
             displayFormat: '{0}'
-          }, 
-         {  
+          },
+          {
             column: "Online Express Ratio",
             summaryType: "avg",
             alignByColumn: true,
             valueFormat: 'percent',
             showInGroupFooter: true,
             displayFormat: '{0}'
-          }, 
-          {  
+          },
+          {
             column: "Online Prospects",
             summaryType: "sum",
             alignByColumn: true,
             showInGroupFooter: true,
             displayFormat: '{0}'
-          }, 
-          {  
+          },
+          {
             column: "Prospect Conversion",
             summaryType: "avg",
             alignByColumn: true,
             valueFormat: 'percent',
             showInGroupFooter: true,
             displayFormat: '{0}'
-          }, 
-          {  
+          },
+          {
             column: "Online Shares",
             summaryType: "sum",
             alignByColumn: true,
             showInGroupFooter: true,
             displayFormat: '{0}'
           },
-          {  
+          {
             column: "Online Orders",
             summaryType: "sum",
             alignByColumn: true,
             showInGroupFooter: true,
             displayFormat: '{0}'
           },
-           {  
+          {
             column: "Roadster Matched Sales",
             summaryType: "sum",
             alignByColumn: true,
             showInGroupFooter: true,
             displayFormat: '{0}'
           },
-          {  
+          {
             column: "Close Rate",
             summaryType: "avg",
             alignByColumn: true,
@@ -650,8 +650,8 @@
             showInGroupFooter: true,
             displayFormat: '{0}'
           },
-            ],
-        },
+        ],
+      },
       grouping: {
         expandMode: 'rowClick'
       }
@@ -763,11 +763,17 @@
         }
       },
       columns: [{
+          dataField: 'Title',
+          groupIndex: 0,
+          sortOrder: 'desc'
+        },
+        {
           dataField: 'Dealership',
           caption: 'Rooftop',
           alignment: 'center',
           dataType: 'string',
           sortOrder: 'desc',
+          width: 175,
           headerCellTemplate: $('<p style="color: white">Rooftop</p>')
         },
         {
@@ -862,6 +868,85 @@
           headerCellTemplate: $('<p style="color: white">Activity w/n 3 Days</p>')
         },
       ],
+      summary: {
+        groupItems: [{
+            column: "Dealership",
+            valueFormat: 'Summary Data:',
+            showInGroupFooter: true
+          },
+          {
+            column: "In-Store Prospects",
+            summaryType: "sum",
+            alignByColumn: true,
+            showInGroupFooter: true,
+            displayFormat: '{0}'
+          },
+          {
+            column: "In-Store Shares",
+            summaryType: "sum",
+            alignByColumn: true,
+            showInGroupFooter: true,
+            displayFormat: '{0}'
+          },
+          {
+            column: "In-Store Orders",
+            summaryType: "sum",
+            alignByColumn: true,
+            showInGroupFooter: true,
+            displayFormat: '{0}'
+          },
+          {
+            column: "Copies",
+            summaryType: "sum",
+            alignByColumn: true,
+            showInGroupFooter: true,
+            displayFormat: '{0}'
+          },
+          {
+            column: "Prints",
+            summaryType: "sum",
+            alignByColumn: true,
+            showInGroupFooter: true,
+            displayFormat: '{0}'
+          },
+          {
+            column: "In-Store Sales",
+            summaryType: "sum",
+            alignByColumn: true,
+            showInGroupFooter: true,
+            displayFormat: '{0}'
+          },
+          {
+            column: "Close Rate",
+            summaryType: "avg",
+            alignByColumn: true,
+            valueFormat: 'percent',
+            showInGroupFooter: true,
+            displayFormat: '{0}'
+          },
+          {
+            column: "Active Agents",
+            summaryType: "sum",
+            alignByColumn: true,
+            showInGroupFooter: true,
+            displayFormat: '{0}'
+          },
+          {
+            column: "Certified Agents",
+            summaryType: "sum",
+            alignByColumn: true,
+            showInGroupFooter: true,
+            displayFormat: '{0}'
+          },
+          {
+            column: "Activity w/n 3 Days",
+            summaryType: "sum",
+            alignByColumn: true,
+            showInGroupFooter: true,
+            displayFormat: '{0}'
+          },
+        ],
+      },
     }).dxDataGrid("instance");
     // Order Funnel Summarized
     var summ3 = $('#order_funnel_summ').dxDataGrid({
@@ -911,6 +996,11 @@
         }
       },
       columns: [{
+          dataField: 'Title',
+          groupIndex: 0,
+          sortOrder: 'desc'
+        },
+        {
           dataField: 'Dealership',
           caption: 'Rooftop',
           alignment: 'center',
@@ -926,7 +1016,7 @@
           format: {
             precision: 0,
           },
-          headerCellTemplate: $('<p style="color: white">Total Order Submitted</p>')
+          headerCellTemplate: $('<p style="color: white">Total Orders Submitted</p>')
         },
         {
           dataField: 'Deal Sheet Accepted Rate',
@@ -989,6 +1079,69 @@
           headerCellTemplate: $('<p style="color: white">Final Deal Sent Rate</p>')
         },
       ],
+      summary: {
+        groupItems: [{
+            column: "Dealership",
+            valueFormat: 'Summary Data:',
+            showInGroupFooter: true
+          },
+          {
+            column: "Total Orders Submitted",
+            summaryType: "sum",
+            alignByColumn: true,
+            showInGroupFooter: true,
+            displayFormat: '{0}'
+          },
+          {
+            column: "Deal Sheet Accepted Rate",
+            summaryType: "avg",
+            alignByColumn: true,
+            valueFormat: 'percent',
+            showInGroupFooter: true,
+            displayFormat: '{0}'
+          },
+          {
+            column: "Trade-In Completed Rate",
+            summaryType: "avg",
+            alignByColumn: true,
+            valueFormat: 'percent',
+            showInGroupFooter: true,
+            displayFormat: '{0}'
+          },
+          {
+            column: "Credit Completed Rate",
+            summaryType: "avg",
+            alignByColumn: true,
+            valueFormat: 'percent',
+            showInGroupFooter: true,
+            displayFormat: '{0}'
+          },
+          {
+            column: "Service Plans Completed Rate",
+            summaryType: "avg",
+            alignByColumn: true,
+            valueFormat: 'percent',
+            showInGroupFooter: true,
+            displayFormat: '{0}'
+          },
+          {
+            column: "Accessories Completed Rate",
+            summaryType: "avg",
+            alignByColumn: true,
+            valueFormat: 'percent',
+            showInGroupFooter: true,
+            displayFormat: '{0}'
+          },
+          {
+            column: "Final Deal Sent Rate",
+            summaryType: "avg",
+            alignByColumn: true,
+            valueFormat: 'percent',
+            showInGroupFooter: true,
+            displayFormat: '{0}'
+          },
+        ],
+      },
     }).dxDataGrid("instance");
 
     // Not related to the select box filter - hacky fix to date not showing up

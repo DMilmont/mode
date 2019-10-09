@@ -23,7 +23,9 @@ base_order_data as (
   WHERE "Dealership" IN (SELECT initcap(name) FROM dpids)
 )
 
-SELECT bod."Dealership", 
+SELECT
+CASE WHEN "Dealership" ILIKE '%Percentile%' THEN 'Top Dealers' ELSE 'Your Rooftops' END as "Title",
+bod."Dealership", 
 bod."Date"::text,
 bod."Total Orders Submitted",
 bod."Accessories Completed",
