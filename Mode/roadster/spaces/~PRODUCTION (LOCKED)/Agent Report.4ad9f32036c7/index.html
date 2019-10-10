@@ -9,21 +9,30 @@
     font-size: 100%;
     font-family: "Gotham SSm A", "Gotham SSm B", Georgia;
   }
-  .b { 
-  text-algin: left !important;
-}
 
-.right-side {
+  .b {
+    text-algin: left !important;
+  }
+
+  .right-side {
     position: absolute;
-    right: 7px ;
+    right: 3px;
     top: 3px;
     margin-bottom: 40px;
     margin-top: 30px;
-}
+  }
 
-.row {
-  margin-top: 90px!important;
-}
+  .left-side {
+    position: absolute;
+    right: 250px;
+    top: 3px;
+    margin-bottom: 40px;
+    margin-top: 30px;
+  }
+
+  .row {
+    margin-top: 90px !important;
+  }
 </style>
 <script>
   var agent_report = datasets[0];
@@ -33,11 +42,12 @@
   var link_p = link.concat(dpid, '/users');
   $('a#change_me').attr('href', link_p);
 </script>
-
 <div class="mode-grid container">
-  <div class="right-side">Month & Year
+  <div class="right-side">Month &amp; Year
     <div id="selectStatus"></div>
   </div>
+
+
   <div></div>
   <div class="row">
     <div class="col-md-12">
@@ -88,31 +98,76 @@
       mth.push(agent_report[i]['Month & Year'])
     }
     var uniqueItems = Array.from(new Set(mth));
+    var box = roadsterdx.getDataSource('select_box');
     
-    $("#selectStatus").dxSelectBox({
-        dataSource: uniqueItems,
-        value: uniqueItems[1],
-        onValueChanged: function(data) {
-            dataGrid.filter(["Month & Year", "=", data.value]);
-        }
-    });
+    var mths = [];
+    for (i = 0; i < box.length; i++) {
+      mths.push(box[i]['Month & Year'])
+    }
+  
 
+    $("#selectStatus").dxSelectBox({
+      dataSource: mths,
+      value: mths[mths.length-1],
+      onValueChanged: function(data) {
+        dataGrid.filter(["Month & Year", "=", data.value]);
+      }
+    });
 
     var dataGrid = $('#agent_reports').dxDataGrid({
       dataSource: agent_report,
       "export": {
-            enabled: true,
-            fileName: "Utilization",
-            allowExportSelectedData: false
-        },
-        paging: {
-            pageSize: 60
-        },
+        enabled: true,
+        fileName: "Utilization",
+        allowExportSelectedData: false
+      },
+      paging: {
+        pageSize: 60
+      },
       showColumnLines: false,
       showRowLines: true,
       columnAutoWidth: true,
       wordWrapEnabled: true,
       allowColumnReordering: true,
+      filterBuilder: {
+        disabled: true,
+        visible: false,
+        height: 0
+      },
+      filterBuilderPopup: {
+        visible: false,
+        height: 0,
+        width: 0,
+        closeOnOutsideClick: true
+      },
+
+      filterRow: {
+        visible: true
+      },
+      //Filtering
+      filterPanel: {
+        visible: true,
+        texts: {
+          createFilter: ''
+        },
+        customizeText: function(e) {
+          return 'Hide Inactive Agents';
+        },
+        filterEnabled: false
+      },
+      filterValue: [
+        ["Show Inactive Agents Only", ">=", 0]
+      ],
+
+      // On Exporting Stuff
+      onExporting: function(e) {
+        e.component.beginUpdate();
+        e.component.columnOption("Certification Completed", "visible", true);
+      },
+      onExported: function(e) {
+        e.component.columnOption("Certification Completed", "visible", false);
+        e.component.endUpdate();
+      },
       onCellPrepared: function(e) {
         if (e.rowType == "header") {
           e.cellElement.css('background', 'black')
@@ -121,13 +176,16 @@
           e.cellElement.css('color', 'white')
         }
       },
-      columns: [
-        {
+      columns: [{
           dataField: 'Month & Year',
           width: 100,
           visible: false,
         },
-        
+        {
+          dataField: 'Show Inactive Agents Only',
+          visible: false,
+        },
+
         {
           dataField: 'Agent Role',
           width: 170,
@@ -136,87 +194,125 @@
           alignment: 'center'
         },
         {
-          dataField: 'Agent',
+          dataField: 'agent',
+          caption: 'Agent',
           //sortOrder: 'desc',
           width: 165,
           headerCellTemplate: $('<p style="color: white">Agent</p>'),
           alignment: 'center'
         },
         {
+          dataField: 'Certification Completed',
+          visible: false
+        },
+        {
           dataField: 'Certification Flag',
-          width: 112,
+          width: 115,
+          allowFiltering: false,
           headerCellTemplate: $('<p style="color: white">Certifications</p>'),
           alignment: 'center',
-          cellTemplate: function (cellElement, cellInfo) {
-            var tipid = cellInfo.data.id;
-            var sitetextid = cellInfo.data.id + "s";
-            console.log(tipid)
-            console.log(sitetextid)
+          cellTemplate: function(cellElement, cellInfo) {
+            var tipid = cellInfo.rowIndex + 'l';
+            var sitetextid = cellInfo.rowIndex + "s";
             $("<div id=" + tipid + "></div><div id=" + sitetextid + "><div>").text(cellInfo.data['Certification Flag']).appendTo(cellElement);
             $("#" + tipid).dxTooltip({
-                target: "#" + sitetextid,
-                showEvent: "dxhoverstart",
-                hideEvent: "dxhoverend",
-                position: "right",
-                contentTemplate: function (contentElement) {
-                    contentElement.html("<b text-align='left' !important>" + 'Certifications:</b><br>' + cellInfo.data['Completed New']);
-                }
+              target: "#" + sitetextid,
+              showEvent: "dxhoverstart",
+              hideEvent: "dxhoverend",
+              position: "top",
+              contentTemplate: function(contentElement) {
+                contentElement.html("<p>" + cellInfo.data['Completed New'] + "</p>");
+              },
             });
           }
         },
         {
           dataField: 'check_for_activity',
           width: 85,
+          allowFiltering: false,
           headerCellTemplate: $('<p style="color: white">Activity Indicator</p>'),
-          alignment: 'center'
+          alignment: 'center',
+          onExporting: function(e) {
+            e.component.beginUpdate();
+            e.component.columnOption("Certification Completed", "visible", true);
+          },
+          cellTemplate: function(cellElement, cellInfo) {
+            var tipids = cellInfo.rowIndex + 'v';
+            var sitetextids = cellInfo.rowIndex + "st";
+            $("<div id=" + tipids + "></div><div id=" + sitetextids + "><div>").text(cellInfo.data['check_for_activity']).appendTo(cellElement);
+            $("#" + tipids).dxTooltip({
+              target: "#" + sitetextids,
+              showEvent: "dxhoverstart",
+              hideEvent: "dxhoverend",
+              position: "top",
+              contentTemplate: function(contentElement) {
+                contentElement.html("<p>" + cellInfo.data['timest'] + "</p>");
+              },
+
+            });
+          }
         },
         {
           dataField: 'Agent Prospects',
           headerCellTemplate: $('<p style="color: white">Prospects</p>'),
           alignment: 'center',
+          allowFiltering: false,
           sortOrder: 'desc',
         },
         {
           dataField: 'Shared Vehicle Details',
           headerCellTemplate: $('<p style="color: white">Shares</p>'),
+          allowFiltering: false,
           alignment: 'center'
         },
         {
           dataField: 'Agent Orders',
           headerCellTemplate: $('<p style="color: white">Orders</p>'),
+          allowFiltering: false,
           alignment: 'center'
         },
         {
           dataField: 'Print Price Summary',
           headerCellTemplate: $('<p style="color: white">Print Price Summary</p>'),
+          allowFiltering: false,
           alignment: 'center'
         },
         {
           dataField: 'Print Share Details',
           headerCellTemplate: $('<p style="color: white">Print Share Details</p>'),
+          allowFiltering: false,
           alignment: 'center'
         },
         {
           dataField: 'Copies',
           headerCellTemplate: $('<p style="color: white">Copies</p>'),
+          allowFiltering: false,
           alignment: 'center'
         },
         {
           dataField: 'Matched Sales',
           headerCellTemplate: $('<p style="color: white">Matched Sales</p>'),
+          allowFiltering: false,
           alignment: 'center'
         },
         {
           dataField: 'Total Sales (if available)',
           headerCellTemplate: $('<p style="color: white">Total Sales</p>'),
+          allowFiltering: false,
           alignment: 'center'
         },
 
       ],
 
     }).dxDataGrid("instance");
-  
-  
-  dataGrid.filter(["Month & Year", "=", uniqueItems[(uniqueItems.length - 2)]]);  
+
+    /// Need to do this after the inital build of the report. Used at Runtime. 
+    $("#agent_reports").dxDataGrid("columnOption", "Show Inactive Agents Only", {
+      selectedFilterOperation: ">",
+      filterValue: 0
+    });
+
+
+    dataGrid.filter(["Month & Year", "=",mths[mths.length-1]]);
   });
 </script>
