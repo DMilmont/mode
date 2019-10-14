@@ -273,11 +273,10 @@
         retrieveFields: false,
         fields: [
           {
-            caption: "",
-            dataField: "",
+            caption: 'New/Used Flag',
+            dataField: "New/Used Flag",
             area: "filter"
           },
-
           {
             caption: "Prospects",
             dataField: "type_to_use",
@@ -482,6 +481,10 @@
             width: 1000,
             height: 700,
             columnAutoWidth: true,
+            "export": {
+              enabled: true,
+              fileName: "lead_specific_details"
+            },
             columns: [{
                 dataField: 'timestamp',
                 caption: 'Date',
@@ -561,6 +564,10 @@
             width: 900,
             height: 700,
             columnAutoWidth: true,
+                        "export": {
+              enabled: true,
+              fileName: "lead_specific_details"
+            },
             columns: [{
                 dataField: 'dt',
                 caption: 'Date',
@@ -623,6 +630,10 @@
             width: 900,
             height: 700,
             columnAutoWidth: true,
+            "export": {
+              enabled: true,
+              fileName: "order_specific_details"
+            },
             columns: [{
                 dataField: 'timestamp',
                 caption: 'Date',
@@ -690,6 +701,10 @@
             width: 900,
             height: 400,
             columnAutoWidth: true,
+            "export": {
+              enabled: true,
+              fileName: "f_i_specific_details"
+            },
             columns: [{
                 dataField: 'customer_email',
                 caption: 'Customer Email',
