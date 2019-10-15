@@ -206,6 +206,7 @@
     var dealer_attributes = roadsterdx.getDataSource('Unlock Mode - Today');
     var agent_certs = roadsterdx.getDataSource('Agent Cert Profiles');
     var online_metrics_sum = roadsterdx.getDataSource('Online Metrics - Summarized');
+    console.log(online_metrics_sum);
     var instore_metrics_sum = roadsterdx.getDataSource('In-Store Metrics - Summarized');
     var order_funnel_bar = roadsterdx.getDataSource('Order Funnel - Bar Chart');
     var daily_srp = roadsterdx.getDataSource('Online SRP Data');
@@ -395,6 +396,46 @@
           },
           {
             dataField: 'Express Visitors',
+            alignment: 'center',
+            dataType: 'number',
+            summaryType: 'avg',
+            area: 'data',
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
+            },
+            format: {
+              type: "fixedPoint",
+              precision: 0
+            }
+          },
+          {
+            dataField: 'SRP Visitors',
+            caption: 'SRP Visitors',
+            alignment: 'center',
+            dataType: 'number',
+            summaryType: 'avg',
+            area: 'data',
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
+            },
+            format: {
+              type: "fixedPoint",
+              precision: 0
+            }
+          },
+          {
+            dataField: 'VDP Visitors',
+            caption: 'VDP Visitors',
             alignment: 'center',
             dataType: 'number',
             summaryType: 'avg',
