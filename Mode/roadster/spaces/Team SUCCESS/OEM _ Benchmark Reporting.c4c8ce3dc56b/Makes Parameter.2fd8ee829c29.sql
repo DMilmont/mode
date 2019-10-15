@@ -6,7 +6,7 @@ ORDER BY primary_make
 {% form %}
 
 primary_make: 
-  type: select
+  type: multiselect
   default: Toyota
   options: 
     labels: primary_make

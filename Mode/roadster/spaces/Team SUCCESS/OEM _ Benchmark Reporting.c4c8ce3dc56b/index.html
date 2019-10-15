@@ -49,8 +49,11 @@
   }
 
   /** {*/
-    /*font-family: 'Helvetica Neue', 'Segoe UI', Helvetica, Verdana, sans-serif !important;*/
+
+  /*font-family: 'Helvetica Neue', 'Segoe UI', Helvetica, Verdana, sans-serif !important;*/
+
   /*  vertical-align: middle !important;*/
+
   /*}*/
 </style>
 <div class="row" data-row-height="small">
@@ -79,23 +82,16 @@
       <mode-text id="text_1a38d606-2f60-4f0a-9892-569db3842b15" dataset="dataset" options="text_options">
         <p><strong>TEST</strong> <strong>REPORT</strong> for OEM</p>
         <p>Quick Facts:</p>
-        <ol>
-          <li>Selecting "Primary Make" will grab all rooftops with that OEM set in our dealer properties. That data will show up under "OEM Rooftop" in our tables below. </li>
-          <li>Choose your Date Range is at the Monthly Level. </li>
-          <li>"State" can narrow down your Primary Make data to certain areas of the country</li>
-          <li>"Dpid" is a new parameter which lets you select custom dealers for comparison. These will show up in the table as "Custom Group". Each table lets you click the arrows to breakout the data at the Rooftop level. </li>
-          <li>Each table can be downloaded to excel by clicking the icon on the left. Click the arrows before downloading to get the breakouts of the dataset by rooftop. </li>
-        </ol>
         <p><br></p>
+        <p><br></p>
+        <ol>
+          <li>Selecting "Primary Make" will grab all rooftops with that OEM set in our dealer properties. That data will show up under "OEM Rooftop" in our tables below. <strong>You can select multiple primary makes. The graphs may show as "Error". The tables will show all available data without issue. </strong></li>
+          <li><strong>Choose your Date Range is at the Monthly Level.</strong></li>
+          <li>"State" can narrow down your Primary Make data to certain areas of the country</li>
+          <li>"Dpid" is a new parameter which lets you select custom dealers for comparison. These will show up in the table as "Custom Group". Each table lets you click the arrows to breakout the data at the Rooftop level.</li>
+          <li>Each table can be downloaded to excel by clicking the icon on the left. Click the arrows before downloading to get the breakouts of the dataset by rooftop.</li>
+        </ol>
       </mode-text>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-6">
-      <mode-chart id="chart_f17ef63fb966" dataset="dataset" options="chart_options"></mode-chart>
-    </div>
-    <div class="col-md-6">
-      <mode-chart id="chart_f275735064bc" dataset="dataset" options="chart_options"></mode-chart>
     </div>
   </div>
   <div class="row">
@@ -355,13 +351,13 @@
             dataType: 'number',
             summaryType: 'avg',
             area: 'data',
-            customizeText: function (cellInfo) {
-                if(cellInfo.valueText == 'NaN') {
-                  v = '';
-                } else {
-                  v = cellInfo.valueText;
-                }
-                return v;
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
             },
             format: {
               type: "fixedPoint",
@@ -374,13 +370,13 @@
             dataType: 'number',
             summaryType: 'avg',
             area: 'data',
-                        customizeText: function (cellInfo) {
-                if(cellInfo.valueText == 'NaN') {
-                  v = '';
-                } else {
-                  v = cellInfo.valueText;
-                }
-                return v;
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
             },
             format: {
               type: "fixedPoint",
@@ -398,13 +394,13 @@
                 return e.value('Express Visitors') / e.value('Dealer Visitors');
               }
             },
-                        customizeText: function (cellInfo) {
-                if(cellInfo.valueText == 'NaN') {
-                  v = '';
-                } else {
-                  v = cellInfo.valueText;
-                }
-                return v;
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
             },
             format: {
               precision: 1,
@@ -415,13 +411,13 @@
             dataField: 'Online Prospects',
             area: 'data',
             summaryType: 'avg',
-                        customizeText: function (cellInfo) {
-                if(cellInfo.valueText == 'NaN') {
-                  v = '';
-                } else {
-                  v = cellInfo.valueText;
-                }
-                return v;
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
             },
             format: {
               type: 'fixedPoint',
@@ -439,13 +435,13 @@
                 return e.value('Online Prospects') / e.value('Express Visitors');
               }
             },
-                        customizeText: function (cellInfo) {
-                if(cellInfo.valueText == 'NaN') {
-                  v = '';
-                } else {
-                  v = cellInfo.valueText;
-                }
-                return v;
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
             },
             format: {
               precision: 1,
@@ -455,13 +451,13 @@
           {
             dataField: 'Online Shares',
             area: 'data',
-                        customizeText: function (cellInfo) {
-                if(cellInfo.valueText == 'NaN') {
-                  v = '';
-                } else {
-                  v = cellInfo.valueText;
-                }
-                return v;
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
             },
             format: {
               type: 'fixedPoint',
@@ -472,13 +468,13 @@
           {
             dataField: 'Online Orders',
             area: 'data',
-                        customizeText: function (cellInfo) {
-                if(cellInfo.valueText == 'NaN') {
-                  v = '';
-                } else {
-                  v = cellInfo.valueText;
-                }
-                return v;
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
             },
             format: {
               type: 'fixedPoint',
@@ -489,13 +485,13 @@
           {
             dataField: 'Roadster Matched Sales',
             area: 'data',
-                        customizeText: function (cellInfo) {
-                if(cellInfo.valueText == 'NaN') {
-                  v = '';
-                } else {
-                  v = cellInfo.valueText;
-                }
-                return v;
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
             },
             format: {
               type: 'fixedPoint',
@@ -506,13 +502,13 @@
           {
             caption: 'Close Rate',
             area: 'data',
-                        customizeText: function (cellInfo) {
-                if(cellInfo.valueText == 'NaN') {
-                  v = '';
-                } else {
-                  v = cellInfo.valueText;
-                }
-                return v;
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
             },
             format: {
               type: 'percent',
@@ -566,13 +562,13 @@
             dataField: "In-Store Prospects",
             area: 'data',
             summaryType: 'avg',
-                        customizeText: function (cellInfo) {
-                if(cellInfo.valueText == 'NaN') {
-                  v = '';
-                } else {
-                  v = cellInfo.valueText;
-                }
-                return v;
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
             },
             format: {
               type: "fixedPoint",
@@ -584,13 +580,13 @@
             dataField: "In-Store Shares",
             area: 'data',
             summaryType: 'avg',
-                        customizeText: function (cellInfo) {
-                if(cellInfo.valueText == 'NaN') {
-                  v = '';
-                } else {
-                  v = cellInfo.valueText;
-                }
-                return v;
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
             },
             format: {
               type: "fixedPoint",
@@ -601,13 +597,13 @@
             dataField: "In-Store Orders",
             area: 'data',
             summaryType: 'avg',
-                        customizeText: function (cellInfo) {
-                if(cellInfo.valueText == 'NaN') {
-                  v = '';
-                } else {
-                  v = cellInfo.valueText;
-                }
-                return v;
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
             },
             format: {
               type: "fixedPoint",
@@ -618,13 +614,13 @@
             dataField: "Copies",
             area: 'data',
             summaryType: 'avg',
-                        customizeText: function (cellInfo) {
-                if(cellInfo.valueText == 'NaN') {
-                  v = '';
-                } else {
-                  v = cellInfo.valueText;
-                }
-                return v;
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
             },
             format: {
               type: "fixedPoint",
@@ -635,13 +631,13 @@
             dataField: "Prints",
             area: 'data',
             summaryType: 'avg',
-                        customizeText: function (cellInfo) {
-                if(cellInfo.valueText == 'NaN') {
-                  v = '';
-                } else {
-                  v = cellInfo.valueText;
-                }
-                return v;
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
             },
             format: {
               type: "fixedPoint",
@@ -652,13 +648,13 @@
             dataField: "In-Store Sales",
             area: 'data',
             summaryType: 'avg',
-                        customizeText: function (cellInfo) {
-                if(cellInfo.valueText == 'NaN') {
-                  v = '';
-                } else {
-                  v = cellInfo.valueText;
-                }
-                return v;
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
             },
             format: {
               type: "fixedPoint",
@@ -669,13 +665,13 @@
             caption: "Close Rate",
             area: "data",
             summaryType: "custom",
-                        customizeText: function (cellInfo) {
-                if(cellInfo.valueText == 'NaN') {
-                  v = '';
-                } else {
-                  v = cellInfo.valueText;
-                }
-                return v;
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
             },
             calculateSummaryValue: e => {
               if (e.value('In-Store Prospects') == 0) {
@@ -693,13 +689,13 @@
             dataField: "Active Agents",
             area: 'data',
             summaryType: 'avg',
-                        customizeText: function (cellInfo) {
-                if(cellInfo.valueText == 'NaN') {
-                  v = '';
-                } else {
-                  v = cellInfo.valueText;
-                }
-                return v;
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
             },
             format: {
               type: "fixedPoint",
@@ -710,13 +706,13 @@
             dataField: "Certified Agents",
             area: 'data',
             summaryType: 'avg',
-                        customizeText: function (cellInfo) {
-                if(cellInfo.valueText == 'NaN') {
-                  v = '';
-                } else {
-                  v = cellInfo.valueText;
-                }
-                return v;
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
             },
             format: {
               type: "fixedPoint",
@@ -727,13 +723,13 @@
             dataField: "Activity w/n 3 Days",
             area: 'data',
             summaryType: 'avg',
-                        customizeText: function (cellInfo) {
-                if(cellInfo.valueText == 'NaN') {
-                  v = '';
-                } else {
-                  v = cellInfo.valueText;
-                }
-                return v;
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
             },
             format: {
               type: "fixedPoint",
@@ -872,4 +868,3 @@
     }, speed);
   }
 </script>
-
