@@ -70,6 +70,7 @@ SELECT
        properties ->> 'unlock_count_validated' unlock_ct_val,
        properties ->> 'unlock_count_days' unlock_ct_days, 
        properties ->> 'marketplace_type' marketplace,
+       properties ->> 'embedded_checkout_frame' "Slide-Out",
        actual_live_date
 FROM dealer_partner_properties dpp
 LEFT JOIN dealer_partners dp ON dpp.dealer_partner_id = dp.id
@@ -81,6 +82,7 @@ ORDER BY date desc
 
 SELECT 
 initcap("Dealership") "Dealership",
+CASE WHEN "Slide-Out" = 'false' THEN 'x' ELSE '✓' END "Slide-Out",
 CASE WHEN in_store_wizard = '' OR in_store_wizard = 'false' THEN 'x'
             else '✓' END "In-Store Purchase Wizard",
 CASE 

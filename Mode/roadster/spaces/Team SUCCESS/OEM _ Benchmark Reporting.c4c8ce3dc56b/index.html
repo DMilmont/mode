@@ -282,6 +282,11 @@
           sortOrder: 'desc'
         },
         {
+          dataField: 'Slide-Out',
+          alignment: 'center',
+          headerCellTemplate: $('<p style="color: white">Slide-Out</p>')
+        },
+        {
           dataField: 'Price Unlock Mode',
           alignment: 'center',
           dataType: 'string',
@@ -361,26 +366,7 @@
             },
             format: {
               type: "fixedPoint",
-              precision: 1
-            }
-          },
-          {
-            dataField: 'Express Visitors',
-            alignment: 'center',
-            dataType: 'number',
-            summaryType: 'avg',
-            area: 'data',
-            customizeText: function(cellInfo) {
-              if (cellInfo.valueText == 'NaN') {
-                v = '';
-              } else {
-                v = cellInfo.valueText;
-              }
-              return v;
-            },
-            format: {
-              type: "fixedPoint",
-              precision: 1
+              precision: 0
             }
           },
           {
@@ -408,6 +394,25 @@
             },
           },
           {
+            dataField: 'Express Visitors',
+            alignment: 'center',
+            dataType: 'number',
+            summaryType: 'avg',
+            area: 'data',
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
+            },
+            format: {
+              type: "fixedPoint",
+              precision: 0
+            }
+          },
+          {
             dataField: 'Online Prospects',
             area: 'data',
             summaryType: 'avg',
@@ -421,7 +426,7 @@
             },
             format: {
               type: 'fixedPoint',
-              precision: 1
+              precision: 0
             }
           },
           {
@@ -449,23 +454,6 @@
             },
           },
           {
-            dataField: 'Online Shares',
-            area: 'data',
-            customizeText: function(cellInfo) {
-              if (cellInfo.valueText == 'NaN') {
-                v = '';
-              } else {
-                v = cellInfo.valueText;
-              }
-              return v;
-            },
-            format: {
-              type: 'fixedPoint',
-              precision: 1
-            },
-            summaryType: 'avg'
-          },
-          {
             dataField: 'Online Orders',
             area: 'data',
             customizeText: function(cellInfo) {
@@ -478,7 +466,7 @@
             },
             format: {
               type: 'fixedPoint',
-              precision: 1
+              precision: 0
             },
             summaryType: 'avg'
           },
@@ -495,7 +483,7 @@
             },
             format: {
               type: 'fixedPoint',
-              precision: 1
+              precision: 0
             },
             summaryType: 'avg'
           },
@@ -772,7 +760,7 @@
             dataField: 'Total Orders Submitted',
             caption: 'Total Orders Submitted',
             area: 'data',
-            summaryType: 'sum',
+            summaryType: 'avg',
             format: {
               type: "fixedPoint",
               precision: 1
@@ -785,7 +773,15 @@
             format: {
               type: "percent",
               precision: 1
-            }
+            },
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
+            },
           },
           {
             dataField: 'Trade-In Completed Rate',
@@ -794,7 +790,15 @@
             format: {
               type: "percent",
               precision: 1
-            }
+            },
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
+            },
           },
           {
             dataField: 'Credit Completed Rate',
@@ -803,7 +807,15 @@
             format: {
               type: "percent",
               precision: 1
-            }
+            },
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
+            },
           },
           {
             dataField: 'Service Plans Completed Rate',
@@ -812,7 +824,15 @@
             format: {
               type: "percent",
               precision: 1
-            }
+            },
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
+            },
           },
           {
             dataField: 'Accessories Completed Rate',
@@ -821,7 +841,15 @@
             format: {
               type: "percent",
               precision: 1
-            }
+            },
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
+            },
           },
           {
             dataField: 'Final Deal Sent Rate',
@@ -830,7 +858,15 @@
             format: {
               type: "percent",
               precision: 1
-            }
+            },
+            customizeText: function(cellInfo) {
+              if (cellInfo.valueText == 'NaN') {
+                v = '';
+              } else {
+                v = cellInfo.valueText;
+              }
+              return v;
+            },
           },
         ]
       },
