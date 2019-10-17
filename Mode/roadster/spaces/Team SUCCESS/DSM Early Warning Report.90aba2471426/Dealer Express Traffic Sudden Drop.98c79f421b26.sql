@@ -1,0 +1,2 @@
+SELECT *
+FROM report_layer.vw_mode_exp_traffic_sudden_drop

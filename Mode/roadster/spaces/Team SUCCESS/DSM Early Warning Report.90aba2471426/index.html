@@ -1,0 +1,311 @@
+<link rel="stylesheet" href="https://mode.github.io/alamode/alamode.min.css">
+<script src="https://mode.github.io/alamode/alamode.min.js"></script>
+<style>
+  mode-table tr:nth-child(even) {
+    background-color: #f2f2f2
+  }
+
+  mode-table tr:hover {
+    background-color: #ddd;
+  }
+
+  mode-table td {
+    height: 20px !important;
+    color: black !important;
+    text-align: center !important;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: 1px solid #ddd;
+  }
+
+  mode-table th {
+    text-align: center !important;
+  }
+
+  .chart-header {
+    display: none;
+  }
+
+  p {
+    font-size: medium;
+  }
+</style>
+<style type="text/css">
+  BR {
+    clear: right
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  a:hover,
+  a:active,
+  a:focus {
+    color: darkred;
+    text-decoration: underline;
+  }
+</style>
+
+<div class="mode-header embed-hidden">
+  <h1>{{ title }}</h1>
+  <p>{{ description }}</p>
+</div>
+<div class="mode-grid container">
+   <div class="CriticalProblems">
+    <div class="row">
+      <div class="col-md-12">
+        <h2><u>Critical Problems</u></h2>
+        <h4>If your name is here, you need to contact your dealer partner and ask them to re-install the "Roadster Analytics Script" on their site.</h4>
+      <mode-table id="table_a88670289900" dataset="dataset" options="table_options"></mode-table>
+      </div>
+    </div>
+    
+    
+    <div class="row">
+      <div class="WebT">
+        <div class="col-md-6">
+          <h2><u>Web Traffic</u></h2>
+          <h4>These lines should never hit zero.</h4>
+
+          <mode-chart id="chart_b46b1d260895" dataset="dataset" options="chart_options" options.title.text="WebT"></mode-chart>
+        </div>
+      </div>
+      <div class="ExpressT">
+        <div class="col-md-6">
+          <h2><u>Express Traffic</u></h2>
+          <!--<mode-chart id="chart_3ecc7b52da12" dataset="dataset" options="chart_options" options.title.text="ExpT"></mode-chart>-->
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <p>Check site to see if GA Tags are up / CTAs are working as expected. <a href="https://roadsterteam.atlassian.net/wiki/spaces/AN/pages/333152257/How+to+detect+if+Roadster+Google+Analytic+Tags+are+up" target="_blank">How to detect if GA Tags are on a webpage.</a> </p>
+      <p>See <a href="https://roadsterteam.atlassian.net/wiki/spaces/AN/pages/314114111/Early+Warning+System+Criteria" target="_blank">Confluence page</a> for documentation on how we detect these dealers. Feel free to add any comments.</p>
+    </div>
+  </div> 
+
+  <div class="row"  data-row-height="large">
+    <div class="col-md-12">
+       <h2><u>Unexpected Drops</u></h2>
+      <h4>The GRAY bar is the number of ES visitors we expected last week, based on history. 
+      <br>The RED bar is how many they actually got last week - and it's low.
+      <br>If your dealer is listed here, you should reach out to them to understand why they might have dropped.</h4>
+      <mode-chart id="chart_c9412501d603" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+         <h2><u>Impressive Jumps</u></h2>
+      <h4>The GRAY bar is the number of ES visitors we expected last week, based on history. 
+      <br>The GREEN bar is how many they actually got last week - and it's better than expected!
+      <br>If your dealer is listed here, you should reach out to congratulate them, understand what they change and share best practices with the team.</h4>
+
+      <mode-chart id="chart_ed779b861f60" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+
+  <div class="row"  data-row-height="medium">
+    <div class="col-md-12">
+         <h2><u>Dealers Not Sending Website Traffic - Detail</u></h2>
+      <h4>These dealers are not sending Roadster their website traffic - please contact them to make sure the Roadster GA tags are implemented on their site.
+        <br>Without website traffic, many of the key Roadster metrics are going to be 0 or ugly N/As.</h4>
+      <mode-table id="table_1aab21dac5f0" dataset="dataset" options="table_options"></mode-table>
+      <p>This list excludes customers who have 'opted out'. If your customer wants to opt out, please send a slack message to #anlytx_L2_Support.</p>
+
+    </div>
+  </div>
+</div>
+<script>
+  setTimeout(function() {
+    var data = datasets.filter(function(d) {
+      return d.queryName == "Dealer Web Traffic Sudden Drop";
+    })[0].content;
+
+    var data2 = datasets.filter(function(d) {
+      return d.queryName == "Dealer Express Traffic Sudden Drop";
+    })[0].content;
+
+    if (data.length == 0) {
+      $('.WebT').remove();
+    }
+    if (data2.length == 0) {
+      $('.ExpressT').remove();
+    }
+    if (data.length == 0 && data2.length == 0) {
+      $('.CriticalProblems').remove();
+    }
+  }, 100);
+  //remove portions of chart
+  // $('.WebT').remove();
+</script>
+<script>
+  alamode.addLinksToTables({
+    table_id: "table_a88670289900",
+    query_name: "Critical Problems",
+    link_columns: ["Dealer Site"],
+    link_urls: ["{{Dealer Site}}"]
+  })
+</script>
+<script>
+  setTimeout(function() {
+    var data = datasets.filter(function(d) {
+      return d.queryName == "Unexpected Drops in Express Visits";
+    })[0].content;
+
+    var data2 = datasets.filter(function(d) {
+      return d.queryName == "Unexpected Jumps in Express Visits";
+    })[0].content;
+
+    var key_value = {};
+    var URL = '<a href="https://modeanalytics.com/roadster/reports/f0928cc35853?max_age=3600&param_dealer_name=';
+    // {{team}}
+    var index;
+    // Get the Dealer Partners data for sending our data elsewhere
+    for (index = 0; index < data.length; ++index) {
+      key_value[data[index][
+        ['Display String']
+      ]] = URL.concat("", data[index][
+        ['Dealer Partner']
+      ], "\">");
+    }
+    for (index = 0; index < data2.length; ++index) {
+      key_value[data2[index][
+        ['Display String']
+      ]] = URL.concat("", data2[index][
+        ['Dealer Partner']
+      ], "\">");
+    }
+
+    var i;
+    for (i = 0; i < Highcharts.charts.length; i++) {
+
+      var chart = Highcharts.charts[i];
+      if (chart.container.closest("#chart_c9412501d603") != null || chart.container.closest("#chart_ed779b861f60") != null)  {
+        chart.update({
+          chart: {
+            type: 'bar',
+            marginTop: 30
+          },
+          plotOptions: {
+            bar: {
+              grouping: false,
+              shadow: false,
+              borderWidth: 0
+            }
+          },
+
+          series: [{
+              pointPadding: 0.0,
+              pointPlacement: -0.0
+
+            },
+            {
+              pointPadding: 0.35,
+              pointPlacement: -0.0
+            },
+          ],
+
+          xAxis: {
+            minorTickLength: 0,
+            tickLength: 0,
+          },
+          yAxis: {
+            labels: {
+              enabled: false
+            },
+            gridLineColor: 'transparent'
+
+          }
+        });
+      }
+    }
+
+    for (i = 0; i < Highcharts.charts.length; i++) {
+      var chart = Highcharts.charts[i];
+      if (chart.container.closest("#chart_c9412501d603") != null) {
+        chart.update({
+          xAxis: {
+            labels: {
+              useHTML: true,
+              enabled: true,
+              align: 'left',
+              reserveSpace: true,
+              formatter: function() {
+                // Display Name
+                return key_value[this.value] + this.value /*+ "</a>"*/ ;
+              }
+
+            }
+          },
+          series: [{
+              dataLabels: {
+                x: 0,
+                y: 0,
+                align: 'left'
+              }, //shift numbers up and to the left
+
+            },
+            {
+              dataLabels: {
+                inside: true,
+                align: 'right',
+                color: "#000000"
+              }, //shift numbers up and to the left
+            },
+          ],
+          tooltip: {
+            style: {
+              pointerEvents: 'all'
+            },
+            shared: true,
+            useHTML: true,
+            shadow: false,
+            hideDelay: 1000,
+            formatter: function() {
+              // Display Name
+              return key_value[this.x];
+            }
+          }
+        })
+      }
+    }
+
+    for (i = 0; i < Highcharts.charts.length; i++) {
+      var chart = Highcharts.charts[i];
+      if (chart.container.closest("#chart_ed779b861f60") != null) {
+        chart.update({
+          xAxis: {
+            labels: {
+              useHTML: true,
+              enabled: true,
+
+              align: 'left',
+              reserveSpace: true,
+              formatter: function() {
+                // Display Name
+                return key_value[this.value] + this.value + "</a>";
+              }
+            }
+          },
+          series: [{
+              dataLabels: {
+                x: 0,
+                y: -10,
+                inside: true,
+                align: 'right'
+              }, //shift numbers up and to the left
+
+            },
+            {
+              dataLabels: {
+                align: 'left',
+                color: "#000000"
+              }, //shift numbers up and to the left
+            },
+          ]
+        })
+      }
+    }
+
+  }, 100);
+</script>
