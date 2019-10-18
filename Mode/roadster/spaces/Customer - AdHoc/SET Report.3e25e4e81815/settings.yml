@@ -1,0 +1,6 @@
+---
+report_description: When attached to a DPID within a dealer group, this report shows
+  all DPIDs within that same dealer group.  This report only needs to be attached
+  to a single DPID.
+is_full_width: false
+hide_run_button: false
