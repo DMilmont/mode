@@ -9,7 +9,7 @@ with filter_for_dpids as (
 
 
 ,dpids as (
-SELECT DISTINCT name
+SELECT DISTINCT dp.name
 FROM fact.salesforce_dealer_info di
 LEFT JOIN public.dealer_partners dp ON di.dpid = dp.dpid
 WHERE CASE WHEN dealer_group IS NULL THEN dealer_name ELSE dealer_group END IN (SELECT * FROM filter_for_dpids)
@@ -25,6 +25,6 @@ SELECT
   COUNT
 FROM fact.mode_agg_daily_traffic_and_prospects ft
 LEFT JOIN dealer_partners dp ON ft.dpid = dp.dpid
-WHERE  name IN (SELECT initcap(name) FROM dpids)
+WHERE  name IN (SELECT name FROM dpids)
 AND type in ('Online Express SRP Traffic', 'Online Express VDP Traffic')
 ORDER BY date
