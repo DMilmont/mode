@@ -64,9 +64,9 @@
 </script>
 <div class="mode-header embed-hidden">
   <h1>{{ title }}</h1>
-  <h4>Click <a href="" id="link_p"> Here</a> to understand user behavior on dealer and express site.</h4>
-  <h4>Click <a href="" id="link_h"> Here</a> to view historic user metrics.</h4>
-  <h4>Please provide any feedback <a href="https://roadsterteam.atlassian.net/wiki/spaces/AN/pages/350388229/Traffic+Reporting+2.0+Feedback" target="_blank">Here </a></h4>
+  <!--<h4>Click <a href="" id="link_p"> Here</a> to understand user behavior on dealer and express site.</h4>-->
+  <!--<h4>Click <a href="" id="link_h"> Here</a> to view historic user metrics.</h4>-->
+  <!--<h4>Please provide any feedback <a href="https://roadsterteam.atlassian.net/wiki/spaces/AN/pages/350388229/Traffic+Reporting+2.0+Feedback" target="_blank">Here </a></h4>-->
   <p>{{ description }}</p>
 </div>
 <div class="mode-grid container">
@@ -100,7 +100,7 @@
     var i;
     for (i = 0; i < Highcharts.charts.length; i++) {
       var chart = Highcharts.charts[i];
-      if (chart.container.closest("#chart_bdeb38ccc2a1") != null || chart.container.closest("#chart_20d07a21cd8c") != null) {
+      if (chart.container.closest("#chart_c1940f0742ce") != null || chart.container.closest("#chart_21e20fe7d37d") != null) {
         chart.update({
           plotOptions: {
             series: {
@@ -131,7 +131,7 @@
     var i;
     for (i = 0; i < Highcharts.charts.length; i++) {
       var chart = Highcharts.charts[i];
-      if (chart.container.closest("#chart_4f5ffe51dc50") != null || chart.container.closest("#chart_46eefa0907b7") != null) {
+      if (chart.container.closest("#chart_25cc892e570b") != null || chart.container.closest("#chart_3a77de1e362d") != null) {
         chart.update({
           plotOptions: {
             series: {
@@ -161,7 +161,7 @@
     var i;
     for (i = 0; i < Highcharts.charts.length; i++) {
       var chart = Highcharts.charts[i];
-      if (chart.container.closest("#chart_4f5ffe51dc50") != null) {
+      if (chart.container.closest("#chart_25cc892e570b") != null) {
         chart.update({
           plotOptions: {
             series: {
