@@ -1,3 +1,31 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.common.css">
+<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.light.css">
+<link rel="stylesheet" media="screen" href="//d2yvqewjuuy0k6.cloudfront.net/fonts/232352/75E15E124468560E8.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdn3.devexpress.com/jslib/18.2.8/js/dx.all.js"></script>
+<style>
+  * {
+    font-size: 100%;
+    font-family: "Gotham SSm A", "Gotham SSm B", Georgia;
+  }
+
+  .b {
+    text-algin: left !important;
+  }
+
+  .right-side {
+    position: absolute;
+    right: 7px;
+    top: 3px;
+    margin-bottom: 40px;
+    margin-top: 30px;
+  }
+
+  .bottom_text {
+    text-align: left;
+  }
+</style>
 <div class="mode-header embed-hidden">
   <h1>{{ title }}</h1>
   <p>{{ description }}</p>
@@ -5,7 +33,211 @@
 <div class="mode-grid container">
   <div class="row">
     <div class="col-md-12">
-      <mode-table id="table_b59ce897f5dd" dataset="dataset" options="table_options"></mode-table>
+      <mode-chart id="base_porsche_data"></mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-chart id="f_i_data"></mode-chart>
     </div>
   </div>
 </div>
+<script>
+  var roadsterdx = {
+    version: 1,
+    getDataSource: function(queryName) {
+      // find the right data on the page, by name
+      var ii = 0;
+      var theSet = null;
+      for (ii = 0; ii < datasets.length; ii++) {
+        if (datasets[ii].queryName == queryName) {
+          theSet = datasets[ii].content;
+          break;
+        }
+      }
+      if (!theSet) {
+        //console.log('did not find data ' + queryName);
+        // make an empty data array
+        theSet = [];
+      }
+      //console.log('returning data');
+      return theSet;
+      /*
+      return new DevExpress.data.DataSource({
+        // array of data
+        store: theSet,
+        // additional configuration options
+        // sort: "name",
+        // pageSize: 10
+      });
+      */
+    },
+  };
+
+
+  $(function() {
+    var base_porsche = roadsterdx.getDataSource('Porsche Data');
+    var f_i = roadsterdx.getDataSource('Service Plan Specific Information');
+
+    var pivot1 = $('#base_porsche_data').dxPivotGrid({
+      allowSortingBySummary: true,
+      allowFiltering: true,
+      showBorders: true,
+      showColumnGrandTotals: false,
+      showRowGrandTotals: true,
+      showRowTotals: true,
+      showColumnTotals: false,
+      "export": {
+        enabled: true,
+        fileName: "prospects"
+      },
+      dataSource: {
+        store: base_porsche,
+        retrieveFields: false,
+        fields: [{
+            dataField: "Month & Year",
+            caption: "Month & Year",
+            area: "row",
+            dataType: 'date',
+            format: 'monthAndYear',
+            width: 140,
+            expanded: true
+          },
+          {
+            dataField: "Dealer",
+            caption: "Dealer",
+            area: "row",
+          },
+          {
+            dataField: "In-Store Flag",
+            area: "row"
+          },
+          {
+            dataField: "Measures",
+            area: "column"
+          },
+          {
+            dataField: "Form Submissions",
+            area: "data",
+            summaryType: "sum"
+          },
+          {
+            dataField: "Deals Built",
+            area: "data",
+            summaryType: "sum"
+          },
+          {
+            dataField: "Deals Submitted",
+            area: "data",
+            summaryType: "sum"
+          },
+          {
+            dataField: "Credit Apps Submitted",
+            area: "data",
+            summaryType: "sum"
+          },
+          {
+            dataField: "Sales Matched",
+            area: "data",
+            summaryType: "sum"
+          },
+          {
+            dataField: "Orders Completed",
+            area: "data",
+            summaryType: "sum"
+          },
+          {
+            dataField: "Trade-In Evaluations",
+            area: "data",
+            summaryType: "sum"
+          },
+          {
+            dataField: "Service Plans Added",
+            area: "data",
+            summaryType: "sum"
+          },
+          {
+            dataField: "Service Plans Removed",
+            area: "data",
+            summaryType: "sum"
+          },
+          {
+            dataField: "Accessories Added",
+            area: "data",
+            summaryType: "sum"
+          },
+          {
+            dataField: "Vehicle Reservations",
+            area: "data",
+            summaryType: "sum"
+          },
+          {
+            dataField: "Vehicle Deposits",
+            area: "data",
+            summaryType: "sum"
+          },
+          {
+            dataField: "Order Completed in Roadster",
+            area: "data",
+            summaryType: "sum"
+          },
+           {
+            dataField: "Trade-In Info Attached to Completed Order",
+            area: "data",
+            summaryType: "sum"
+          },
+
+        ],
+      },
+    });
+    
+    var pivot2 = $('#f_i_data').dxPivotGrid({
+      allowSortingBySummary: true,
+      allowFiltering: true,
+      showBorders: true,
+      showColumnGrandTotals: false,
+      showRowGrandTotals: true,
+      showRowTotals: true,
+      showColumnTotals: false,
+      "export": {
+        enabled: true,
+        fileName: "prospects"
+      },
+      dataSource: {
+        store: f_i,
+        retrieveFields: false,
+        fields: [{
+            dataField: "month_year",
+            caption: "Month & Year",
+            area: "row",
+            dataType: 'date',
+            format: 'monthAndYear',
+            width: 140,
+            expanded: true
+          },
+          {
+            dataField: "dpid",
+            caption: "Dealer",
+            area: "row"
+          },
+          {
+            dataField: "name",
+            caption: "Added / Removed",
+            area: "row",
+            expanded: true
+          }, 
+          {
+            dataField: "Button Clicked",
+            area: "column"
+          },
+          {
+            dataField: "sum",
+            caption: "Values",
+            summaryType: "sum",
+            area: "data"
+          },
+          ]},
+    });
+    
+  });
+</script>

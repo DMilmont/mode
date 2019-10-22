@@ -2,6 +2,7 @@
 SELECT fs.dpid "Dealer",
        fs.month_year "Month & Year",
        fs.in_store "In-Store Flag", --ct_total_forms_submitted,
+       'Measures' "Measures",
  ct_unique_users_form_submissions "Form Submissions", --ct_total_deals_built,
  ct_unique_users_deals_built "Deals Built", --ct_total_deals_submitted,
  ct_unique_users_deals_submitted "Deals Submitted" , --ct_credit_apps_submitted,
@@ -13,7 +14,9 @@ SELECT fs.dpid "Dealer",
  ct_unique_users_serviceplanremoved_events "Service Plans Removed",
  ct_unique_users_accessories_added "Accessories Added",
  ct_vehicle_reservations "Vehicle Reservations",
- ct_vehicle_deposits "Vehicle Deposits"
+ ct_vehicle_deposits "Vehicle Deposits",
+ ct_orders_completed_fully "Order Completed in Roadster",
+ ct_trade_info_attached_to_order "Trade-In Info Attached to Completed Order"
 FROM
     (SELECT dpid,
             date_trunc('month', timestamp) month_year,
@@ -176,7 +179,8 @@ LEFT JOIN
                             'Service Plan Removed') ) t
      GROUP BY 1,
               2,
-              3) spp
+              3
+              ) spp
   ON fs.dpid = spp.dpid
   AND fs.month_year = spp.month_year
   AND fs.in_store = spp.in_store
@@ -227,4 +231,22 @@ LEFT JOIN
   AND fs.month_year = r.month_year
 INNER JOIN dealer_partners dps
   ON fs.dpid = dps.dpid
-    WHERE dps.primary_make = 'Porsche'
+  
+LEFT JOIN (
+ SELECT
+dpid,
+date_trunc('month', oc.timestamp) "Month & Year",
+o.in_store,
+COUNT(o.*) ct_orders_completed_fully,
+COUNT(ti.status) ct_trade_info_attached_to_order
+--COUNT(*) ct_comleted_orders
+FROM orders o
+INNER JOIN order_completed oc ON o.id = oc.order_id
+LEFT JOIN dealer_partners dp ON oc.dealer_partner_id = dp.id
+LEFT JOIN trade_ins ti ON o.id = ti.order_id
+WHERE
+order_type = 'Purchase' AND
+primary_make = 'Porsche'
+GROUP BY 1,2, 3
+) til ON fs.dpid = til.dpid AND fs.in_store = til.in_store AND fs.month_year = til."Month & Year"
+WHERE dps.primary_make = 'Porsche'
