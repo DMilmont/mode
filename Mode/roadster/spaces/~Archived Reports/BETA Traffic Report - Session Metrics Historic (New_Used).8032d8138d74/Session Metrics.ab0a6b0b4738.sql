@@ -1,6 +1,6 @@
 select *
 
-from report_layer.ga2_session_metrics
+from fact.agg_monthly_session_metrics
 where type = 'Express New or Used Shoppers' 
 AND dpid='{{ dpid }}'
 and session_type <> 'Dealer Admin'
