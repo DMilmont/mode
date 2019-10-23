@@ -1,6 +1,6 @@
 
 SELECT fs.dpid "Dealer",
-       fs.month_year "Month & Year",
+       (fs.month_year + '1 day'::interval) "Month & Year",
        fs.in_store "In-Store Flag", --ct_total_forms_submitted,
        'Measures' "Measures",
  ct_unique_users_form_submissions "Form Submissions", --ct_total_deals_built,
@@ -16,7 +16,9 @@ SELECT fs.dpid "Dealer",
  ct_vehicle_reservations "Vehicle Reservations",
  ct_vehicle_deposits "Vehicle Deposits",
  ct_orders_completed_fully "Order Completed in Roadster",
- ct_trade_info_attached_to_order "Trade-In Info Attached to Completed Order"
+ ct_trade_info_attached_to_order "Trade-In Info Attached to Completed Order",
+ ct_unique_vdp_views "VDP Views",
+ ct_dealer_visitors "Dealer Website Visitors"
 FROM
     (SELECT dpid,
             date_trunc('month', timestamp) month_year,
@@ -30,6 +32,25 @@ FROM
    GROUP BY 1,
             2,
             3) fs
+LEFT JOIN (
+  SELECT 
+  dpid,
+  date_trunc('month', date) month_year,
+  is_in_store in_store,
+  COUNT(DISTINCT distinct_id) ct_unique_vdp_views
+  FROM fact.f_traffic ft
+  WHERE page_path IN ('/New VDP', '/Used VDP')
+  GROUP BY 1,2,3
+) vdp_views ON fs.dpid = vdp_views.dpid AND fs.in_store = vdp_views.in_store AND fs.month_year = vdp_views.month_year
+LEFT JOIN (
+  SELECT
+  dpid, 
+  false in_store,
+  "Date" month_year,
+  "Dealer Visitors" ct_dealer_visitors
+  FROM report_layer.dg_online_metrics_monthly dgo
+  LEFT JOIN dealer_partners dp ON dgo."Dealership" = dp.name
+) dwv ON fs.dpid = dwv.dpid AND fs.month_year = dwv.month_year AND fs.in_store = dwv.in_store
 LEFT JOIN
   (SELECT dpid,
           month_year,
@@ -249,4 +270,9 @@ order_type = 'Purchase' AND
 primary_make = 'Porsche'
 GROUP BY 1,2, 3
 ) til ON fs.dpid = til.dpid AND fs.in_store = til.in_store AND fs.month_year = til."Month & Year"
-WHERE dps.primary_make = 'Porsche'
+WHERE dps.dpid IN (
+SELECT dpid
+FROM dealer_partners dp
+WHERE primary_make = 'Porsche'
+AND dpid != 'loeberporsche'
+)

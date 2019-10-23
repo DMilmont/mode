@@ -1,7 +1,7 @@
 SELECT
 dpid,
 month_year,
-in_store,
+CASE WHEN in_store = true THEN 'In-Store' ELSE 'Online' END "in_store",
 "Button Clicked",
 'Measures' "Measures",
 name,
@@ -21,5 +21,11 @@ FROM
     WHERE timestamp >= '2019-09-01'
     AND primary_make = 'Porsche'
     AND ue.name IN ('Service Plan Added', 'Service Plan Removed')
+    AND dp.dpid IN (
+      SELECT dpid
+      FROM dealer_partners dp
+      WHERE primary_make = 'Porsche'
+      AND dpid != 'loeberporsche'
+      )
 ) t
 GROUP BY 1,2,3,4,5,6
