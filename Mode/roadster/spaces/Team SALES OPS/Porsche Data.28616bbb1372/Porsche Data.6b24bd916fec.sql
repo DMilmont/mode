@@ -32,6 +32,7 @@ FROM
    LEFT JOIN dealer_partners dp
      ON ls.dealer_partner_id = dp.id
    WHERE timestamp >= '2019-09-01'
+   AND primary_make in ('Porsche')
    GROUP BY 1,
             2,
             3) fs
@@ -67,7 +68,9 @@ LEFT JOIN (
   is_in_store in_store,
   COUNT(DISTINCT distinct_id) ct_unique_vdp_views
   FROM fact.f_traffic ft
+  LEFT JOIN dealer_partners dp ON ft.dpid = dp.dpid
   WHERE page_path IN ('/New VDP', '/Used VDP')
+  AND primary_make in ('Porsche')
   GROUP BY 1,2,3
 ) vdp_views ON fs.dpid = vdp_views.dpid AND fs.in_store = vdp_views.in_store AND fs.month_year = vdp_views.month_year
 LEFT JOIN (
@@ -78,6 +81,7 @@ LEFT JOIN (
   "Dealer Visitors" ct_dealer_visitors
   FROM report_layer.dg_online_metrics_monthly dgo
   LEFT JOIN dealer_partners dp ON dgo."Dealership" = dp.name
+  WHERE primary_make in ('Porsche')
 ) dwv ON fs.dpid = dwv.dpid AND fs.month_year = dwv.month_year AND fs.in_store = dwv.in_store
 LEFT JOIN
   (SELECT dpid,
@@ -143,7 +147,7 @@ LEFT JOIN
        ON cc.dealer_partner_id = dp.id
      LEFT JOIN orders o
        ON cc.order_id = o.id
-     WHERE timestamp >= '2019-09-01'
+     WHERE timestamp >= '2019-09-01' AND primary_make in ('Porsche')
      GROUP BY 1,
               2,
               3) cas
@@ -172,7 +176,7 @@ LEFT JOIN
        ON oc.dealer_partner_id = dp.id
      LEFT JOIN orders o
        ON oc.order_id = o.id
-     WHERE timestamp > '2019-09-01'
+     WHERE timestamp > '2019-09-01' AND primary_make in ('Porsche')
      GROUP BY 1,
               2,
               3) os
