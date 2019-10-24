@@ -18,7 +18,10 @@ SELECT fs.dpid "Dealer",
  ct_orders_completed_fully "Order Completed in Roadster",
  ct_trade_info_attached_to_order "Trade-In Info Attached to Completed Order",
  ct_unique_vdp_views "VDP Views",
- ct_dealer_visitors "Dealer Website Visitors"
+ ct_dealer_visitors "Dealer Website Visitors",
+ "Lease Orders Submitted",
+ "Cash Orders Submitted",
+ "Finance Orders Submitted"
 FROM
     (SELECT dpid,
             date_trunc('month', timestamp) month_year,
@@ -32,6 +35,31 @@ FROM
    GROUP BY 1,
             2,
             3) fs
+LEFT JOIN (
+  SELECT
+dpid,
+month_year,
+in_store,
+SUM(CASE WHEN deal_type = 'lease' THEN ct_deal_types ELSE NULL END) "Lease Orders Submitted",
+SUM(CASE WHEN deal_type = 'cash' THEN ct_deal_types ELSE NULL END) "Cash Orders Submitted",
+SUM(CASE WHEN deal_type = 'finance' THEN ct_deal_types ELSE NULL END) "Finance Orders Submitted"
+FROM (
+    SELECT
+    dpid,
+    deal_type,
+    date_trunc('month', os.timestamp) month_year,
+    in_store,
+    COUNT(DISTINCT user_id) ct_deal_types
+    FROM orders o
+    INNER JOIN order_submitted os ON o.id = os.order_id
+    LEFT JOIN dealer_partners dp ON os.dealer_partner_id = dp.id
+    WHERE primary_make IN ('Porsche')
+    AND os.timestamp >= '2019-09-01'
+    AND deal_type IS NOT NULL
+    GROUP BY 1,2,3, 4
+) t
+GROUP BY 1,2,3
+) os_submitted ON fs.dpid = os_submitted.dpid AND fs.month_year = os_submitted.month_year AND fs.in_store = os_submitted.in_store 
 LEFT JOIN (
   SELECT 
   dpid,
