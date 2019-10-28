@@ -4,7 +4,7 @@ with filter_for_dpids as (
   SELECT DISTINCT CASE WHEN di.dealer_group IS NULL THEN dealer_name ELSE di.dealer_group END dealer_group
   FROM fact.salesforce_dealer_info di
   INNER JOIN public.dealer_partners dp on di.dpid = dp.dpid
-  WHERE set_dealer IS TRUE
+  WHERE set_dealer IS TRUE and name <> 'Lexus Of Pleasanton'
 )
 
 
@@ -23,6 +23,7 @@ base_order_data as (
   WHERE "Dealership" IN (SELECT initcap(name) FROM dpids)
   AND "Date" IN (select generate_series(date_trunc('month', now()) - '6 mons'::interval, date_trunc('month', now()), '1 month'))
   AND "Date"  >= (date_trunc('month', now()) - '2 months'::interval)
+  AND "Dealership" <> 'Lexus Of Pleasanton'
 )
 
 SELECT "Dealership", "Date"::text, 'Total Orders Submitted' metric, 1 value_order_steps, 1 step FROM base_order_data UNION

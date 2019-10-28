@@ -4,7 +4,7 @@ WITH filter_for_dpids as (
   SELECT DISTINCT CASE WHEN di.dealer_group IS NULL THEN dealer_name ELSE di.dealer_group END dealer_group
   FROM fact.salesforce_dealer_info di
   INNER JOIN public.dealer_partners dp on di.dpid = dp.dpid
-  WHERE set_dealer IS TRUE
+  WHERE set_dealer IS TRUE and name <> 'Lexus Of Pleasanton'
 )
 
 ,dpids as (
@@ -40,5 +40,6 @@ MIN("Active Agents") "Active Agents",
 MIN("Certified Agents") "Certified Agents", 
 MIN("Activity w/n 3 Days") "Activity w/n 3 Days"
 FROM instore_data
+WHERE "Dealership" <> 'Lexus Of Pleasanton'
 GROUP BY 1,2,3
 ORDER BY 2,3

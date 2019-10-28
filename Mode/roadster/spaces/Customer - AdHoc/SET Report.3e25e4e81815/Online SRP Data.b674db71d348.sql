@@ -1,4 +1,4 @@
-with filter_for_dpids as (
+  with filter_for_dpids as (
   -- Generate the Dealer Group associated with the dpid param filter
   -- Sets up the entire query. Needs the dpsk and the dpid from params to work
   SELECT DISTINCT CASE WHEN di.dealer_group IS NULL THEN dealer_name ELSE di.dealer_group END dealer_group
@@ -27,4 +27,5 @@ FROM fact.mode_agg_daily_traffic_and_prospects ft
 LEFT JOIN dealer_partners dp ON ft.dpid = dp.dpid
 WHERE  name IN (SELECT initcap(name) FROM dpids)
 AND type in ('Online Express SRP Traffic', 'Online Express VDP Traffic')
+AND name != '' and name <> 'Lexus Of Pleasanton'
 ORDER BY date

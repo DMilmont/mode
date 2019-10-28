@@ -4,7 +4,7 @@ with filter_for_dpids as (
   SELECT DISTINCT CASE WHEN di.dealer_group IS NULL THEN dealer_name ELSE di.dealer_group END dealer_group
   FROM fact.salesforce_dealer_info di
   INNER JOIN public.dealer_partners dp on di.dpid = dp.dpid
-  WHERE set_dealer IS TRUE
+  WHERE set_dealer IS TRUE 
 ),
 
 base_percentile_data as (
@@ -69,3 +69,4 @@ acd.training_type "Roadster Certifications",
 CASE WHEN acd.training_type IS NULL THEN 0 ELSE 1 END "Any Roadster Certifications"
 FROM base_agent_data bad 
 LEFT JOIN public.agent_certifications_data acd ON bad.email = acd.email
+WHERE bad.name <> 'Lexus of Pleasanton'

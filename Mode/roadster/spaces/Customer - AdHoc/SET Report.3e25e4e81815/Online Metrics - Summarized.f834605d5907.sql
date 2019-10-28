@@ -2,7 +2,7 @@ WITH filter_for_dpids as (
   SELECT DISTINCT CASE WHEN di.dealer_group IS NULL THEN dealer_name ELSE di.dealer_group END dealer_group
   FROM fact.salesforce_dealer_info di
   INNER JOIN public.dealer_partners dp on di.dpid = dp.dpid
-  WHERE set_dealer IS TRUE
+  WHERE set_dealer IS TRUE and name <> 'Lexus Of Pleasanton'
 )
 
 ,dpids as (
@@ -56,3 +56,4 @@ CASE WHEN "Dealer Visitors" = 0 OR "Dealer Visitors" IS NULL THEN 'Traffic Unava
 "Roadster Matched Sales",
 "Close Rate"
 FROM almost_final
+WHERE "Dealership" <> 'Lexus Of Pleasanton'

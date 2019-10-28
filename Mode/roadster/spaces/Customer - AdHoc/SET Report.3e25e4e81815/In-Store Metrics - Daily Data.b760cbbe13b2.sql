@@ -4,7 +4,7 @@ WITH filter_for_dpids as (
   SELECT DISTINCT CASE WHEN di.dealer_group IS NULL THEN dealer_name ELSE di.dealer_group END dealer_group
   FROM fact.salesforce_dealer_info di
   INNER JOIN public.dealer_partners dp on di.dpid = dp.dpid
-  WHERE set_dealer IS TRUE
+  WHERE set_dealer IS TRUE 
 )
 
 ,dpids as (
@@ -32,4 +32,5 @@ im."sorting"
 FROM report_layer.dg_in_store_metrics_monthly im
 WHERE ("Dealership" IN (SELECT initcap(name) FROM dpids)
 OR "Dealership" IN ('50th Percentile Dealer Groups', '75th Percentile Dealer Groups', '90th Percentile Dealer Groups'))
+AND "Dealership" <> 'Lexus Of Pleasanton'
 
