@@ -1,8 +1,8 @@
 WITH filter_for_dpids as (
   SELECT DISTINCT CASE WHEN di.dealer_group IS NULL THEN dealer_name ELSE di.dealer_group END dealer_group
-  FROM fact.salesforce_dealer_info di
+  FROM fact.salesforce_dealer_info_SET di
   INNER JOIN public.dealer_partners dp on di.dpid = dp.dpid
-  WHERE set_dealer IS TRUE and name <> 'Lexus Of Pleasanton'
+  WHERE name <> 'Lexus Of Pleasanton'
 )
 
 ,dpids as (

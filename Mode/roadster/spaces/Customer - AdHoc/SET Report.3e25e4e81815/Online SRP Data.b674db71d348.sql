@@ -2,9 +2,8 @@
   -- Generate the Dealer Group associated with the dpid param filter
   -- Sets up the entire query. Needs the dpsk and the dpid from params to work
   SELECT DISTINCT CASE WHEN di.dealer_group IS NULL THEN dealer_name ELSE di.dealer_group END dealer_group
-  FROM fact.salesforce_dealer_info di
+  FROM fact.salesforce_dealer_info_SET di
   INNER JOIN public.dealer_partners dp on di.dpid = dp.dpid
-  WHERE set_dealer IS TRUE
 )
 
 
