@@ -37,6 +37,8 @@ SUM("Copies") "Copies",
 SUM("Prints") "Prints", 
 SUM("In-Store Sales") "In-Store Sales",
 SUM("In-Store Sales") / NULLIF(SUM("In-Store Prospects"), 0) "Close Rate", 
+SUM("In-Store VDP Visitors") "In-Store VDP Visitors",
+SUM("In-Store SRP Visitors") "In-Store SRP Visitors",
 MIN("Active Agents") "Active Agents", 
 MIN("Certified Agents") "Certified Agents", 
 MIN("Activity w/n 3 Days") "Activity w/n 3 Days"

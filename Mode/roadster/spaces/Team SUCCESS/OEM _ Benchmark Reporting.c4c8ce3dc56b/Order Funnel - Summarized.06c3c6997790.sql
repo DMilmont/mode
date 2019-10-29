@@ -15,7 +15,7 @@ base_order_data as (
   dp.primary_make
   FROM report_layer.dg_order_step_metrics rr
   LEFT JOIN dealer_partners dp ON rr."Dealership" = initcap(dp.name)
-  WHERE "Dealership" IN (SELECT initcap(name) FROM dpids)
+  WHERE ("Dealership" IN (SELECT initcap(name) FROM dpids))
 )
 
 SELECT 
