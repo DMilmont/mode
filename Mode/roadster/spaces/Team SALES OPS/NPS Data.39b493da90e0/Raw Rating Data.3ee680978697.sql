@@ -1,6 +1,7 @@
 SELECT 
 r.timestamp,
 dpid, 
+primary_make,
 u.first_name || ' '|| u.last_name "Customer Name",
 u.email "Customer Email",
 'dealers.roadster.com/' || dp.dpid || '/ratings' "url",

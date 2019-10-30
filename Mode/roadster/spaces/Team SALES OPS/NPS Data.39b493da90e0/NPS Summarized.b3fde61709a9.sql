@@ -3,6 +3,7 @@
 
 SELECT 
 dpid, 
+primary_make,
 SUM("Promoters") "Promoters",
 SUM("Detractors") "Detractors",
 ROUND((SUM("Promoters")::decimal / Sum("Total")) - (SUM("Detractors") / Sum("Total")), 2) * 100  "NPS"
@@ -11,6 +12,7 @@ FROM
       SELECT 
       r.timestamp,
       dpid, 
+      primary_make,
       u.first_name || ' '|| u.last_name "Customer Name",
       u.email "Customer Email",
       'dealers.roadster.com/' || dp.dpid || '/ratings' "url",
@@ -25,4 +27,4 @@ FROM
       AND r.timestamp >= '{{ start_date }}'
       AND r.timestamp < '{{ end_date }}'
       ) t
-GROUP BY 1
+GROUP BY 1,2
