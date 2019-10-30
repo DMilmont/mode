@@ -380,6 +380,10 @@
             dataType: "number",
             summaryType: "sum",
           },
+          {
+            dataField: "grade",
+            caption: "New/Used Flag"
+          }
         ],
       },
     }).dxPivotGrid("instance");
@@ -502,6 +506,11 @@
               {
                 dataField: 'email',
                 caption: 'Customer Email',
+                alignment: 'center'
+              },
+              {
+                dataField: 'Customer Name',
+                caption: 'Customer Name',
                 alignment: 'center'
               },
               {

@@ -27,9 +27,11 @@ CASE
 user_id,
 u.first_name,
 u.last_name,
+u.first_name || u.last_name "Customer Name",
 u.email,
 1 "exists",
 a.first_name || ' ' || a.last_name agent_name,
+
 regexp_replace(type, '([a-z])([A-Z])', '\1 \2','g') type_to_use,
 CASE WHEN os.status IS NULL AND ls.order_id IS NOT NULL THEN 'Open'
 ELSE initcap(os.status) END as order_status, 
