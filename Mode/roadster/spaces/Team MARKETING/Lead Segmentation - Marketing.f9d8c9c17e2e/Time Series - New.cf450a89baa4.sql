@@ -22,7 +22,6 @@ WITH dealer_group_closed_min_date as (
       ,case when L."ConvertedOpportunityId" is not null then L."ConvertedDate" else null end as "Opportunity Date" --Opportunity Timestamp
      ,O."StageName" as "Current Stage"
      ,"Start_Date_of_Current_Stage__c" as "Start Date of Current Stage"  
-     ,"Unqualified_Reason__c" as "Unqualified Reason"
 
       ,case when "StageName"='Closed/Won' then 'Y' ELSE 'N' end as "Closed/Won Flag"  --- Closed Flag
       ,case when "StageName"='Closed/Won' then "Start_Date_of_Current_Stage__c" ELSE null end "Closed Timestamp"  --- Closed Timestamp
@@ -54,24 +53,20 @@ and case when COALESCE(L."Status",'x')='Unqualified' and "Unqualified_Reason__c"
         when COALESCE(L."Status",'x')='Unqualified' then 0
         else 1 end =1
 )
-select         ((to_char("Lead Timestamp", 'Month'::text)) || case when to_char("Lead Timestamp", 'Month'::text)='September' then ' ' else '' end ||
-          to_char("Lead Timestamp", 'YYYY'::text))    as  month
-          ,dense_rank () over (order by date_part('month'::text, "Lead Timestamp")   ) +  (12*( date_part('year'::text, "Lead Timestamp")-2018)) as rnk
-          ,case when ("Lead Timestamp"<='2019-07-01' and "Lead Origination" is null) then 'Sales' else "Lead Origination" end as lead_origination
-          , "New/Expansion" as new_expansion
-          ,"Lead ID"
-          ,COALESCE("Name", '~ Non Opportunity Lead ~') as "Name"
-          ,count(1) as lead_count
-          ,sum(case when "Opportunity"='Y' or "Name" is not null then 1 else 0 end) as opportunity_count
-          ,sum(case when "Closed/Won Flag"='Y' then 1 else 0 end) as closed_won_count
-          ,case when "Closed/Won Flag"='Y' then 'Won' 
-                when "Opportunity"='Y' or "Name" is not null then 'Opportunity - Not Won'
-                else 'Lead - Not Opportunity' end as win_status
-        ,"Unqualified Reason" as unqualified_reason        
-      
-from detail          
 
-group by 1,3,4, 5,6,date_part('month'::text, "Lead Timestamp") ,date_part('year'::text, "Lead Timestamp") ,case when "Closed/Won Flag"='Y' then 'Won' 
-                when "Opportunity"='Y' or "Name" is not null then 'Opportunity - Not Won'
-                else 'Lead - Not Opportunity' end ,"Unqualified Reason"
-order by 2
+
+select    date_trunc('month'::text, ("Lead Timestamp")::timestamp with time zone)   as month_date  
+     --     ,"Lead Origination" as lead_origination
+--          , "New/Expansion" as new_expansion
+          ,count(1) as "Leads"
+          ,sum(case when "Opportunity"='Y' or "Name" is not null then 1 else 0 end) as opportunity_count
+          ,round(sum(case when "Opportunity"='Y' or "Name" is not null then 1 else 0 end)::decimal/count(1),2) as "Opportunity Rate" 
+          ,sum(case when "Closed/Won Flag"='Y' then 1 else 0 end) as closed_won_count
+          ,case when sum(case when "Opportunity"='Y' or "Name" is not null then 1 else 0 end)<>0 then round(sum(case when "Closed/Won Flag"='Y' then 1 else 0 end)::decimal / sum(case when "Opportunity"='Y' or "Name" is not null then 1 else 0 end),2) else 0 end as "Won Rate"
+          
+from detail         
+where coalesce("New/Expansion",'x') in ('New')
+group by 1
+order by 1
+
+

@@ -52,13 +52,49 @@
   <h1>{{ title }}</h1>
   <p>{{ description }}</p>
 </div>
+
 <div class="mode-grid container">
   <mode-chart id="Summary_Pivot"></mode-chart>
+  <br>
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <h2>Leads by Month - All</h2>
+      <mode-chart id="chart_6ef1b46a8291" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <h2>Leads by Month - New</h2>
+      <mode-chart id="chart_8d5f9b04324a" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+    <div class="row" data-row-height="large">
+    <div class="col-md-12">
+            <h2>Leads by Month - Expansion</h2>
+      <mode-chart id="chart_37e670893b68" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <h2>Leads by Month - Demo Form &amp; Marketing (New/Expansion)</h2>
+      <mode-chart id="chart_9a57577eaddc" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+
+  <div class="row" data-row-height="large">
+    <div class="col-md-12">
+      <h2>Leads by Month - Sales (New/Expansion)</h2>
+      <mode-chart id="chart_0c550a372112" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+
+
 
   <p>• Opportunity Rate = Opportunity / Leads </p>
-  <p>• Closed/Won Rate = Closed/Won / Leads </p>
+  <p>• Won Rate = Won / Opportunity </p>
   <p><u>Lead Segmentation Logic </u></p>
-<a href="https://ibb.co/LrR6D3q"><img src="https://i.ibb.co/vhqmCSr/Screen-Shot-2019-09-04-at-4-38-48-PM.png" alt="Screen-Shot-2019-09-04-at-4-38-48-PM" border="0"></a><br />
+  <a href="https://ibb.co/LrR6D3q"><img src="https://i.ibb.co/vhqmCSr/Screen-Shot-2019-09-04-at-4-38-48-PM.png" alt="Screen-Shot-2019-09-04-at-4-38-48-PM" border="0"></a><br>
+
 </div>
 <script>
   var roadsterdx = {
@@ -101,8 +137,8 @@
       allowFiltering: true,
       showBorders: true,
       showColumnGrandTotals: false,
-      showRowGrandTotals: false,
-      showRowTotals: false,
+      showRowGrandTotals: true,
+      showRowTotals: true,
       showColumnTotals: false,
       fieldPanel: {
         showColumnFields: false,
@@ -139,30 +175,13 @@
         export: {
           enable: true
         },
-        fields: [{
-            caption: "New/Expansion",
-            dataField: "new_expansion",
-            area: "row",
-            width: 100,
-            alignment: 'center',
-            sortBySummaryField: 'Leads',
-            sortOrder: 'desc',
-            allowFiltering: true,
-          },
-          {
-            caption: "Lead Origination",
-            dataField: "lead_origination",
-               sortBySummaryField: 'Leads',
-            sortOrder: 'desc',
-            area: "row",
-
-          }, {
+        fields: [
+                    {
             caption: "Month",
             dataField: "month",
 
-            area: "filter",
-            filterType: 'include',
-            filterValues: ['August   2019'],
+            area: "row",
+
             sortingMethod: function(a, b) {
               var index1 = a.value.rnk
               var index2 = b.value.rnk
@@ -176,6 +195,51 @@
             }
 
           },
+          
+          {
+            caption: "New/Exp",
+            dataField: "new_expansion",
+            area: "row",
+            width: 40,
+            alignment: 'center',
+            sortBySummaryField: 'Leads',
+            sortOrder: 'desc',
+            allowFiltering: true,
+            expanded: true,
+          },
+          {
+            caption: "Lead Origination",
+            dataField: "lead_origination",
+            sortBySummaryField: 'Leads',
+            width: 40,
+            sortOrder: 'desc',
+            area: "row",
+
+          },
+          
+          {
+            caption: "Opp Name",
+            dataField: "Name",
+            width: 40,
+            sortOrder: 'asc',
+            area: "row",
+
+          },    {
+            caption: "Unqualified Reason",
+            dataField: "unqualified_reason",
+            width: 40,
+            sortOrder: 'asc',
+            area: "row",
+
+          },
+                {
+            caption: "Status",
+            dataField: "win_status",
+            sortOrder: 'desc',
+            area: "filter",
+
+          },
+
           {
             caption: "Totals",
             dataField: "title",
@@ -214,12 +278,12 @@
             },
 
             format: {
-              precision: 1,
+              precision: 0,
               type: 'percent'
             },
           }, {
             dataField: "closed_won_count",
-            caption: "Closed/Won",
+            caption: "Closed Won",
             area: "data",
             summaryType: "sum",
             format: {
@@ -228,20 +292,20 @@
             }
           },
           {
-            caption: "Closed/Won Rate",
+            caption: "Closed Won Rate",
             area: "data",
             summaryType: "custom",
             calculateSummaryValue: e => {
               if (e.value('lead_count') == 0) {
                 return 0;
               } else {
-                return e.value('closed_won_count') / e.value('lead_count');
+                return e.value('closed_won_count') / e.value('opportunity_count');
               }
 
             },
 
             format: {
-              precision: 1,
+              precision: 0,
               type: 'percent'
             },
           },
@@ -256,4 +320,371 @@
 
 
   });
+</script>
+<script>
+  var data_Marketing = datasets.filter(function(d) {
+    return d.queryName == "Time Series - Marketing";
+  })[0].content;
+
+  var won_value_Marketing = [];
+  for (index = 0; index < data_Marketing.length; ++index) {
+    won_value_Marketing.push(data_Marketing[index]['Won Rate']);
+  }
+
+  var x_value_Marketing = [];
+  for (index = 0; index < data_Marketing.length; ++index) {
+    x_value_Marketing.push(data_Marketing[index]['month_date'].split('T')[0]);
+
+  }
+
+  var newseries_Marketing = []
+  for (i = 0; i < data_Marketing.length; ++i) {
+    var parts = x_value_Marketing[i].split('-');
+    // Please pay attention to the month (parts[1]); JavaScript counts months from 0:
+    // January - 0, February - 1, etc.
+    var mydate = new Date(parts[0], parts[1] - 1, parts[2]);
+    var point = {
+      x: mydate,
+      y: won_value_Marketing[i]
+    };
+    newseries_Marketing.push(point);
+  }
+
+
+
+  var data_Sales = datasets.filter(function(d) {
+    return d.queryName == "Time Series - Sales";
+  })[0].content;
+
+  var won_value_Sales = [];
+  for (index = 0; index < data_Sales.length; ++index) {
+    won_value_Sales.push(data_Sales[index]['Won Rate']);
+  }
+
+  var x_value_Sales = [];
+  for (index = 0; index < data_Sales.length; ++index) {
+    x_value_Sales.push(data_Sales[index]['month_date'].split('T')[0]);
+
+  }
+
+  var newseries_Sales = []
+  for (i = 0; i < data_Sales.length; ++i) {
+    var parts = x_value_Sales[i].split('-');
+    // Please pay attention to the month (parts[1]); JavaScript counts months from 0:
+    // January - 0, February - 1, etc.
+    var mydate = new Date(parts[0], parts[1] - 1, parts[2]);
+    var point = {
+      x: mydate,
+      y: won_value_Sales[i]
+    };
+    newseries_Sales.push(point);
+  }
+
+
+  var data_ALL = datasets.filter(function(d) {
+    return d.queryName == "Time Series - ALL";
+  })[0].content;
+
+  var won_value_ALL = [];
+  for (index = 0; index < data_ALL.length; ++index) {
+    won_value_ALL.push(data_ALL[index]['Won Rate']);
+  }
+
+  var x_value_ALL = [];
+  for (index = 0; index < data_ALL.length; ++index) {
+    x_value_ALL.push(data_ALL[index]['month_date'].split('T')[0]);
+
+  }
+
+  var newseries_ALL = []
+  for (i = 0; i < data_ALL.length; ++i) {
+    var parts = x_value_ALL[i].split('-');
+    // Please pay attention to the month (parts[1]); JavaScript counts months from 0:
+    // January - 0, February - 1, etc.
+    var mydate = new Date(parts[0], parts[1] - 1, parts[2]);
+    var point = {
+      x: mydate,
+      y: won_value_ALL[i]
+    };
+    newseries_ALL.push(point);
+  }
+
+  var data_New = datasets.filter(function(d) {
+    return d.queryName == "Time Series - New";
+  })[0].content;
+
+  var won_value_New = [];
+  for (index = 0; index < data_New.length; ++index) {
+    won_value_New.push(data_New[index]['Won Rate']);
+  }
+
+  var x_value_New = [];
+  for (index = 0; index < data_New.length; ++index) {
+    x_value_New.push(data_New[index]['month_date'].split('T')[0]);
+
+  }
+
+  var newseries_New = []
+  for (i = 0; i < data_New.length; ++i) {
+    var parts = x_value_New[i].split('-');
+    // Please pay attention to the month (parts[1]); JavaScript counts months from 0:
+    // January - 0, February - 1, etc.
+    var mydate = new Date(parts[0], parts[1] - 1, parts[2]);
+    var point = {
+      x: mydate,
+      y: won_value_New[i]
+    };
+    newseries_New.push(point);
+  }
+  
+var data_Expansion = datasets.filter(function(d) {
+    return d.queryName == "Time Series - Expansion";
+  })[0].content;
+
+  var won_value_Expansion = [];
+  for (index = 0; index < data_Expansion.length; ++index) {
+    won_value_Expansion.push(data_Expansion[index]['Won Rate']);
+  }
+  
+  var x_value_Expansion = [];
+  for (index = 0; index < data_Expansion.length; ++index) {
+    x_value_Expansion.push(data_Expansion[index]['month_date'].split('T')[0]);
+
+  }
+
+  var newseries_Expansion = []
+  for (i = 0; i < data_Expansion.length; ++i) {
+    var parts = x_value_Expansion[i].split('-');
+    // Please pay attention to the month (parts[1]); JavaScript counts months from 0:
+    // January - 0, February - 1, etc.
+    var mydate = new Date(parts[0], parts[1] - 1, parts[2]);
+    var point = {
+      x: mydate,
+      y: won_value_Expansion[i]
+    };
+    newseries_Expansion.push(point);
+  }
+
+
+  setTimeout(function() {
+
+    for (i = 0; i < Highcharts.charts.length; i++) {
+      var chart = Highcharts.charts[i];
+      console.log(chart);
+      if (chart.container.closest("#chart_9a57577eaddc") != null) {
+        chart.update({
+
+
+          chart: {
+            borderColor: '#FFFFFF',
+          },
+
+          tooltip: [{
+
+            },
+            {
+              formatter: function() {
+
+                return false;
+              }
+            }
+          ],
+
+          xAxis: {
+            type: 'datetime', //this forces the xAxis to be a 'date type'
+            minorTickLength: 0, //hide the little ticks on the Vertical Axis
+            tickLength: 0, //hide the little ticks on the Vertical Axis
+            lineWidth: 0, //make the vertical axis 0 pixels wide
+          },
+
+          yAxis: [{
+            gridLineColor: 'transparent' // hide vertical gridlines
+          }, {
+            max: 1,
+            tickInterval: .2,
+            alignTicks: false // Keeps max at 100% but shifts nuumbr
+          }],
+
+        });
+        chart.addSeries({
+          name: 'Won Rate',
+          data: newseries_Marketing,
+          color: '#27825c',
+          yAxis: 1,
+          xAxis: 0,
+        });
+        $(this).attr('disabled', true);
+      }
+
+      if (chart.container.closest("#chart_0c550a372112") != null) {
+        chart.update({
+          chart: {
+            borderColor: '#FFFFFF',
+          },
+          xAxis: {
+            type: 'datetime', //this forces the xAxis to be a 'date type'
+            minorTickLength: 0, //hide the little ticks on the Vertical Axis
+            tickLength: 0, //hide the little ticks on the Vertical Axis
+            lineWidth: 0, //make the vertical axis 0 pixels wide
+          },
+
+          yAxis: [{
+            gridLineColor: 'transparent' // hide vertical gridlines
+          }, {
+            max: 1,
+            tickInterval: .2,
+            alignTicks: false // Keeps max at 100% but shifts nuumbr
+          }],
+          // series: [{
+          //   a,
+          //   b,
+          //   won_value
+          // }],
+        });
+        chart.addSeries({
+          name: 'Won Rate',
+          data: newseries_Sales,
+          // [
+          // {x: Date.UTC(2019, 3, 9, 0, 0, 0), y: .67},
+          // {x: Date.UTC(2019, 4, 9, 0, 0, 0), y: .67},
+          // {x: Date.UTC(2019, 5, 9, 0, 0, 0), y: .68},
+          // {x: Date.UTC(2019, 6, 9, 0, 0, 0), y: .68},
+          // {x: Date.UTC(2019, 7, 9, 0, 0, 0), y: .9},
+          // {x: Date.UTC(2019, 8, 9, 0, 0, 0), y: .9}
+          // ],
+          color: '#27825c',
+          yAxis: 1,
+        });
+        $(this).attr('disabled', true);
+      }
+
+      if (chart.container.closest("#chart_6ef1b46a8291") != null) {
+        chart.update({
+          chart: {
+            borderColor: '#FFFFFF',
+          },
+          xAxis: {
+            type: 'datetime', //this forces the xAxis to be a 'date type'
+            minorTickLength: 0, //hide the little ticks on the Vertical Axis
+            tickLength: 0, //hide the little ticks on the Vertical Axis
+            lineWidth: 0, //make the vertical axis 0 pixels wide
+          },
+
+          yAxis: [{
+            gridLineColor: 'transparent' // hide vertical gridlines
+          }, {
+            max: 1,
+            tickInterval: .2,
+            alignTicks: false // Keeps max at 100% but shifts nuumbr
+          }],
+          // series: [{
+          //   a,
+          //   b,
+          //   won_value
+          // }],
+        });
+        chart.addSeries({
+          name: 'Won Rate',
+          data: newseries_ALL,
+          // [
+          // {x: Date.UTC(2019, 3, 9, 0, 0, 0), y: .67},
+          // {x: Date.UTC(2019, 4, 9, 0, 0, 0), y: .67},
+          // {x: Date.UTC(2019, 5, 9, 0, 0, 0), y: .68},
+          // {x: Date.UTC(2019, 6, 9, 0, 0, 0), y: .68},
+          // {x: Date.UTC(2019, 7, 9, 0, 0, 0), y: .9},
+          // {x: Date.UTC(2019, 8, 9, 0, 0, 0), y: .9}
+          // ],
+          color: '#27825c',
+          yAxis: 1,
+        });
+        $(this).attr('disabled', true);
+      }
+
+      if (chart.container.closest("#chart_8d5f9b04324a") != null) {
+        chart.update({
+          chart: {
+            borderColor: '#FFFFFF',
+          },
+          xAxis: {
+            type: 'datetime', //this forces the xAxis to be a 'date type'
+            minorTickLength: 0, //hide the little ticks on the Vertical Axis
+            tickLength: 0, //hide the little ticks on the Vertical Axis
+            lineWidth: 0, //make the vertical axis 0 pixels wide
+          },
+
+          yAxis: [{
+            gridLineColor: 'transparent' // hide vertical gridlines
+          }, {
+            max: 1,
+            tickInterval: .2,
+            alignTicks: false // Keeps max at 100% but shifts nuumbr
+          }],
+          // series: [{
+          //   a,
+          //   b,
+          //   won_value
+          // }],
+        });
+        chart.addSeries({
+          name: 'Won Rate',
+          data: newseries_New,
+          // [
+          // {x: Date.UTC(2019, 3, 9, 0, 0, 0), y: .67},
+          // {x: Date.UTC(2019, 4, 9, 0, 0, 0), y: .67},
+          // {x: Date.UTC(2019, 5, 9, 0, 0, 0), y: .68},
+          // {x: Date.UTC(2019, 6, 9, 0, 0, 0), y: .68},
+          // {x: Date.UTC(2019, 7, 9, 0, 0, 0), y: .9},
+          // {x: Date.UTC(2019, 8, 9, 0, 0, 0), y: .9}
+          // ],
+          color: '#27825c',
+          yAxis: 1,
+        });
+        $(this).attr('disabled', true);
+      }
+      
+      
+      if (chart.container.closest("#chart_37e670893b68") != null) {
+        chart.update({
+          chart: {
+            borderColor: '#FFFFFF',
+          },
+          xAxis: {
+            type: 'datetime', //this forces the xAxis to be a 'date type'
+            minorTickLength: 0, //hide the little ticks on the Vertical Axis
+            tickLength: 0, //hide the little ticks on the Vertical Axis
+            lineWidth: 0, //make the vertical axis 0 pixels wide
+          },
+
+          yAxis: [{
+            gridLineColor: 'transparent' // hide vertical gridlines
+          }, {
+            max: 1,
+            tickInterval: .2,
+            alignTicks: false // Keeps max at 100% but shifts nuumbr
+          }],
+          // series: [{
+          //   a,
+          //   b,
+          //   won_value
+          // }],
+        });
+        chart.addSeries({
+          name: 'Won Rate',
+          data: newseries_Expansion,
+          // [
+          // {x: Date.UTC(2019, 3, 9, 0, 0, 0), y: .67},
+          // {x: Date.UTC(2019, 4, 9, 0, 0, 0), y: .67},
+          // {x: Date.UTC(2019, 5, 9, 0, 0, 0), y: .68},
+          // {x: Date.UTC(2019, 6, 9, 0, 0, 0), y: .68},
+          // {x: Date.UTC(2019, 7, 9, 0, 0, 0), y: .9},
+          // {x: Date.UTC(2019, 8, 9, 0, 0, 0), y: .9}
+          // ],
+          color: '#27825c',
+          yAxis: 1,
+        });
+        $(this).attr('disabled', true);
+      }
+
+    }
+  }, 100);
 </script>

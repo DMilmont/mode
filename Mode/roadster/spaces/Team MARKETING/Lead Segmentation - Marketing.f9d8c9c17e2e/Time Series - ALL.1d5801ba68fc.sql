@@ -10,11 +10,9 @@ WITH dealer_group_closed_min_date as (
                 group by 1,2
         ),
  detail as (select L."Id" as "Lead ID" --Lead ID
-      ,case when date(L."CreatedDate")> date(L."ConvertedDate") then date(L."ConvertedDate")  else L."CreatedDate" end as "Lead Timestamp" --Lead Timestamp
+      ,case when date(L."CreatedDate")> date(L."ConvertedDate") then COALESCE(O."CreatedDate"::date AT TIME ZONE 'UTC' AT TIME ZONE 'PST',date(L."ConvertedDate") ) else COALESCE(O."CreatedDate"::date AT TIME ZONE 'UTC' AT TIME ZONE 'PST' ,L."CreatedDate") end as "Lead Timestamp" --Lead Timestamp
        ,L."Email" --Lead Email
-   
-      ,L."Type__c" as "Lead Type"
-      ,O."Lead_Type__c" as "Lead Type - Opp" 
+      ,L."Type__c" as "Type"
       ,L."LeadSource" as "Lead Source"
       ,L."New_Expansion_Lead__c" as "SF New Expansion Lead"
       ,dgc."Name" as "Dealer Group"
@@ -28,13 +26,13 @@ WITH dealer_group_closed_min_date as (
       ,case when "StageName"='Closed/Won' then 'Y' ELSE 'N' end as "Closed/Won Flag"  --- Closed Flag
       ,case when "StageName"='Closed/Won' then "Start_Date_of_Current_Stage__c" ELSE null end "Closed Timestamp"  --- Closed Timestamp
       ,case when "StageName"='Closed/Won' then ceiling("Start_Date_of_Current_Stage__c"::date - L."CreatedDate"::date) else null end as "Days to Close" --- Days to Close
-     ,case when COALESCE(L."Type__c",O."Lead_Type__c") in ('Event','Marketing Qualified') then 'MKT'
+     ,case when COALESCE(O."Lead_Type__c",L."Type__c") in ('Event','Marketing Qualified') then 'Marketing'
             -- when  L."LeadSource" in ('Lead Form','Event','Demo Request Form (US)') then 'MKT'   
-            when COALESCE(L."Type__c",O."Lead_Type__c")  in ('OEM - Shift','OEM - Pilot','Sales','OEM_Shift','OEM - BD') then 'Sales'
-            when COALESCE(L."Type__c",O."Lead_Type__c")  in ('Success','Other') then 'Other'
-            when COALESCE(L."Type__c",O."Lead_Type__c") in ('Express') then 'Demo Form'
-            when COALESCE(L."Type__c",O."Lead_Type__c") in ('Demo Request Form (US)','Demo Request Form (UK)') then 'Demo Form'
-            else COALESCE(L."Type__c",O."Lead_Type__c")  end as "Lead Origination"
+            when COALESCE(O."Lead_Type__c",L."Type__c")   in ('OEM - Shift','OEM - Pilot','Sales','OEM_Shift','OEM - BD') then 'Sales'
+            when COALESCE(O."Lead_Type__c",L."Type__c")  in ('Success','Other') then 'Other'
+            when COALESCE(O."Lead_Type__c",L."Type__c")  in ('Express') then 'Demo Form'
+            when COALESCE(O."Lead_Type__c",L."Type__c")  in ('Demo Request Form (US)','Demo Request Form (UK)') then 'Demo Form'
+            else COALESCE(O."Lead_Type__c",L."Type__c")   end as "Lead Origination"
          
       
       ,case when "New_Expansion_Lead__c" is not null then "New_Expansion_Lead__c"
@@ -43,20 +41,31 @@ WITH dealer_group_closed_min_date as (
              when "New_Expansion_Lead__c" is null and dgc.dg_close_min_date is not null  then 'Expansion'
         else 'ERROR' end   "New/Expansion"
       
-from roadster_salesforce."Lead" L
-left join roadster_salesforce."Opportunity" O
+from roadster_salesforce."Opportunity" O 
+full outer join roadster_salesforce."Lead" L
 on L."ConvertedOpportunityId"=O."Id"
 left join dealer_group_closed_min_date dgc
 on L."DealerGroup__c"=dgc."DealerGroup__c"
-where L."CreatedDate">='2019-04-01'
+where COALESCE(O."CreatedDate"::date,L."CreatedDate") >='2018-01-01'
 and COALESCE(L."New_Expansion_Lead__c",'x')<>'Not Applicable'
-and L."IsDeleted" is false
+ and COALESCE(L."IsDeleted",false) is false
+and case when COALESCE(L."Status",'x')='Unqualified' and "Unqualified_Reason__c"='Unresponsive' and  L."CreatedDate">='2019-07-01' then 1
+        when COALESCE(L."Status",'x')='Unqualified' then 0
+        else 1 end =1
 )
-select     *
-          
-from detail          
-where  
 
-"Lead Type - Opp" is null and "Lead Type" is null
-and "Opportunity"='Y'
-order by 2 desc
+
+select    date_trunc('month'::text, ("Lead Timestamp")::timestamp with time zone)   as month_date  
+     --     ,"Lead Origination" as lead_origination
+--          , "New/Expansion" as new_expansion
+          ,count(1) as "Leads"
+          ,sum(case when "Opportunity"='Y' or "Name" is not null then 1 else 0 end) as opportunity_count
+          ,round(sum(case when "Opportunity"='Y' or "Name" is not null then 1 else 0 end)::decimal/count(1),2) as "Opportunity Rate" 
+          ,sum(case when "Closed/Won Flag"='Y' then 1 else 0 end) as closed_won_count
+          ,case when sum(case when "Opportunity"='Y' or "Name" is not null then 1 else 0 end)<>0 then round(sum(case when "Closed/Won Flag"='Y' then 1 else 0 end)::decimal / sum(case when "Opportunity"='Y' or "Name" is not null then 1 else 0 end),2) else 0 end as "Won Rate"
+          
+from detail         
+group by 1
+order by 1
+
+
