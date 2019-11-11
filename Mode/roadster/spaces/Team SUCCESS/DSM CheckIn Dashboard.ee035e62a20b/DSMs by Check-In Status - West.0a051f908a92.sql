@@ -4,10 +4,10 @@ with  check_in as
               ,SC."Name"                                        as "Check-In Priority"
               ,SC."Status__c"                                   as "Status"
                 ,SC."Overdue__c"                                  as "Overdue"
-                ,CASE WHEN date(SC."Original_Due_Date__c") < date(now()) AND SC."Status__c"='Open' then 'Open and Overdue'
-                    WHEN date(SC."Original_Due_Date__c") < date(now()) AND SC."Status__c"='Completed' then 'Completed - Overdue'
-                    WHEN date(SC."Original_Due_Date__c") >= date(now())AND SC."Status__c"='Open' then 'Currently Open'
-                    WHEN date(SC."Original_Due_Date__c") >= date(now()) AND SC."Status__c"='Completed' then 'Completed - On Time'
+            ,CASE WHEN date(SC."Original_Due_Date__c") > date(now() AT TIME ZONE 'UTC' AT TIME ZONE 'PST')    AND SC."Status__c"='Open' then 'Currently Open'
+                    WHEN date(SC."Original_Due_Date__c") < date(SC."Completion_Date__c" )   AND SC."Status__c"='Completed' then 'Completed - Overdue'
+                    WHEN date(SC."Original_Due_Date__c") <= date(now() AT TIME ZONE 'UTC' AT TIME ZONE 'PST')   AND SC."Status__c"='Open' then 'Open and Overdue'
+                    WHEN date(SC."Original_Due_Date__c") >= date(SC."Completion_Date__c" ) AND SC."Status__c"='Completed' then 'Completed - On Time'
                     END                                       as "Check-In Status"  
               ,date(SC."Original_Due_Date__c")                        as "Orignial Due Date"      
               ,date(SC."CreatedDate")                                 as "Created Date"
@@ -15,7 +15,7 @@ with  check_in as
               ,date(SC."Completion_Date__c" )                         as "Completion Date"
               ,SC."Type_of_Contact__c"                          as "Check-In Type"
 
-              ,CASE WHEN "East_Coast__c"='TRUE' then 'East'
+              ,CASE  WHEN "East_Coast__c"='TRUE' then 'East'
                     WHEN "West_Coast__c"='TRUE' then  'West'
                     END                                         as "Region"
  
@@ -29,7 +29,11 @@ with  check_in as
       ON SC."Account__c"=EXC."Account__c"
       WHERE EXC."Account__c" IS NULL
             AND "West_Coast__c"='TRUE' 
-            and "Status__c"='Open'
+            -- and "Status__c"='Open'
+            and date(SC."Original_Due_Date__c") >='2019-09-01'
+            and date(SC."Original_Due_Date__c") <date(now() AT TIME ZONE 'UTC' AT TIME ZONE 'PST')
+             and "Check_In_Type__c"='Success Check-In'
+             and SC."IsDeleted" is false
   ),
 stat_cnt AS
 (

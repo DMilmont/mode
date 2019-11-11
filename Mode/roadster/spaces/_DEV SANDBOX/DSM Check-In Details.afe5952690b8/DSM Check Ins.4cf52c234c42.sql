@@ -3,10 +3,10 @@
               ,SC."Name"                                        as "Check-In Priority"
               ,SC."Status__c"                                   as "Status"
                 ,SC."Overdue__c"                                  as "Overdue"
-                ,CASE WHEN date(SC."Original_Due_Date__c") < date(now()) AND SC."Status__c"='Open' then 'Open and Overdue'
-                    WHEN date(SC."Original_Due_Date__c") < date(now()) AND SC."Status__c"='Completed' then 'Completed - Overdue'
-                    WHEN date(SC."Original_Due_Date__c") >= date(now())AND SC."Status__c"='Open' then 'Currently Open'
-                    WHEN date(SC."Original_Due_Date__c") >= date(now()) AND SC."Status__c"='Completed' then 'Completed - On Time'
+    ,CASE WHEN date(SC."Original_Due_Date__c") > date(now() AT TIME ZONE 'UTC' AT TIME ZONE 'PST')    AND SC."Status__c"='Open' then 'Currently Open'
+                    WHEN date(SC."Original_Due_Date__c") < date(SC."Completion_Date__c" )   AND SC."Status__c"='Completed' then 'Completed - Overdue'
+                    WHEN date(SC."Original_Due_Date__c") <= date(now() AT TIME ZONE 'UTC' AT TIME ZONE 'PST')   AND SC."Status__c"='Open' then 'Open and Overdue'
+                    WHEN date(SC."Original_Due_Date__c") >= date(SC."Completion_Date__c" ) AND SC."Status__c"='Completed' then 'Completed - On Time'
                     END                                       as "Check-In Status"  
               ,date(SC."Original_Due_Date__c")                        as "Orignial Due Date"      
               ,date(SC."CreatedDate")                                 as "Created Date"
@@ -26,10 +26,13 @@
                  where "Type__c" = 'Exclude from Rooftop Count'
                 )EXC
       ON SC."Account__c"=EXC."Account__c"
-      WHERE EXC."Account__c" IS NULL
-      AND US."Name"='{{ dsm }}'
-      and "Status__c"='Open'
-      order by CASE WHEN date(SC."Original_Due_Date__c") < date(now()) AND SC."Status__c"='Open' then 1
+       WHERE EXC."Account__c" IS NULL
+            and US."Name"='{{ dsm }}'
+                        and SC."IsDeleted" is false
+                        and "Check_In_Type__c"='Success Check-In'
+                                and date(SC."Original_Due_Date__c") >='2019-09-01'
+            and date(SC."Original_Due_Date__c") <date(now() AT TIME ZONE 'UTC' AT TIME ZONE 'PST')   
+            order by CASE WHEN date(SC."Original_Due_Date__c") < date(now()) AND SC."Status__c"='Open' then 1
                     WHEN date(SC."Original_Due_Date__c") < date(now()) AND SC."Status__c"='Completed' then 3
                     WHEN date(SC."Original_Due_Date__c") >= date(now()) AND SC."Status__c"='Open' then 2
                     WHEN date(SC."Original_Due_Date__c") >= date(now()) AND SC."Status__c"='Completed' then 4

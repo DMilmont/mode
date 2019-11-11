@@ -129,7 +129,7 @@ agent_ranks as (select agent_full_name
                 from agent_score       
                   )
 select am.*
-      ,am."Title" || ar.rnk || '. ' || am.agent_name as "Agent Ranked"
+      ,am."Title"|| ' - ' || am.agent_name as "Agent Ranked" --|| ar.rnk || '
 from agent_metrics am
 left join agent_ranks ar on am.agent_full_name=ar.agent_full_name
 

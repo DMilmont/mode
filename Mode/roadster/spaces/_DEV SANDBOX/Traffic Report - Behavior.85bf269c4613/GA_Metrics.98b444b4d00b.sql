@@ -1,7 +1,7 @@
 WITH min_session_id AS
 ( SELECT distinct_id
         ,min(session_id) as min_session_id
-  FROM report_layer.ga2_sessions_all_prospect
+  FROM fact.f_sessions
   WHERE date_local >= '{{ start_date }}'  
 and date_local <= '{{ end_date }}'  
 AND dpid='{{ dpid }}'
@@ -15,7 +15,7 @@ details as (SELECT dpid
       ,prospect_flag
       ,new_used
       ,srp_vdp
-      ,is_in_store as in_store_flag
+      ,case when in_store is true then 'In-Store' else 'Online' end as in_store_flag
       ,date_local::date as date
       ,sum(case when bounce=true then 1 else 0 end ) as bounce
       ,count(1) as sessions
@@ -24,11 +24,14 @@ details as (SELECT dpid
       ,sum(pageviews) as pageviews
       ,sum(duration) as duration
       ,'Summary' as title
-from report_layer.ga2_sessions_all_prospect ga
+from fact.f_sessions ga
 LEFT JOIN min_session_id msi on ga.session_id=msi.min_session_id
 WHERE date_local >= '{{ start_date }}'  
-and date_local <= '{{ end_date }}' 
+and date_local <= '{{ end_date }}'  
 AND ga.dpid='{{ dpid }}'
+and COALESCE(session_type,'x')<>'Dealer Admin'
+ and COALESCE(new_used,'x')<>'Did Not Visit Inventory on Express'
+and  coalesce(srp_vdp,'x')<>'Did Not Visit Inventory on Express'
 group by 1,2,3,4,5,6,7,8,9,10
 ),
 detail_breakout as (SELECT 'Day' as type
@@ -94,12 +97,12 @@ type:
 
 start_date:
   type: date
-  default: '2019-07-09'
+  default: '2019-08-09'
   description: Data available starting May 10th (GA Limitation)
 
 end_date: 
   type: date
-  default: '2019-07-16'
+  default: '2019-09-09'
   description: Data available until July 20th (Testing Reasons)
 
 {% endform %}

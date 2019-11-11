@@ -95,12 +95,11 @@ type:
 
 start_date:
   type: date
-  default: '2019-07-21'
+  default: '2019-07-29'
   description: Data available starting May 10th (GA Limitation)
 
 end_date: 
   type: date
-  default: '2019-07-28'
-  description: Data available until July 20th (Testing Reasons)
+  default: '2019-08-04'
 
 {% endform %}

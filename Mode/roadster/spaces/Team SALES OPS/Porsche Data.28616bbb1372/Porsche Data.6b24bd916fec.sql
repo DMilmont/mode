@@ -5,7 +5,7 @@ SELECT fs.dpid "Dealer",
        'Measures' "Measures",
  ct_unique_users_form_submissions "Form Submissions", --ct_total_deals_built,
  ct_unique_users_deals_built "Deals Built", --ct_total_deals_submitted,
- ct_unique_users_deals_submitted "Deals Submitted" , --ct_credit_apps_submitted,
+ --ct_unique_users_deals_submitted "Deals Submitted" , --ct_credit_apps_submitted,
  ct_unique_users_credit_app_submitted "Credit App Submitted",
  ct_sales_matched "Sales Matched", --ct_orders_completed,
  ct_unique_users_orders_completed "Orders Completed", --ct_trade_in_valuation_events,
@@ -21,7 +21,8 @@ SELECT fs.dpid "Dealer",
  ct_dealer_visitors "Dealer Website Visitors",
  "Lease Orders Submitted",
  "Cash Orders Submitted",
- "Finance Orders Submitted"
+ "Finance Orders Submitted",
+ "Lease Orders Submitted" + "Cash Orders Submitted" + "Finance Orders Submitted" "Deals Submitted"
 FROM
     (SELECT dpid,
             date_trunc('month', timestamp) month_year,
@@ -63,19 +64,19 @@ GROUP BY 1,2,3
 ) os_submitted ON fs.dpid = os_submitted.dpid AND fs.month_year = os_submitted.month_year AND fs.in_store = os_submitted.in_store 
 LEFT JOIN (
   SELECT 
-  dpid,
+  dp.dpid,
   date_trunc('month', date) month_year,
   is_in_store in_store,
   COUNT(DISTINCT distinct_id) ct_unique_vdp_views
   FROM fact.f_traffic ft
   LEFT JOIN dealer_partners dp ON ft.dpid = dp.dpid
-  WHERE page_path IN ('/New VDP', '/Used VDP')
-  AND primary_make in ('Porsche')
+  WHERE page_path IN ('/New VDP', '/Used VDP', '/R-online/vdp-used', '/R-online/vdp-new')
+  AND dp.primary_make in ('Porsche')
   GROUP BY 1,2,3
 ) vdp_views ON fs.dpid = vdp_views.dpid AND fs.in_store = vdp_views.in_store AND fs.month_year = vdp_views.month_year
 LEFT JOIN (
   SELECT
-  dpid, 
+  dp.dpid, 
   false in_store,
   "Date" month_year,
   "Dealer Visitors" ct_dealer_visitors
@@ -122,7 +123,7 @@ LEFT JOIN
           ON gp.ga2_session_id = gs.id
           WHERE gp.timestamp >= '2019-09-01'
             AND gs.timestamp >= '2019-09-01'
-            AND page_path = '/virtual/order-steps'
+            AND page_path IN ( '/virtual/order-steps', '/R-online/order-intro/steps')
             AND property = 'Express Sites'
             AND gs.dpid IN
               (SELECT dpid

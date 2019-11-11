@@ -1,3 +1,7 @@
+-- Returns first 100 rows from fact.mode_agg_daily_traffic_and_prospects
+SELECT type, sum(count) FROM fact.mode_agg_daily_traffic_and_prospects group by 1 LIMIT 100;
+
+
 
 
 
@@ -44,6 +48,7 @@ SELECT
        --dp.ga_tracking_id "Roadster's GA Property",
        admin.properties ->> 'ga_accounts' "Customer GA Account",
        admin.properties ->> 'gtm_account' "Customer GTM Container",
+       case when admin.properties ->> 'use_server_calculation_engine' = 'true' then 'YES' else '' end as "New Server Calc?",
        case 
           when dp.dpid = 'roadster' then '-DEFAULT-'
           when admin.properties ->> 'reports' is null then '' 

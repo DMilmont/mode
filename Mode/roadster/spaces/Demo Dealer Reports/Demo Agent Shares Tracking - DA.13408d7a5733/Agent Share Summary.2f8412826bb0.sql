@@ -10,7 +10,7 @@ select date
       ,sum(Click_Check)  as "Shares Clicked"
       ,CASE when sum(Click_Check) =0 then 0 else round(sum(Click_Check)::decimal/count(distinct id),2) END as "Shares Clicked %"
 from fact.zdemo_shares_detail
-where date >= (date_trunc('day', now()) - interval '31 days')  
-    and dpid='{{ dpid }}'
+where dpid='{{ dpid }}'
+and date>='2019-07-19'
 GROUP BY 1,2,3
 

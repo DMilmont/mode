@@ -1,4 +1,4 @@
-
+-- Sean's Scheduled run of 'Reports Activity Last Week' Query: Top 25 Dealers
 
 -- Grab Pageviews from GA
 WITH 

@@ -1,3 +1,5 @@
+-- Sean's Scheduled run of 'Reports Activity Last Week' Query: who is pulling a given report
+
 WITH GA AS
   (
   SELECT ga2_pageviews.id,
@@ -9,6 +11,7 @@ WITH GA AS
               ga2_pageviews.distinct_id,
               gs.in_store,
               a.email, 
+              a.roles,
               gs.full_referrer,
           1 count
    
@@ -38,6 +41,7 @@ WITH GA AS
           left(btrim(regexp_replace(regexp_replace((GA.page_path) :: text, '\/reports\/' :: text, '' :: text), '-|_' :: text, ' ' :: text, 'g' :: text)),25) AS page_path_fixed,
           dpid,
           email agent_email,
+          roles,
           date_part('day', DealerTime) day_t,
           date_part('month', DealerTime) month_t,
           date_part('year', DealerTime) year_t,
@@ -50,7 +54,8 @@ WITH GA AS
             month_t,
             year_t,
             dpid,
-            agent_email )
+            agent_email,
+            roles)
             
 select * from GAday 
 --where dpid in('mbwestwood','applenissan','applechevrolet', 'audipasadena','hondaeastcincy', 'jimnortontoyota','legacytoyota','lexusofpleasanton','vistabmw')

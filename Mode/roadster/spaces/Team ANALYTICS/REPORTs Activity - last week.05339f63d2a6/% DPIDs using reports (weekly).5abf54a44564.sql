@@ -1,5 +1,4 @@
-
-
+-- Sean's Scheduled run of 'Reports Activity Last Week' Query: % DPIDs using Reports
 
 /* 
 Active Dealers have at least 14 unique customers doing something in a given week (getting a share, taking an order step - anything.  Just 10 unique emails)

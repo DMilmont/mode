@@ -1,0 +1,1 @@
+table(trade_data$trade_in_status, trade_data$status)

@@ -8,7 +8,8 @@ WITH tab1 as (
   
   
     CASE 
-      WHEN dp.primary_make = 'All' then 'Multiple'
+      when dp.inventory_type = 'used_only' then 'Used Only'
+      WHEN dp.primary_make = 'All' then 'New Marketplace Sites'
       When dp.primary_make in ('BMW','MINI','Rolls-Royce') then 'BMW Group'
       When dp.primary_make in ('Alfa Romeo','Chrysler','FIAT','Jeep','Maserati') then 'Fiat Chrysler'
       When dp.primary_make in ('Ford','Lincoln') then 'Ford Motor Company'

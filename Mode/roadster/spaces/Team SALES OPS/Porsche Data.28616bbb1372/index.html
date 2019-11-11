@@ -41,6 +41,16 @@
       <mode-chart id="f_i_data"></mode-chart>
     </div>
   </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-chart id="vdp_specifc_data"></mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-table id="table_52100aac721a" dataset="dataset" options="table_options"></mode-table>
+    </div>
+  </div>
 </div>
 <script>
   var roadsterdx = {
@@ -78,6 +88,7 @@
   $(function() {
     var base_porsche = roadsterdx.getDataSource('Porsche Data');
     var f_i = roadsterdx.getDataSource('Service Plan Specific Information');
+    var vdp_specific = roadsterdx.getDataSource('VDP / SRP Specific Data');
 
     var pivot1 = $('#base_porsche_data').dxPivotGrid({
       allowSortingBySummary: true,
@@ -207,7 +218,7 @@
             area: "data",
             summaryType: "sum"
           },
-           {
+          {
             dataField: "Trade-In Info Attached to Completed Order",
             area: "data",
             summaryType: "sum"
@@ -216,7 +227,7 @@
         ],
       },
     });
-    
+
     var pivot2 = $('#f_i_data').dxPivotGrid({
       allowSortingBySummary: true,
       allowFiltering: true,
@@ -251,7 +262,7 @@
             caption: "Added / Removed",
             area: "row",
             expanded: true
-          }, 
+          },
           {
             dataField: "Button Clicked",
             area: "column"
@@ -262,8 +273,52 @@
             summaryType: "sum",
             area: "data"
           },
-          ]},
+        ]
+      },
     });
-    
+
+    $('#vdp_specific_data').dxPivotGrid({
+      allowSortingBySummary: true,
+      allowFiltering: true,
+      showBorders: true,
+      showColumnGrandTotals: false,
+      showRowGrandTotals: true,
+      showRowTotals: true,
+      showColumnTotals: false,
+      "export": {
+        enabled: true,
+        fileName: "VDP_SRP_Data"
+      },
+      dataSource: {
+        store: vdp_specific,
+        retrieveFields: false,
+        fields: [{
+            dataField: "month_year",
+            caption: "Month & Year",
+            area: "row",
+            dataType: 'date',
+            format: 'monthAndYear',
+            width: 140,
+            expanded: true
+          },
+          {
+            dataField: "dpid",
+            caption: "Dealer",
+            area: "row"
+          },
+          {
+            caption: "Metrics",
+            area: "column"
+          },
+          {
+            dataField: "ct_unique_dealer_visitors",
+            caption: "All Dealer Visitors",
+            summaryType: "sum",
+            area: "data"
+          },
+        ]
+      },
+    });
+
   });
 </script>

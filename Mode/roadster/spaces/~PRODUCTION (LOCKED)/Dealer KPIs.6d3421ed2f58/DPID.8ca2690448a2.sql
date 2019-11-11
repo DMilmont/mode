@@ -7,7 +7,7 @@
 
 dpid:
     type: select
-    default: 'jimnortontoyota'
+    default: 'manchesterhonda'
     label: dpid
     input_type: string
     options:

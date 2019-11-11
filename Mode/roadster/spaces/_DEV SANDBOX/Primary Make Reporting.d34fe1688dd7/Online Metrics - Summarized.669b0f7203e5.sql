@@ -1,9 +1,12 @@
+
 WITH dpids as (
 SELECT DISTINCT name
 FROM fact.salesforce_dealer_info di
 LEFT JOIN public.dealer_partners dp ON di.dpid = dp.dpid
-WHERE primary_make in ({{ primary_make }})
-AND dp.state IN ({{ state }})
+WHERE (primary_make in ({{ primary_make }})
+AND dp.state IN ({{ state }}))
+OR
+(dp.dpid IN ( {{ dpid }} ))
 ), 
 
 base_online_data as (
@@ -29,3 +32,4 @@ SUM(online_sales) / NULLIF(SUM("Online Prospects"), 0) "Close Rate"
 FROM base_online_data
 GROUP BY 1
 ORDER BY "Dealership"
+

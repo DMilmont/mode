@@ -26,3 +26,4 @@ WITH GA AS
    )
             
 select * from GAday 
+WHERE ga2_session_id = 115102136	

@@ -29,11 +29,17 @@ with date_dpid as (
       where timestamp >= (date_trunc('day', now()) - interval '91 days')
         and type='SharedExpressVehicle'
         and sent_at is not null
-        and delivered_at is null
+        and (delivered_at is null or opened_at is null or clicked_at is null)
     ),
-      detail as (SELECT a.agent_name as "Agent"
+      detail as (SELECT 
+                    case when delivered_at is null then '1. Failed Share - Invalid Email'
+                    when opened_at is null then '2. Delivered - Not Opened'
+                    when clicked_at is null then '3. Opened - Not Clicked' end as "Status"
+                    ,a.agent_name as "Agent"
                     ,alo.customer_email as "E-mail"
                     ,date(sent_at) as "Date Sent"
+                    ,case when vin is not null then case when grade='cpo' then 'CPO' else INITCAP(grade) end || ' ' || year || ' ' || make || ' ' || coalesce(model, '') else 'Multiple Models' end as "Vehicles Shared"
+                    ,'https://dealers.roadster.com/'|| ls.dpid||'/user_contacts/'||ls.user_contact_dbid as link
                FROM leads_submitted ls
               left join agent a on ls.agent_id=a.id
               left join all_leads_and_orders alo on 'UC' || ls.user_contact_dbid = alo.id
@@ -42,6 +48,7 @@ with date_dpid as (
                   order by 1,3 asc
     )
     select * from detail
+    order by "Status", "Date Sent" desc
     
           
 

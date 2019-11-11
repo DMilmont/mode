@@ -1,8 +1,4 @@
--- This report accesses the following tables - PLEASE KEEP THIS UPDATED --
--- ga_pageviews
--- public.dealer_partners
--- fact.salesforce_dealer_info
-
+-- Sean's Scheduled run of 'Reports Activity Last Week' Query: Least Active Live Dealers
 
 
 

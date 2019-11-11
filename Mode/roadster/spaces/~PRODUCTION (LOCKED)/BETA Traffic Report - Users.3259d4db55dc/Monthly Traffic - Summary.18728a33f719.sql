@@ -32,7 +32,7 @@ express_visits as (SELECT month_year
                     and month_year >= (date_trunc('day', now()) - INTERVAL '7 Months')
                     and month_year <= (date_trunc('day', now()) - INTERVAL '1 Months')
                     AND item_type='Express Visitor'
-                    and is_in_store is not null 
+                    and is_in_store is false
                     GROUP BY 1,2,3,4
                     ),
 express_visits_SRP as (SELECT month_year
@@ -44,7 +44,7 @@ express_visits_SRP as (SELECT month_year
                     and month_year >= (date_trunc('day', now()) - INTERVAL '7 Months')
                     and month_year <= (date_trunc('day', now()) - INTERVAL '1 Months')
                     AND item_type='Express SRP Visitor'
-                    and is_in_store is not null 
+                   and is_in_store is false
                     GROUP BY 1,2,3
 ) ,
 express_visits_VDP as (SELECT month_year
@@ -56,7 +56,7 @@ express_visits_VDP as (SELECT month_year
                     and month_year >= (date_trunc('day', now()) - INTERVAL '7 Months')
                     and month_year <= (date_trunc('day', now()) - INTERVAL '1 Months')
                     AND item_type='Express VDP Visitor'
-                    and is_in_store is not null 
+                    and is_in_store is false
                     GROUP BY 1,2,3
 ) ,
 online_prospects as ( select month_year
@@ -71,7 +71,7 @@ online_prospects as ( select month_year
                       AND grade='All'
                       AND source='Lead Type'
                       and is_prospect_close_sale is null --- ********* WHAT DOES THIS MEAN***************
-                      and is_in_store is not null
+                      and is_in_store is false
                       group by 1,2,3
 
 ),
@@ -98,7 +98,9 @@ SELECT ev.dpid as dpid
       ,case when ev.is_in_store is true then 'In-Store' else 'Online' end as "In Store"
       ,coalesce(dv.dealer_visits,0) as dealer_visitors
       ,ev.express_visits as express_visitors
-      ,case when dv.dealer_visits = 0 then 0 else ev.express_visits::decimal/dv.dealer_visits end as "Online Express Ratio"
+      ,case when dv.dealer_visits = 0 then 0 
+            when ev.express_visits::decimal/dv.dealer_visits >1.5 then null
+      else ev.express_visits::decimal/dv.dealer_visits end as "Online Express Ratio"
       ,evs.express_visits_SRP as "Express SRP Visitors"
       ,evv.express_visits_VDP as "Express VDP Visitors"
       ,op.prospect_count as prospect_count

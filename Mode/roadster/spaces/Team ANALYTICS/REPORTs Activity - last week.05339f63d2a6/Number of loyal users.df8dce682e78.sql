@@ -1,3 +1,5 @@
+-- Sean's Scheduled run of 'Reports Activity Last Week' Query: Number of Loyal Users
+
 /* We want to identify the number of users who are loyal to a given report - 
 if a report has even a single loyal user then we should not consider that report for elimination - it's important to someone
 Our definition of loyalty is: if a user pulls the report on 3 distinct days within the past 4 weeks, the report must be important to them.
@@ -62,6 +64,15 @@ WITH
              when bd.report = 'details' then '3.4 Prospect/Details'
              when bd.report in ('utilization', 'utilization v2') then '4.1 Agent/Utilization'
              when bd.report = 'certification' then '4.2 Agent/Certification'
+             when bd.report in ('dealer group report', 'dealer groups') then '5.1 Dealer Group Report [MODE]'
+             when bd.report in ('shares open rate', 'shares open click rates') then '4.3 Agent/Shares Open Rate'
+             when bd.report in ('prospect dashboard', 'prospects dashboard') then '3.1 Prospects/Prospect Dashboard [MODE]'
+             when bd.report = 'sales dashboard' then '3.2 Prospects/Sales Dashboard [MODE]'
+             when bd.report = 'behavior' then '2.3 Traffic/Behavior [MODE]'
+             when bd.report = 'overviewt' then '2.1 Traffic/Overview [MODE]'
+             when bd.report = 'session level metrics' then '2.4 Traffic/Session Level Metrics [MODE]'
+             when bd.report = 'shares open click rates' then '4.3 Agents/Shares Open Click Rates [MODE]'
+             when bd.report = 'top referring and landing page' then '2.2 Traffic/Top Referring and Landing Page [MODE]'
              else bd.report end as "report"
       ,bd.week::date
       ,COALESCE(days_with_a_report_view,0) total_days_viewed

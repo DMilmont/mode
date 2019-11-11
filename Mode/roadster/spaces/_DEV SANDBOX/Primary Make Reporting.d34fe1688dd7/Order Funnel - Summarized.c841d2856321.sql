@@ -1,9 +1,12 @@
+
 with dpids as (
 SELECT DISTINCT name
 FROM fact.salesforce_dealer_info di
 LEFT JOIN public.dealer_partners dp ON di.dpid = dp.dpid
-WHERE primary_make in ({{ primary_make }})
-AND dp.state IN ({{ state }})
+WHERE (primary_make in ({{ primary_make }})
+AND dp.state IN ({{ state }}))
+OR 
+dp.dpid IN ( {{ dpid }} )
 ), 
 
 base_order_data as (
@@ -15,6 +18,7 @@ base_order_data as (
 SELECT *
 FROM base_order_data
 WHERE "Date" IN ({{choose_your_date_range}})
+
 
 
 

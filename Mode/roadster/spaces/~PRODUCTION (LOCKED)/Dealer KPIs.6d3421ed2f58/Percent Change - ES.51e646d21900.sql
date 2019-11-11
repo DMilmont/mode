@@ -12,3 +12,5 @@ group by 1,CASE
   ,sum(count) as count
 from weekly_count
 group by 1
+
+

@@ -64,9 +64,9 @@
 </script>
 <div class="mode-header embed-hidden">
   <h1>{{ title }}</h1>
-  <h4>Click <a href="" id="link_p"> Here</a> to understand user behavior on dealer and express site.</h4>
-  <h4>Click <a href="" id="link_h"> Here</a> to view historic session metrics by segments..</h4>
-  <h4>Please provide any feedback <a href="https://roadsterteam.atlassian.net/wiki/spaces/AN/pages/350388229/Traffic+Reporting+2.0+Feedback" target="_blank">Here </a></h4>
+  <!--<h4>Click <a href="" id="link_p"> Here</a> to understand user behavior on dealer and express site.</h4>-->
+  <!--<h4>Click <a href="" id="link_h"> Here</a> to view historic session metrics by segments..</h4>-->
+  <!--<h4>Please provide any feedback <a href="https://roadsterteam.atlassian.net/wiki/spaces/AN/pages/350388229/Traffic+Reporting+2.0+Feedback" target="_blank">Here </a></h4>-->
   <p>{{ description }}</p>
 </div>
 <div class="mode-grid container">
@@ -101,16 +101,16 @@
     </div>
   </div>
   <h2><u>Notes</u></h2>
-  <p> ▶ Visitors are counted as distinct users for the month </p>
-  <p> ▶ Express Ratio is calculated as Express Visitors over Dealer Visitors </p>
-  <p> ▶ Conversion to Online Prospect is calculated as Prospects over Express Visitors</p>
+  <p>• Visitors are counted as distinct users for the month </p>
+  <p>• Express Ratio is calculated as Express Visitors over Dealer Visitors </p>
+  <p>• Conversion to Online Prospect is calculated as Prospects over Express Visitors</p>
 </div>
 <script>
   setTimeout(function() {
     var i;
     for (i = 0; i < Highcharts.charts.length; i++) {
       var chart = Highcharts.charts[i];
-      if (chart.container.closest("#chart_be6aa0a1a882") != null || chart.container.closest("#chart_39e5aa6846ca") != null) {
+      if (chart.container.closest("#chart_0a660bdd9e0c") != null || chart.container.closest("#chart_472369156260") != null) {
         chart.update({
 
           xAxis: {
@@ -131,7 +131,7 @@
     var i;
     for (i = 0; i < Highcharts.charts.length; i++) {
       var chart = Highcharts.charts[i];
-      if (chart.container.closest("#chart_3c4eac33dfcc") != null || chart.container.closest("#chart_f3ecf1fd8770") != null) {
+      if (chart.container.closest("#chart_5de40d8f2198") != null || chart.container.closest("#chart_2b1de8043a7a") != null) {
         chart.update({
           plotOptions: {
             series: {
@@ -198,6 +198,9 @@
         enabled: true,
         fileName: "traffic_users"
       },
+      onCellClick: function(e) {
+        e.cancel = true;
+      },
       fieldPanel: {
         showColumnFields: false,
         showDataFields: false,
@@ -263,7 +266,11 @@
               if (e.value('dealer_visitors') == 0) {
                 return 0;
               } else {
+                if (e.value('express_visitors') / e.value('dealer_visitors')> 1) {return 0;}
+                else{
                 return e.value('express_visitors') / e.value('dealer_visitors');
+                  
+                }
               }
 
             },

@@ -19,5 +19,5 @@ from fact.vin_activity
 where  dpid='{{dpid}}'
 and timestamp_local>=(CURRENT_DATE - '31 days' :: interval)
 and grade='new'
-group by 1,2,3,4,5,6,7,8,9,10
+group by 1,2,3,4,5,6,7,8,9,10,11,exterior_color_rgb
 

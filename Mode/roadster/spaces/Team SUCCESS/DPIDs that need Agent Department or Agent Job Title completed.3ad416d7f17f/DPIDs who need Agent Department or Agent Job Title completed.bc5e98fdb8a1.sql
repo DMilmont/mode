@@ -21,20 +21,22 @@ where pa.status = 'Active'
 and (sf.status = 'Live' or dp.status = 'Live')
 and ae.agent_id is not null
 group by 1,2
-order by 2 DESC)
+order by 2 DESC
+)
 
---select * from jobtitle 
 
 select 
   success_manager "DSM"
   ,dpid
   ,'Very Few Agents have Agent Job Titles or Departments completed' as "Problem"
-  ,"Active Agents"
+  ,to_char("Active Agents",'9990') "Agents with Activity"
+  ,"No Department"
+  ,"No Job Title"
   ,"No Department" || to_char(100 - "Has Department"::decimal / "Active Agents"::decimal *100 ,' (990%)') as "Agents missing Department"
-  ,"No Job Title" || to_char(100 - "Has Job Title"::decimal / "Active Agents"::decimal *100 ,' (990%)') as "Agents missing Job Title"
+    ,"No Job Title" || to_char(100 - "Has Job Title"::decimal / "Active Agents"::decimal *100 ,' (990%)') as "Agents missing Job Title"
  from jobtitle
 where ("Has Department"::decimal / "Active Agents"::decimal *100 <=25 or "Has Job Title"::decimal / "Active Agents"::decimal *100 <=25)
 and "Active Agents" > 5
-order by 1, 6 desc 
+order by "Active Agents" - ("Has Department" - "Has Job Title")/2 desc 
 
 ;

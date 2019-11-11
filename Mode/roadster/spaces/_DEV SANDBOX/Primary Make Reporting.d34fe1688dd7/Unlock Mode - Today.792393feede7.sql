@@ -1,3 +1,4 @@
+
 with base_percentile_data as (
     SELECT dpid, percent_rank() OVER (ORDER BY score) keep_dpids
     FROM fact.f_benchmark b
@@ -39,8 +40,10 @@ filter_for_dealer_group  as (
 SELECT DISTINCT di.dpid, dealer_group, dp.tableau_secret
 FROM fact.salesforce_dealer_info di
 LEFT JOIN public.dealer_partners dp ON di.dpid = dp.dpid
-WHERE primary_make in ({{ primary_make }})
-AND dp.state IN ({{ state }})
+WHERE (primary_make in ({{ primary_make }})
+AND dp.state IN ({{ state }}))
+OR 
+(dp.dpid IN ( {{ dpid }} ))
 ),
 
 date_dpid as (

@@ -93,7 +93,7 @@
     <p> ▶ Please click <a href="" id="link_p" target="_blank">Here</a> to update the <b>Job Title</b> for agents where its currently missing for dealer <span id="titleHolder"></span>. </p>
     <p> ▶ Share activity is counted based on date initially sent. Opened/Clicked status is based on current tracking information </p>
 
-    </p>
+    <p></p>
   </div>
 </div>
 <script>
@@ -322,24 +322,24 @@
           dataField: 'Most Efficient Agent',
           headerCellTemplate: $('<p style="color: white">Highest Contributing Agent *</p>'),
           alignment: 'center',
-          cellTemplate: function (cellElement, cellInfo) {
+          cellTemplate: function(cellElement, cellInfo) {
             var tipid = cellInfo.rowIndex;
             var sitetextid = cellInfo.rowIndex + "s";
             console.log(tipid)
             console.log(sitetextid)
             $("<div id=" + tipid + "></div><div id=" + sitetextid + "><div>").text(cellInfo.data['Most Efficient Agent']).appendTo(cellElement);
             $("#" + tipid).dxTooltip({
-                target: "#" + sitetextid,
-                showEvent: "dxhoverstart",
-                hideEvent: "dxhoverend",
-                position: "top",
-                contentTemplate: function (contentElement) {
-                    contentElement.html("<p>"+cellInfo.data['tooltip'] +"</p>");
-                },
-                
+              target: "#" + sitetextid,
+              showEvent: "dxhoverstart",
+              hideEvent: "dxhoverend",
+              position: "top",
+              contentTemplate: function(contentElement) {
+                contentElement.html("<p>" + cellInfo.data['tooltip'] + "</p>");
+              },
+
             });
           }
-          
+
         }
       ],
     });

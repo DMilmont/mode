@@ -1,14 +1,6 @@
 
-with cdk_api as (
-SELECT dp.dpid,
-       case when properties -> 'cdk_extract_id' <> 'null' then 'CDK API' else '' end AS "cdk_api"
-FROM public.dealer_partner_properties dpp
-left join public.dealer_partners dp ON dp.id = dpp.dealer_partner_id
-WHERE date > (date_trunc('day', now()) - INTERVAL '1 day')
-)
 
-
-,date_dpid as (
+with date_dpid as (
 select c.month_year, dp.dpid, sf.status, dp.status dp_status, sf.success_manager, sf.actual_live_date, sf.dealer_group, dp.name, dp.tableau_secret as dpsk
 from fact.d_cal_month c
 cross join (
@@ -146,18 +138,17 @@ GROUP BY date_trunc('month', cohort_date_utc), dpid
 
 
 select
-  to_char(dd.month_year, 'Month') || ' ' || to_char(dd.month_year, 'YYYY') as "Month"
+  --to_char(dd.month_year, 'Month') || ' ' || to_char(dd.month_year, 'YYYY') as "Month"
 
 
-, dd.name as "Dealership"
+ dd.name as "Dealership"
 , dd.dealer_group as "Dealer Group"
-, dd.status as "SF Status"
-, dd.dp_status as "DA Status"
-, dd.success_manager
-, dp.primary_make as "Primary Make"
+--, dd.status as "SF Status"
+--, dd.dp_status as "DA Status"
+--, dd.success_manager
+--, dp.primary_make as "Primary Make"
 , to_char(dd.actual_live_date,'yyyy_mm_dd') as "SF Go Live"
-, cdk_api
-, dpp.properties ->> 'crm_vendor' "Dealer Admin CRM"
+--, dpp.properties ->> 'crm_vendor' "Dealer Admin CRM"
 , COALESCE(sdd."MATCHED SALE", 0) "Matched Sales w/i 90 Days"
 , COALESCE(sdd."ALL SALES", 0) "All Sales"
 , COALESCE(dt.visitors, 0) as "Dealer Visitors"
@@ -165,7 +156,7 @@ select
 , COALESCE(et.online_express_visitors, 0) as "Online Express Visitors"
 , COALESCE(online_express_srp_visitors, 0) as "Online Express SRP Visitors"
 , COALESCE(online_express_vdp_visitors, 0) as "Online Express VDP Visitors"
-, dp.price_unlock_mode
+--, dp.price_unlock_mode
 , COALESCE(ROUND((op.online_prospects::numeric/et.online_express_visitors::numeric), 3), 0) as "Conversion to Online Prospect"
 , COALESCE(op.online_prospects, 0) as "Online Prospects"
 , COALESCE(isp.sum_in_store_prospects, 0) as "In-Store Prospects"
@@ -185,7 +176,7 @@ select
 , COALESCE("Service Plans Attached", 0) AS "Service Plans Attached"
 , COALESCE("Service Plans Completed", 0) AS "Service Plans Completed"
 , COALESCE("Final Deal Sent", 0) AS "Final Deal Sent"
-, dd.month_year::date as "Date"
+--, dd.month_year::date as "Date"
 
 
 from date_dpid dd
@@ -195,7 +186,7 @@ left join (
   FROM fact.agg_daily_dealer_traffic
   GROUP BY dpid, date_trunc('month', date)
   ) dt on dt.dpid = dd.dpid and dt.month_year = dd.month_year
-left join cdk_api ca on ca.dpid = dd.dpid
+
 LEFT JOIN dealer_partners dp  ON dd.dpid = dp.dpid
 left join public.dealer_partner_properties dpp on dpp.dealer_partner_id = dp.id
 left join online_express_vdp_traffic vdp on vdp.month_year = dd.month_year and vdp.dpid = dd.dpid
@@ -206,5 +197,5 @@ LEFT JOIN pivot_orders_agg poa ON dd.month_year = poa.month_year AND dd.dpid = p
 LEFT JOIN in_store_shares iss ON dd.month_year = iss.month_year AND dd.dpid = iss.dpid
 LEFT JOIN in_store_prospects isp ON dd.month_year = isp.month_year AND dd.dpid = isp.dpid
 left join report_layer.vw_share_open_rate sor on dd.month_year=sor.month_year and dd.dpid= sor.dpid 
-group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25, 26, 27, 28, 29,30,31,32,33,34,35,36,37
-ORDER BY dd.month_year::date desc, COALESCE(sdd."MATCHED SALE", 0) desc
+group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25, 26, 27, 28
+--ORDER BY dd.month_year::date desc, COALESCE(sdd."MATCHED SALE", 0) desc

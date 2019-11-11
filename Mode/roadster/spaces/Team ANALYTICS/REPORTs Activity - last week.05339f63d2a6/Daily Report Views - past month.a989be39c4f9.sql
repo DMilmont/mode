@@ -1,7 +1,5 @@
--- This report accesses the following tables - PLEASE KEEP THIS UPDATED --
--- public.ga2_pageviews
--- fact.salesforce_dealer_info
--- ga_pageviews
+-- Sean's Scheduled run of 'Reports Activity Last Week' Query: Daily Report Views - Past Month
+
 
 WITH 
     GA AS ( SELECT ga2_pageviews.id,

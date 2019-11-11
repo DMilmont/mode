@@ -15,7 +15,7 @@ SELECT
 start_date, 
 end_date, 
 dp.name,
-dealer_code,
+sf_set.dealer_code,
 'Week of ' ||  (EXTRACT(MONTH FROM start_date)) || '/' || (EXTRACT(DAY FROM start_date))  || ' - ' || (EXTRACT(MONTH FROM end_date)) || '/' || (EXTRACT(DAY FROM end_date)) "Title",
 tab1.*,
 'Measures' "Measures"
@@ -23,4 +23,7 @@ FROM tab1
 LEFT JOIN dealer_partners dp ON tab1.dpid = dp.dpid
 LEFT JOIN dts ON tab1."Rolling 7 Day Window" = dts."Rolling 7 Day Window"
 LEFT JOIN fact.shopper_assurance hsa ON tab1.dpid = hsa.dpid
+LEFT JOIN fact.mode_sfdc_status_set sf_set ON tab1.dpid = sf_set.dpid
 WHERE tab1."Rolling 7 Day Window" = (SELECT max("Rolling 7 Day Window") FROM dts)
+AND sf_set.dealer_code IS NOT NULL
+AND dp.status = 'Live'

@@ -4,7 +4,7 @@ with filter_for_dpids as (
   SELECT DISTINCT CASE WHEN di.dealer_group IS NULL THEN dealer_name ELSE di.dealer_group END dealer_group
   FROM fact.salesforce_dealer_info di
   INNER JOIN public.dealer_partners dp on di.dpid = dp.dpid
-  WHERE di.dpid = '{{ dpid }}' 
+  WHERE di.dpid IN ({{ dpid }})
 ),
 
 base_percentile_data as (
@@ -47,7 +47,7 @@ filter_for_dealer_group  as (
 SELECT DISTINCT dp.dpid
 FROM fact.salesforce_dealer_info di
 LEFT JOIN public.dealer_partners dp ON di.dpid = dp.dpid
-WHERE CASE WHEN dealer_group IS NULL THEN dealer_name ELSE dealer_group END = (SELECT * FROM filter_for_dpids)
+WHERE CASE WHEN dealer_group IS NULL THEN dealer_name ELSE dealer_group END IN (SELECT * FROM filter_for_dpids)
 --and dealer_group <> dp.name
 ), 
 

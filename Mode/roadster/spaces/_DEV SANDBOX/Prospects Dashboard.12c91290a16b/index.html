@@ -119,7 +119,7 @@
   <div class="row">
     <div class="col-md-12">
       <mode-chart id="Attachments"></mode-chart>
-      <!--<div id="Attachments_Data"></div>-->
+      <div id="Attachments_Data"></div>
     </div>
   </div>
 </div>
@@ -164,6 +164,7 @@
     var drillDownDataSource = {};
     var drillDownDataSource_basic = {};
     var drillDownDataSource_order = {};
+    var drillDownDataSource_attach = {};
 
     $('#prospect_basic').dxPivotGrid({
       allowSortingBySummary: true,
@@ -369,14 +370,14 @@
         enabled: true,
         fileName: "orders"
       },
-      // onCellClick: function(e) {
-      //   if (e.area == "data") {
-      //     var pivotGridDataSource_order = e.component.getDataSource();
-      //     drillDownDataSource_order = pivotGridDataSource_order.createDrillDownDataSource(e.cell);
-      //     order_specific_info.option("title", 'General Order Information');
-      //     order_specific_info.show();
-      //   }
-      // },
+      onCellClick: function(e) {
+        if (e.area == "data") {
+          var pivotGridDataSource_attach = e.component.getDataSource();
+          drillDownDataSource_attach = pivotGridDataSource_order.createDrillDownDataSource(e.cell);
+          order_specific_info.option("title", 'General Attachment Information');
+          order_specific_info.show();
+        }
+      },
       // How to add drill down
       dataSource: {
         store: attachments,
@@ -567,6 +568,68 @@
       }
     }).dxPopup("instance");
 
+    var order_specific_info = $("#order_specific_info").dxPopup({
+      width: 950,
+      height: 800,
+      closeOnOutsideClick: true,
+      contentTemplate: function(contentElement) {
+        $("<div />")
+          .addClass("drill-down3")
+          .dxDataGrid({
+            width: 900,
+            height: 700,
+            columnAutoWidth: true,
+            columns: [{
+                dataField: 'timestamp',
+                caption: 'Date',
+                alignment: 'center',
+                sortOrder: 'desc',
+                dataType: 'date',
+                //format: 'monthAndYear',
+              },
+              {
+                dataField: 'Customer Name',
+                caption: 'Customer Name',
+                alignment: 'center'
+              },
+              {
+                dataField: 'Customer Email',
+                caption: 'Customer Email',
+                alignment: 'center'
+              },
+              {
+                dataField: 'Agent',
+                caption: 'Agent',
+                alignment: 'center'
+              },
+              {
+                dataField: 'Order',
+                caption: 'Order Page',
+                alignment: 'center',
+                cellTemplate: function(container, options) {
+                  if (options.value) {
+                    $('<a>' + 'Link' + '</a>')
+                      .attr('href', options.value)
+                      .attr('target', '_blank')
+                      .appendTo(container);
+                  }
+                }
+              },
+            ]
+          }).appendTo(contentElement);
+      },
+      onShowing: function() {
+        $(".drill-down3")
+          .dxDataGrid("instance")
+          .option("dataSource", drillDownDataSource_order);
+      },
+      onShown: function() {
+        $(".drill-down3")
+          .dxDataGrid("instance")
+          .updateDimensions();
+      }
+    }).dxPopup("instance");
+    
     var order_specific_info = $("#order_specific_info").dxPopup({
       width: 950,
       height: 800,

@@ -1,20 +1,11 @@
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.common.css">
 <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.light.css">
 <link rel="stylesheet" media="screen" href="//d2yvqewjuuy0k6.cloudfront.net/fonts/232352/75E15E124468560E8.css">
 <script type="text/javascript" src="https://cdn3.devexpress.com/jslib/18.2.8/js/dx.all.js"></script>
-<script type="text/javascript" src="js/jquery-3.1.0.min.js"></script>
- 
-<!-- Reference either Knockout or AngularJS, if you do -->
-<script type="text/javascript" src="js/knockout-latest.js"></script>
-<script type="text/javascript" src="js/angular.min.js"></script>
- 
-<!-- DevExtreme themes -->
-<link rel="stylesheet" href="css/dx.common.css">
-<link rel="stylesheet" href="css/dx.light.css">
- 
-<!-- DevExtreme library -->
-<script src="dist/jszip.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+
 <style>
   .chart-header {
     display: none;
@@ -44,21 +35,17 @@
     font-family: "Gotham SSm A", "Gotham SSm B", Georgia
   }
 </style>
-<div class="mode-header embed-hidden">
-  <h1>{{ title }}</h1>
-  <p>{{ description }}</p>
-</div>
 
-<div class="mode-grid container">
+  <h1>Traffic Report - Test (toyotalegacy)</h1>
+
   <div class="row">
     <div class="col-md-12">
       <mode-chart id="chart_566e729f22fc" dataset="dataset" options="chart_options"></mode-chart>
-    
-      <mode-chart id="Summary_Pivot"></mode-chart>
+
     </div>
   </div>
-</div>
-  <div id="pivotgrid-chart"></div>
+
+   <mode-chart id="Summary_Pivot"></mode-chart>
 <script>
   var roadsterdx = {
     version: 1,
@@ -91,6 +78,8 @@
     }).dxChart("instance");
    */
     var summary = roadsterdx.getDataSource('GA_Metrics');
+    var zip = new JSZip();
+    
     var pivotGrid = $("#Summary_Pivot").dxPivotGrid({
       allowSortingBySummary: true,
       allowFiltering: true,
@@ -99,37 +88,55 @@
       showRowGrandTotals: false,
       showRowTotals: false,
       showColumnTotals: false,
-    /*  fieldChooser: {
-        enabled: true,
-        height: 400
-      },*/
-      export :{
-        enabled:true,
+        fieldPanel: {
+            showColumnFields: false,
+            showDataFields: false,
+            showFilterFields: true,
+            showRowFields: true,
+            allowFieldDragging: true,
+          	visible: true  
+        },
+    headerFilter: {
+            allowSearch: true,
+            showRelevantValues: true,
+            width: 300,
+            height: 400
+        },
+      // fieldChooser: {
+      //   enabled: true,
+      //   height: 400
+      // },
+     "export" :{
+            enabled: true,
+
       },
       dataSource: {
         retrieveFields: false,
+        export: {enable: true},
         fields: [{
             caption: "Channel Grouping",
             dataField: "channel_grouping",
             area: "row",
-            width: 150,
+            width: 100,
             alignment: 'center',
             sortBySummaryField: 'Users',
             sortOrder: 'desc',
             allowFiltering: true,
-             headerFilter: {
-                allowSearch: true
-            },
- 
           },  
           {
             caption: "Session Type",
             dataField: "session_type",
             area: "row",
-                        allowFiltering: true,
-             headerFilter: {
-                allowSearch: true
-            },
+      
+          },     {
+            caption: "New/Used",
+            dataField: "new_used",
+            area: "row"
+          },
+               {
+            caption: "SRP/VDP",
+            dataField: "srp_vdp",
+            area: "row"
           },
           {
             caption: "Prospect",
@@ -144,9 +151,18 @@
           {
             caption: "Source",
             dataField: "source",
+    
             area: "row"
           }
           , {
+            caption: "In-Store",
+            dataField: "in_store_flag",
+    
+            area: "filter",
+            filterType: 'include',
+            filterValues: ['Online'],
+          },
+          {
             caption: "Totals",
              dataField: "title",
             area: "column"
@@ -156,6 +172,7 @@
             caption: "Sessions",
             area: "data",
             summaryType: "sum",
+            allowFiltering: false,
             format: {
               type: "fixedPoint",
               precision: 0
@@ -249,7 +266,7 @@
               if (e.value('sessions') == 0) {
                 return 0;
               } else {
-                return Math.floor((e.value('duration') / e.value('sessions')) / 60) + ":" + ((e.value('duration') / e.value('sessions')) % 60 ?  Math.floor((e.value('duration') / e.value('sessions')) % 60): '00') ;
+                return Math.floor((e.value('duration') / e.value('sessions')) / 60) + ":" + ((e.value('duration') / e.value('sessions')) % 60 ? ('0' + Math.floor((e.value('duration') / e.value('sessions')) % 60)).slice(-2): '00') ;
                 
               }
 
@@ -313,6 +330,7 @@
       xAxis: {
         minorTickLength: 0,
         tickLength: 0,
+      tickInterval: 3600000*24,
                 type: 'date',
                labels: { formatter: function() {return Highcharts.dateFormat('%a, %b %e, %Y', this.value); } }
       },

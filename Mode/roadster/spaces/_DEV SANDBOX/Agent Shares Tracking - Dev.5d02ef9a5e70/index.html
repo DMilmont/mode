@@ -1,7 +1,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.common.css">
 <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.light.css">
-<link rel="stylesheet" media="screen" href="//d2yvqewjuuy0k6.cloudfront.net/fonts/232352/75E15E124468560E8.css"/>
+<link rel="stylesheet" media="screen" href="//d2yvqewjuuy0k6.cloudfront.net/fonts/232352/75E15E124468560E8.css">
 <script type="text/javascript" src="https://cdn3.devexpress.com/jslib/18.2.8/js/dx.all.js"></script>
 <style>
   .chart-header {
@@ -15,10 +15,11 @@
   BR {
     clear: right
   }
+
   .highcharts-background {
-borderColor:#FFFFFF;
-borderWidth:5px;
-}
+    borderColor: #FFFFFF;
+    borderWidth: 5px;
+  }
 
   a {
     text-decoration: underline;
@@ -33,7 +34,7 @@ borderWidth:5px;
 
   * {
     font-size: 100%;
-    font-family:  "Gotham SSm A", "Gotham SSm B", Georgia !important;
+    font-family: "Gotham SSm A", "Gotham SSm B", Georgia !important;
   }
 </style>
 <script>
@@ -74,6 +75,11 @@ borderWidth:5px;
       <mode-chart id="chart_b6122867cfd9" dataset="dataset" options="chart_options"></mode-chart>
     </div>
   </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-table id="table_c537c4d2998f" dataset="dataset" options="table_options"></mode-table>
+    </div>
+  </div>
   <div class="InvalidE">
     <h2><u>Failed Shares - Invalid Email</u></h2>
     <div class="row">
@@ -84,11 +90,9 @@ borderWidth:5px;
   </div>
   <p> ▶ Please click <a href="" id="link_p" target="_blank">Here</a> to update the <b>Job Title</b> for agents where its currently missing for dealer <span id="titleHolder"></span>. </p>
   <p> ▶ Share activity is counted based on date initially sent. Opened/Clicked status is based on current tracking information </p>
-   <p> ▶ * Highest Contributing Agent is determined by looking at an agents share contribution, click contribution and click thru rate.
+  <p> ▶ * Highest Contributing Agent is determined by looking at an agents share contribution, click contribution and click thru rate.
   </p>
 </div>
-
-
 <script>
   setTimeout(function() {
     var data = datasets.filter(function(d) {
@@ -109,11 +113,11 @@ borderWidth:5px;
     for (i = 0; i < Highcharts.charts.length; i++) {
 
       var chart = Highcharts.charts[i];
-      if (chart.container.closest("#chart_bbeadbd0b5be") != null) {
+      if (chart.container.closest("#chart_b6122867cfd9") != null) {
         chart.update({
-   chart: {
-        borderColor: '#FFFFFF',
-   },
+          chart: {
+            borderColor: '#FFFFFF',
+          },
           xAxis: {
             minorTickLength: 0,
             tickLength: 0,
@@ -133,11 +137,11 @@ borderWidth:5px;
 
       /* Focus on Chart # i */
       var chart = Highcharts.charts[i];
-      if (chart.container.closest("#chart_148435cbd26e") != null) {
+      if (chart.container.closest("#chart_99a3673845e3") != null) {
         chart.update({
-   chart: {
-        borderColor: '#FFFFFF',
-   },
+          chart: {
+            borderColor: '#FFFFFF',
+          },
           xAxis: {
 
             type: 'date', //this forces the xAxis to be a 'date type'
@@ -180,7 +184,7 @@ borderWidth:5px;
 
       /* Focus on Chart # i */
       var chart = Highcharts.charts[i];
-      if (chart.container.closest("#chart_148435cbd26e") != null) {
+      if (chart.container.closest("#chart_99a3673845e3") != null) {
 
         if (shares_delivered_max < 8) {
           chart.update({

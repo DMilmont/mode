@@ -115,7 +115,7 @@
         <th>Bounce Rate</th>
       </tr>
       <tr>
-        <th>Dealer + Expresss Site</th>
+        <th>Dealer + Express Site</th>
         <td>
           <div style="float:left" class="bullet de_duration"></div>
           <p style="float:right;" id="de_duration_v"></p>
@@ -290,13 +290,13 @@
     for (index = 0; index < data.length; ++index) {
       Y_value_d.push(data[index]['avg_session_duration_seconds']);
     }
-    var Y_Axis_d = Math.max.apply(Math, Y_value_d) * 1.03;
+    var Y_Axis_d = Math.max.apply(Math, Y_value_d) * 1;
     
     var Y_value_p = [];
     for (index = 0; index < data.length; ++index) {
       Y_value_p.push(data[index]['pageviews_per_session']);
     }
-    var Y_Axis_p = Math.max.apply(Math, Y_value_p) * 1.03;
+    var Y_Axis_p = Math.max.apply(Math, Y_value_p) * 1;
 
     var de = data.filter(function (de_p){
       return de_p.session_type=="Dealer + Express Site"
@@ -310,7 +310,7 @@
       return e_p.session_type=="Express Site Only"
     });
     
-     document.getElementById('de_duration_v').innerHTML = de[0]['avg_session_duration_time'];
+    document.getElementById('de_duration_v').innerHTML = de[0]['avg_session_duration_time'];
      document.getElementById('d_duration_v').innerHTML = d[0]['avg_session_duration_time'];
      document.getElementById('e_duration_v').innerHTML = e[0]['avg_session_duration_time'];
      
@@ -345,11 +345,11 @@ console.log(de)
     },
         };
         
-     var de_dur = $.extend({ value: de[0]['avg_session_duration_seconds'],  color: '#03367c' }, options_d),
+    var de_dur = $.extend({ value: de[0]['avg_session_duration_seconds'],  color: '#03367c' }, options_d),
         d_dur = $.extend({ value: d[0]['avg_session_duration_seconds'], color: '#ff8b33' }, options_d),
         e_dur = $.extend({ value: e[0]['avg_session_duration_seconds'],  color: '#27825c' }, options_d);
         
-         var de_page = $.extend({ value: de[0]['pageviews_per_session'],  color: '#03367c' }, options_p),
+     var     de_page = $.extend({ value: de[0]['pageviews_per_session'],  color: '#03367c' }, options_p),
         d_page = $.extend({ value: d[0]['pageviews_per_session'], color: '#ff8b33' }, options_p),
         e_page = $.extend({ value: e[0]['pageviews_per_session'],  color: '#27825c' }, options_p);
         
@@ -357,7 +357,7 @@ console.log(de)
         d_bounce_b = $.extend({ value: d[0]['bounce_rate'], color: '#ff8b33' }, options_b),
         e_bounce_b = $.extend({ value: e[0]['bounce_rate'],  color: '#27825c' }, options_b);
         
-     $('.de_duration').dxBullet(de_dur);
+    $('.de_duration').dxBullet(de_dur);
     $('.d_duration').dxBullet(d_dur);
     $('.e_duration').dxBullet(e_dur);
     

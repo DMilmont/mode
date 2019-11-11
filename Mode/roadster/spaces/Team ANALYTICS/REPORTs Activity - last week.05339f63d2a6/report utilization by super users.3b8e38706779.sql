@@ -1,3 +1,5 @@
+-- Sean's Scheduled run of 'Reports Activity Last Week' Query: Report utilization by Super Users
+
 /* Super Users are defined as users who view at least 2 different reports per week
 for at least 6 of the past 13 weeks.  */
 
@@ -81,6 +83,16 @@ WITH
              when cr.report in ('utilization', 'utilization v2', 'agent utilization') then '4.1 Agent/Utilization'
              when cr.report = 'certification' then '4.2 Agent/Certification'
              when cr.report = 'shares open rate' then '4.3 Agent/Shares Open Rate'
+             when cr.report = 'behavior' then '2.3 Traffic/Behavior [MODE]'
+             when cr.report = 'dealer group report' then '5.1 Dealer Group Report [MODE]'
+             when cr.report = 'overviewt' then '2.1 Traffic/Overview [MODE]'
+             when cr.report in ('prospect dashboard', 'prospects dashboard') then '3.1 Prospects/Prospect Dashboard [MODE]'
+             when cr.report = 'sales dashboard' then '3.2 Prospects/Sales Dashboard [MODE]'
+             when cr.report = 'session level metrics' then '2.4 Traffic/Session Level Metrics [MODE]'
+             when cr.report = 'shares open click rates' then '4.3 Agents/Shares Open Click Rates [MODE]'
+             when cr.report = 'top referring and landing page' then '2.2 Traffic/Top Referring and Landing Page [MODE]'
+             
+             
              else cr.report end as "Report"
         
         ,COALESCE(sum(sr.distinct_weeks),0) as "Distinct User-Weeks"
@@ -89,7 +101,7 @@ WITH
       from current_reports cr
       left join superuser_reports sr on sr.report = cr.report
       --where distinct_weeks >=2
-      --and total_report_views >=3
+      where  total_report_views >=1
       group by 1
       order by 1 asc
       

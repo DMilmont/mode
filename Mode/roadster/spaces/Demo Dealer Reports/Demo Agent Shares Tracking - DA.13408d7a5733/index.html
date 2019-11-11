@@ -264,18 +264,18 @@
       showRowLines: true,
       columnAutoWidth: true,
       wordWrapEnabled: true,
-      onCellPrepared: function(e) {
-        if (e.rowType == "header") {
-          e.cellElement.css('background', 'black')
-        };
-        if (e.value == 0) {
-          e.cellElement.css('color', 'white')
-        }
-      },
+      // onCellPrepared: function(e) {
+      //   if (e.rowType == "header") {
+      //     e.cellElement.css('background', 'black')
+      //   };
+      //   if (e.value == 0) {
+      //     e.cellElement.css('color', 'white')
+      //   }
+      // },
       columns: [{
           dataField: 'Time Frame',
 
-          headerCellTemplate: $('<p style="color: white">Time Frame</p>'),
+          // headerCellTemplate: $('<p style="color: white">Time Frame</p>'),
           //     sortOrder: 'asc',
           alignment: 'center',
           width: 145
@@ -283,13 +283,13 @@
         {
           dataField: 'Total Shares',
           dataType: 'number',
-          headerCellTemplate: $('<p style="color: white">Total Shares</p>'),
+          // headerCellTemplate: $('<p style="color: white">Total Shares</p>'),
           alignment: 'center'
         },
         {
           dataField: 'Total Opened',
           dataType: 'number',
-          headerCellTemplate: $('<p style="color: white">Total Opened</p>'),
+          // headerCellTemplate: $('<p style="color: white">Total Opened</p>'),
           alignment: 'center'
         },
         {
@@ -299,13 +299,13 @@
             precision: 0,
             type: 'percent'
           },
-          headerCellTemplate: $('<p style="color: white">Open Rate</p>'),
+          // headerCellTemplate: $('<p style="color: white">Open Rate</p>'),
           alignment: 'center'
         },
         {
           dataField: 'Total Clicked',
           dataType: 'number',
-          headerCellTemplate: $('<p style="color: white">Total Clicked</p>'),
+          // headerCellTemplate: $('<p style="color: white">Total Clicked</p>'),
           alignment: 'center'
         },
         {
@@ -315,12 +315,12 @@
             precision: 0,
             type: 'percent'
           },
-          headerCellTemplate: $('<p style="color: white">Click Thru Rate</p>'),
+          // headerCellTemplate: $('<p style="color: white">Click Thru Rate</p>'),
           alignment: 'center'
         },
         {
           dataField: 'Most Efficient Agent',
-          headerCellTemplate: $('<p style="color: white">Highest Contributing Agent *</p>'),
+          // headerCellTemplate: $('<p style="color: white">Highest Contributing Agent *</p>'),
           alignment: 'center',
           cellTemplate: function (cellElement, cellInfo) {
             var tipid = cellInfo.rowIndex;

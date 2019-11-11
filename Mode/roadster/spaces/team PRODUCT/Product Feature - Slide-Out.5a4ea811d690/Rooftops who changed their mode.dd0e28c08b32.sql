@@ -47,20 +47,38 @@ group by 1
 
 , change_interpretation as ( select
     cd.dpid
-    ,case when"Slide Out Start" > "Inline Start" then '---Inline to Slideout' else '>>>Slideout to Inline' end as "Switched from"
-    ,case when "Slide Out Start" > "Inline Start" then "Slide Out Start" else "Inline Start" end as "Action Date"
+    ,case when"Slide Out Start" > "Inline Start" then '...Inline to Slideout' else '>>Slideout to Inline' end as "Switched from"
+    ,case when "Slide Out Start" > "Inline Start" then "Slide Out Start"::date else "Inline Start"::date end as "Switch Date"
+    ,sf.actual_live_date::date as "Go Live"
     ,COALESCE(instore."In Store",0) as "Instore Orders Started, past 6w"
     ,COALESCE(instore."Online",0) as "Online Orders Started, past 6w"
-    ,"Inline Start"
-    ,"Inline End"
-    ,"Slide Out Start"
-    ,"Slide Out End"
+    ,"Inline Start"::date
+    ,"Inline End"::date
+    ,"Slide Out Start"::date
+    ,"Slide Out End"::date
 
     from change_dates cd
     left join instore on instore.dpid = cd.dpid 
+    LEFT JOIN fact.salesforce_dealer_info sf ON cd.dpid = sf.dpid
     )
     
     
-select * from change_interpretation
-order by "Action Date" DESC
+select dpid
+      ,"Switched from"
+      ,"Switch Date"::date 
+      ,"Go Live"::date 
+      ,("Switch Date" - "Go Live")::int "Days after Go Live"
+      , "Instore Orders Started, past 6w"
+      , "Online Orders Started, past 6w"
+      ,"Inline Start"::date
+      ,"Inline End"::date
+      ,("Inline End" - "Inline Start")::Int "Days Inline"
+      ,"Slide Out Start"::date
+      ,"Slide Out End"::date
+      ,("Slide Out End" - "Slide Out Start")::Int "Days Slide Out"
+
+from change_interpretation
+where ("Switch Date" - "Go Live")::int > 30
+
+order by "Switch Date" DESC
 

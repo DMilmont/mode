@@ -19,8 +19,8 @@ SELECT
     to_char(crm.msrp, '999,999') "MSRP",
     to_char(crm.invoice_price, '999,999')  "Invoice Price",
     to_char(crm.cash_price, '999,999') "Purchase Price",
-    to_char(crm.back_end_gross_profit, '999,999.99') "Front Gross",
-    to_char(crm.front_end_gross_profit, '999,999.99') "Back Gross",
+    to_char(crm.front_end_gross_profit, '999,999.99') "Front Gross",
+    to_char(crm.back_end_gross_profit, '999,999.99') "Back Gross",
     to_char(crm.total_gross, '999,999.99') "Total Gross",
     
     to_char(crm.down_payment, '999,999.99') "Down Payment",
@@ -66,8 +66,8 @@ left join fact.f_sale s on  s.crm_record_id = crm.id
 where  dp.dpid = '{{ dpid }}'
   and crm_type = 'cdk'
   and crm.status = 'Sold'
-  and item_type = 'Matched Sale'
+  and item_type = 'Sale'
   and crm.sold_at > sf.actual_live_date
-  --and crm.sold_at > now() - '3 months'::interval
+and crm.sold_at > now() - '3 months'::interval
 
 order by /*s.item_type asc,*/ crm.sold_at desc

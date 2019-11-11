@@ -29,19 +29,17 @@ LEFT JOIN min_session_id msi on ga.session_id=msi.min_session_id
 WHERE date_local >= (date_trunc('day', now()) - INTERVAL '31 Days')
 and date_local::date<  date(now()::date AT TIME ZONE 'PST')
 AND ga.dpid='{{ dpid }}'
+and COALESCE(session_type,'x')<>'Dealer Admin'
+ and COALESCE(new_used,'x')<>'Did Not Visit Inventory on Express'
+and  coalesce(srp_vdp,'x')<>'Did Not Visit Inventory on Express'
 group by 1,2,3,4,5,6,7,8,9,10
-),
-detail_breakout as (SELECT 'Day' as type
+)
+SELECT 'Day' as type
       ,* 
 FROM details     
 
 
-)
-SELECT * 
-FROM detail_breakout
-where  COALESCE(session_type,'x')<>'Dealer Admin'
- and COALESCE(new_used,'x')<>'Did Not Visit Inventory on Express'
-and  coalesce(srp_vdp,'x')<>'Did Not Visit Inventory on Express'
+
 
 
   

@@ -11,225 +11,221 @@
   <p>{{ description }}</p>
 </div>
 <div class="mode-grid container">
-      <h3 style='color: darkred;'>*BETA Report Currently Only Visible to Roadster</h3>
-       <h4>Please provide any feedback <a href="https://roadsterteam.atlassian.net/wiki/spaces/AN/pages/370607213/Top+Visited+Vins+Feedback" target="_blank" >Here </a></h4>
-        <div id="Summary_Pivot"></div>
-    </div>
-
-
-
-  <script>
-    var roadsterdx = {
-      version: 1,
-      getDataSource: function(queryName) {
-        // find the right data on the page, by name
-        var ii = 0;
-        var theSet = null;
-        for (ii = 0; ii < datasets.length; ii++) {
-          if (datasets[ii].queryName == queryName) {
-            theSet = datasets[ii].content;
-            break;
-          }
+   <h2>Top Visited <u>New</u> Vins - Past 30 Days </h2>
+  <h4 style="color: darkred;">*BETA Report Currently Only Visible to Roadster</h4>
+  <h4>Please provide any feedback <a href="https://roadsterteam.atlassian.net/wiki/spaces/AN/pages/370607213/Top+Visited+Vins+Feedback" target="_blank">Here </a></h4>
+  <div id="Summary_Pivot"></div>
+</div>
+<script>
+  var roadsterdx = {
+    version: 1,
+    getDataSource: function(queryName) {
+      // find the right data on the page, by name
+      var ii = 0;
+      var theSet = null;
+      for (ii = 0; ii < datasets.length; ii++) {
+        if (datasets[ii].queryName == queryName) {
+          theSet = datasets[ii].content;
+          break;
         }
-        if (!theSet) {
-          theSet = [];
-        }
+      }
+      if (!theSet) {
+        theSet = [];
+      }
 
-        return theSet;
+      return theSet;
+
+    },
+  };
+  $(function() {
+    /*     var pivotGridChart = $("#pivotgrid-chart").dxChart({
+            dataSource: summary,
+            commonSeriesSettings: {
+                type: "bar",
+                argumentField:"date",
+            },
+     
+        }).dxChart("instance");
+      */
+    var summary = roadsterdx.getDataSource('Vin_Metrics_new');
+    var zip = new JSZip();
+
+
+
+    var pivotGrid = $("#Summary_Pivot").dxPivotGrid({
+      allowSortingBySummary: true,
+      allowFiltering: true,
+      showBorders: true,
+      showColumnGrandTotals: false,
+      showRowGrandTotals: false,
+      showRowTotals: false,
+      showColumnTotals: false,
+      fieldPanel: {
+        showColumnFields: false,
+        showDataFields: false,
+        showFilterFields: true,
+        showRowFields: true,
+        allowFieldDragging: true,
+        visible: true
+      },
+      headerFilter: {
+        allowSearch: true,
+        showRelevantValues: true,
+        visible: true,
 
       },
-    };
-    $(function() {
-      /*     var pivotGridChart = $("#pivotgrid-chart").dxChart({
-              dataSource: summary,
-              commonSeriesSettings: {
-                  type: "bar",
-                  argumentField:"date",
-              },
-       
-          }).dxChart("instance");
-        */
-      var summary = roadsterdx.getDataSource('Vin_Metrics_new');
-      var zip = new JSZip();
+      // fieldChooser: {
+      //   enabled: true,
+      //   height: 400
+      // },
+      "export": {
+        enabled: true,
+        fileName: "new_vin_metrics"
+      },
 
-
-
-      var pivotGrid = $("#Summary_Pivot").dxPivotGrid({
-        allowSortingBySummary: true,
-        allowFiltering: true,
-        showBorders: true,
-        showColumnGrandTotals: false,
-        showRowGrandTotals: false,
-        showRowTotals: false,
-        showColumnTotals: false,
-        fieldPanel: {
-          showColumnFields: false,
-          showDataFields: false,
-          showFilterFields: true,
-          showRowFields: true,
-          allowFieldDragging: true,
-          visible: true
+      dataSource: {
+        retrieveFields: false,
+        export: {
+          enable: true
         },
-        headerFilter: {
-          allowSearch: true,
-          showRelevantValues: true,
-           visible: true,
- 
-        },
-        // fieldChooser: {
-        //   enabled: true,
-        //   height: 400
-        // },
-        "export": {
-          enabled: true,
-          fileName: "new_vin_metrics"
-        },
+        fields: [
 
-        dataSource: {
-          retrieveFields: false,
-          export: {
-            enable: true
-          },
-          fields: [
-
-            {
-              caption: "Model",
-              dataField: "model",
-              width: 120,
-              area: "row",
-              sortBySummaryField: 'vdp_views',
-              sortOrder: 'desc',
-              allowFiltering: true,
-
-            },
-            {
-              caption: "Trim",
-              dataField: "trim",
-              area: "row",
-              width: 100,
-              alignment: 'center',
+          {
+            caption: "Model",
+            dataField: "model",
+            width: 120,
+            area: "row",
             sortBySummaryField: 'vdp_views',
-              sortOrder: 'desc',
-              allowFiltering: true,
+            sortOrder: 'desc',
+            allowFiltering: true,
+
+          },
+          {
+            caption: "Trim",
+            dataField: "trim",
+            area: "row",
+            width: 100,
+            alignment: 'center',
+            sortBySummaryField: 'vdp_views',
+            sortOrder: 'desc',
+            allowFiltering: true,
 
 
-            },
-            {
-              caption: "VIN",
-              dataField: "vin",
+          },
+          {
+            caption: "VIN",
+            dataField: "vin",
 
-              area: "row",
-              sortBySummaryField: 'vdp_views',
-              sortOrder: 'desc',
-              allowFiltering: true,
+            area: "row",
+            sortBySummaryField: 'vdp_views',
+            sortOrder: 'desc',
+            allowFiltering: true,
 
-            },
-            {
-              caption: "Year",
-              dataField: "year",
-              area: "filter"
-            },
-            {
-              caption: "Body",
-              dataField: "body",
-              area: "filter"
-            },   
-            {
-              caption: "Color",
-              dataField: "exterior_color_rgb",
-              area: "row",
-              sortBySummaryField: 'vdp_views',
-              sortOrder: 'desc',
-              headerFilter:{
-                datasource: [
-                      {
-                        
-                        template: function(e) {
-                        return   e.cellElement.html(e.cell.text);
-                          }
-                      },
-                  ]
-                
-              }
-              
+          },
+          {
+            caption: "Year",
+            dataField: "year",
+            area: "filter"
+          },
+          {
+            caption: "Body",
+            dataField: "body",
+            area: "filter"
+          },
+          {
+            caption: "Color",
+            dataField: "exterior_color_rgb",
+            area: "row",
+            sortBySummaryField: 'vdp_views',
+            sortOrder: 'desc',
+            headerFilter: {
+              datasource: [{
 
-            },
+                template: function(e) {
+                  return e.cellElement.html(e.cell.text);
+                }
+              }, ]
 
-            {
-              caption: "Totals",
-              dataField: "title",
-              area: "column"
-            },
-            {
-              dataField: "vdp_views",
-              caption: "Pageviews",
-              area: "data",
-              summaryType: "sum",
-              allowFiltering: false,
-              format: {
-                type: "fixedPoint",
-                precision: 0
-              }
-            },        {
-              dataField: "buy_activity_cnt",
-              caption: "Purchase Events",
-              visible: true,
-              area: "data",
-              summaryType: "sum",
-              format: {
-                type: "fixedPoint",
-                precision: 0
-              }
-            },{
-              dataField: "unique_viewers",
-              caption: "Unique Users",
-              area: "data",
-              summaryType: "sum",
-              format: {
-                type: "fixedPoint",
-                precision: 0
-              }
-            }, {
-              dataField: "unique_prospects",
-              caption: "Prospects",
-              visible: true,
-              area: "data",
-              summaryType: "sum",
-              format: {
-                type: "fixedPoint",
-                precision: 0
-              }
-            },
-      
-             {
-              dataField: "buy_activity_users",
-              caption: "Users w/ Purchase Events",
-              visible: true,
-              area: "data",
-              summaryType: "sum",
-              format: {
-                type: "fixedPoint",
-                precision: 0
-              }
-            },
-          ],
-          store: summary
-        },
-        onCellPrepared: function(e){
-    if ( e.area ==='row' && e.cell.text && e.cell.text.length >= 28  )// && e.cell.text.startsWith('<'))// & e.cell.text.length>=15 && e.cell.text.indexOf(' ') <= 0)
-     
-    { 
-    
-      e.cellElement.html(e.cell.text); 
-    }
-      if (e.area == "data" )  
-        e.cellElement.css("text-align", "center"); 
-     
-    }
-      }).dxPivotGrid("instance");
+            }
+
+
+          },
+
+          {
+            caption: "Totals",
+            dataField: "title",
+            area: "column"
+          },
+          {
+            dataField: "vdp_views",
+            caption: "Pageviews",
+            area: "data",
+            summaryType: "sum",
+            allowFiltering: false,
+            format: {
+              type: "fixedPoint",
+              precision: 0
+            }
+          }, {
+            dataField: "buy_activity_cnt",
+            caption: "Purchase Events",
+            visible: true,
+            area: "data",
+            summaryType: "sum",
+            format: {
+              type: "fixedPoint",
+              precision: 0
+            }
+          }, {
+            dataField: "unique_viewers",
+            caption: "Unique Users",
+            area: "data",
+            summaryType: "sum",
+            format: {
+              type: "fixedPoint",
+              precision: 0
+            }
+          }, {
+            dataField: "unique_prospects",
+            caption: "Prospects",
+            visible: true,
+            area: "data",
+            summaryType: "sum",
+            format: {
+              type: "fixedPoint",
+              precision: 0
+            }
+          },
+
+          {
+            dataField: "buy_activity_users",
+            caption: "Users w/ Purchase Events",
+            visible: true,
+            area: "data",
+            summaryType: "sum",
+            format: {
+              type: "fixedPoint",
+              precision: 0
+            }
+          },
+        ],
+        store: summary
+      },
+      onCellPrepared: function(e) {
+        if (e.area === 'row' && e.cell.text && e.cell.text.length >= 28) // && e.cell.text.startsWith('<'))// & e.cell.text.length>=15 && e.cell.text.indexOf(' ') <= 0)
+
+        {
+
+          e.cellElement.html(e.cell.text);
+        }
+        if (e.area == "data")
+          e.cellElement.css("text-align", "center");
+
+      }
+    }).dxPivotGrid("instance");
 
 
 
 
-    });
-  </script>
+  });
+</script>

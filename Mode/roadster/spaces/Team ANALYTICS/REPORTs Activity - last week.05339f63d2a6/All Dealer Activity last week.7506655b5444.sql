@@ -1,4 +1,4 @@
-
+-- Sean's Scheduled run of 'Reports Activity Last Week' Query: All Dealer Activity Last Week
 
 -- Grab Pageviews from GA
 WITH tGA AS

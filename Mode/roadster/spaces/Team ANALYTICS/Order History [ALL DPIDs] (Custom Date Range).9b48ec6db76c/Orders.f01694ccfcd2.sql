@@ -202,6 +202,7 @@ SELECT
 
 select  
   dp.dpid as "DPID"
+  ,sf.dealer_group
   --,os.cancelled,os.complete 
   ,case when os.cancelled = 'Cancelled' then 'Cancelled' when os.complete = 'Complete' then 'Complete' else 'Open' end as "Status"
   ,o.order_type "Order Type"
@@ -258,7 +259,7 @@ left join serviceplans on serviceplans.order_id = os.order_id
 left join public.trade_ins ti on ti.order_id = os.order_id 
 --left join public.trade_in_offer tio on tio.order_id = os.order_id
 left join public.trade_in_completed tc on tc.order_id = os.order_id  
-
+left join fact.salesforce_dealer_info sf on sf.dpid = dp.dpid 
 
 where orderstart >= '{{start_date}}'::date 
 and orderstart <= '{{end_date}}'::date 

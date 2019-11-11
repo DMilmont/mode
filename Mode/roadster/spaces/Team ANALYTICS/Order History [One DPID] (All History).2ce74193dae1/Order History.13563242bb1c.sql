@@ -172,14 +172,14 @@ SELECT
      ,max(agent_id) "agent_id"
      ,min(timestamp) as "orderstart"
      ,max(timestamp) as "laststep"
-     ,max(case when "Item Type" = 'Order Submitted' then '✓' end) as "os"
-     ,max(case when "Item Type" = 'Deal Sheet Sent' then '✓' end) as "ds"
-     ,max(case when "Item Type" = 'Deal Sheet Accepted' then '✓' end) as "da"
-     ,max(case when "Item Type" = 'Credit Completed' then '✓' end) as "cc"
-     ,max(case when "Item Type" = 'Service Plans Completed' then '✓' end) as "sp"
-     ,max(case when "Item Type" = 'Accessories Completed' then '✓' end) as "ac"
-     ,max(case when "Item Type" = 'Final Deal Sent' then '✓' end) as "fds"
-     ,max(case when "Item Type" = 'Final Deal Accepted' then '✓' end) as "fda"
+     ,max(case when "Item Type" = 'Order Submitted' then 'os' end) as "os"
+     ,max(case when "Item Type" = 'Deal Sheet Sent' then 'ds' end) as "ds"
+     ,max(case when "Item Type" = 'Deal Sheet Accepted' then 'da' end) as "da"
+     ,max(case when "Item Type" = 'Credit Completed' then 'cc' end) as "cc"
+     ,max(case when "Item Type" = 'Service Plans Completed' then 'sp' end) as "sp"
+     ,max(case when "Item Type" = 'Accessories Completed' then 'ac' end) as "ac"
+     ,max(case when "Item Type" = 'Final Deal Sent' then 'fds' end) as "fds"
+     ,max(case when "Item Type" = 'Final Deal Accepted' then 'fda' end) as "fda"
      ,max(case when "Item Type" = 'Order Completed' then 'Complete' end) as "complete"
      ,max(case when "Item Type" = 'Order Cancelled' then 'Cancelled' end) as "cancelled"
      
@@ -247,7 +247,8 @@ select
   ,tio.source "TradeOffer Source"
   ,tc.timestamp "TradeComplete Timestamp"
   ,tc.duration "TradeComplete Duration"
-
+  ,dp.primary_make "Dealer Primary Make"
+  --,sf.actual_live_date
   
 
 
@@ -261,8 +262,8 @@ left join serviceplans on serviceplans.order_id = os.order_id
 left join public.trade_ins ti on ti.order_id = os.order_id 
 left join public.trade_in_offer tio on tio.order_id = os.order_id
 left join public.trade_in_completed tc on tc.order_id = os.order_id  
+left join fact.salesforce_dealer_info sf on sf.dpid = dp.dpid
 
-
-where dpid = '{{dpid}}'
+where dp.dpid = '{{dpid}}'
 order by os.orderstart desc 
 

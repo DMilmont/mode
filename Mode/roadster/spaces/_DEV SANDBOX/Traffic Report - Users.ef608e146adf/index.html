@@ -2,6 +2,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.common.css">
 <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/18.2.8/css/dx.light.css">
 <link rel="stylesheet" media="screen" href="//d2yvqewjuuy0k6.cloudfront.net/fonts/232352/75E15E124468560E8.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
 <script type="text/javascript" src="https://cdn3.devexpress.com/jslib/18.2.8/js/dx.all.js"></script>
 <style>
   .chart-header {
@@ -47,21 +48,38 @@
   font-family: 'DXIcons'!important;
 }
 </style>
+<script>
+  // Pull in the Data Group Name for displaying in the title tag
+  var data = datasets.filter(function(d) {
+    return d.queryName == "Monthly Traffic - Summary";
+  })[0].content;
+  var dpid = data[0]['dpid']
+
+  var link = "https://modeanalytics.com/roadster/reports/e6826888aa30?max_age=3600&param_dpid="
+  var link1="https://modeanalytics.com/roadster/reports/e566cf30926b?max_age=3600&param_dpid="
+  var link_p = link.concat(dpid);
+  var link_h =link1.concat(dpid);
+ document.getElementById("link_p").href = link_p;
+document.getElementById("link_h").href = link_h;
+</script>
 <div class="mode-header embed-hidden">
   <h1>{{ title }}</h1>
+  <h4>Click <a href="" id="link_p"> Here</a> to understand user behavior on dealer and express site.</h4>
+  <h4>Click <a href="" id="link_h"> Here</a> to view historic session metrics by segments..</h4>
+  <h4>Please provide any feedback <a href="https://roadsterteam.atlassian.net/wiki/spaces/AN/pages/350388229/Traffic+Reporting+2.0+Feedback" target="_blank" >Here </a></h4>
   <p>{{ description }}</p>
 </div>
 <div class="mode-grid container">
 
   <div class="row" data-row-height="large">
     <div class="col-md-12">
-      <h2>Online Performance Metrics</h2>
+      <h2><u>Online Performance Metrics</u></h2>
       <p><em>Here you can view monthly metrics</em></p>
       <mode-chart id="Summary_Pivot"></mode-chart>
     </div>
   </div>
   <div class="row">
-    <h2>Online Express Website Performance</h2>
+    <h2><u>Online Express Website Performance</u></h2>
     <div class="col-md-6">
       <h3>Express Visitors</h3>
       <mode-chart id="chart_be6aa0a1a882" dataset="dataset" options="chart_options"></mode-chart>
@@ -72,7 +90,7 @@
     </div>
   </div>
   <div class="row">
-    <h2>Online Prospect Performance</h2>
+    <h2><u>Online Prospect Performance</u></h2>
     <div class="col-md-6">
       <h3>Prospects</h3>
       <mode-chart id="chart_39e5aa6846ca" dataset="dataset" options="chart_options"></mode-chart>
@@ -82,6 +100,10 @@
       <mode-chart id="chart_f3ecf1fd8770" dataset="dataset" options="chart_options"></mode-chart>
     </div>
   </div>
+  <h2><u>Notes</u></h2>
+   <p> ▶ Visitors are counted as distinct users for the month </p>
+   <p> ▶ Express Ratio is calculated as Express Visitors over Dealer Visitors </p>
+   <p> ▶ Conversion to Online Prospect is calculated as Prospects over Express Visitors</p>
 </div>
 <script>
 setTimeout(function() {  
@@ -172,7 +194,7 @@ setTimeout(function() {
 
   $(function() {
     var summary_UP = roadsterdx.getDataSource('Monthly Traffic - Summary');
-    $("#Summary_Pivot").dxPivotGrid({
+   var pivot1= $("#Summary_Pivot").dxPivotGrid({
       allowSortingBySummary: true,
       allowFiltering: true,
       showBorders: true,
@@ -180,7 +202,18 @@ setTimeout(function() {
       showRowGrandTotals: false,
       showRowTotals: false,
       showColumnTotals: false,
-
+      "export": {
+            enabled: true,
+            fileName: "traffic_users"
+        },
+                 fieldPanel: {
+        showColumnFields: false,
+        showDataFields: false,
+        showFilterFields: true,
+        showRowFields: true,
+        allowFieldDragging: true,
+        visible: true
+      },
       fieldChooser: {
         enabled: true,
         height: 400
@@ -194,18 +227,15 @@ setTimeout(function() {
             width: 80,
             alignment: 'center',
             dataType: 'date',
-            format: 'MMM y'
-
+            format: 'MMM y',
+             expanded: true,
 
           }, {
             caption: "Price Unlock",
             dataField: "Price Unlock",
-            area: "row"
-          }, {
-            caption: "In Store",
-            dataField: "In Store",
-            width: 60,
-            area: "row"
+            width: 135,
+            area: "row",
+              expanded: true,
           },
           {
             caption: "Totals",
@@ -250,6 +280,27 @@ setTimeout(function() {
               precision: 1,
               type: 'percent'
             },
+            
+            
+            cellTemplate: function (cellElement, cellInfo) {
+            var tipid = cellInfo.rowIndex;
+            var sitetextid = cellInfo.rowIndex + "s";
+            console.log(tipid)
+            console.log(sitetextid)
+            $("<div id=" + tipid + "></div><div id=" + sitetextid + "><div>").text(cellInfo.data['Express Ratio']).appendTo(cellElement);
+            $("#" + tipid).dxTooltip({
+                target: "#" + sitetextid,
+                showEvent: "dxhoverstart",
+                hideEvent: "dxhoverend",
+                position: "top",
+                contentTemplate: function (contentElement) {
+                    contentElement.html("<p>"+ cellInfo.data['express_visitors'] +"</p>");
+                }
+            });
+          } 
+            
+            
+            
           },
           {
             caption: "Express SRP Visitors",
@@ -321,6 +372,16 @@ setTimeout(function() {
       }
 
     }).dxPivotGrid("instance");
+    function expand() {
+      var dataSource = pivot1.getDataSource();
+  
+      dataSource.expandHeaderItem("row", ["Jan 2019"]);
+   
+    };
+
+    setTimeout(expand, 0);
+
+    
   });
 
   $(function() {
@@ -332,6 +393,13 @@ setTimeout(function() {
       showRowLines: true,
       columnAutoWidth: true,
       wordWrapEnabled: true,
+  
+          headerFilter: {
+        allowSearch: true,
+        showRelevantValues: true,
+        width: 300,
+        height: 400
+      },
       onCellPrepared: function(e) {
         if (e.rowType == "header") {
           e.cellElement.css('background', 'black')

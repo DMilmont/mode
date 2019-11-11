@@ -1,4 +1,4 @@
-WITH Overlay_Dealers as (select distinct dpid, properties->>'embedded_checkout_frame' 
+WITH /*Overlay_Dealers as (select distinct dpid, properties->>'embedded_checkout_frame' 
                       from dealer_partner_properties
                       left join dealer_partners dp on dealer_partner_properties.dealer_partner_id = dp.id
                       where  properties->>'embedded_checkout_frame' ='true'
@@ -11,7 +11,7 @@ demo_dealers as ( select distinct dpid
                   where status = 'Live'
                        and dpid like '%demo%'
 ),
-
+*/
 dealer_visits as ( SELECT month_year
                           ,dpid
                           ,false as is_in_store
@@ -92,7 +92,8 @@ price_unlock as (select dpid
                   )
 
 
-SELECT ev.month_year + 1  as "Month Year"
+SELECT ev.dpid as dpid
+      ,ev.month_year + 1  as "Month Year"
       ,pu.price_unlock as "Price Unlock"
       ,case when ev.is_in_store is true then 'In-Store' else 'Online' end as "In Store"
       ,coalesce(dv.dealer_visits,0) as dealer_visitors
@@ -109,4 +110,4 @@ left join dealer_visits dv on ev.month_year=dv.month_year and ev.is_in_store =dv
 left join express_visits_SRP evs on ev.month_year=evs.month_year and ev.is_in_store=evs.is_in_store
 left join express_visits_VDP evv on ev.month_year=evv.month_year and ev.is_in_store=evv.is_in_store
 left join online_prospects op on ev.month_year=op.month_year and ev.is_in_store=op.is_in_store
-
+where ev.is_in_store is false

@@ -74,6 +74,7 @@ document.getElementById("link_h").href = link_h;
   </div>
 </div>
 <mode-chart id="Summary_Pivot"></mode-chart>
+      <div id="pivot_popout"></div>
   </div>
   <h2><u>Notes</u></h2>
    <!--<p> • Data table is Pivot-Grid which is meant to mimic functionality from Pivot Table. All fields are customizable. <a href="https://roadsterteam.atlassian.net/wiki/spaces/AN/pages/350388225/Pivot+Grid+Walkthrough" >See Tutorial.</a></p>-->
@@ -148,20 +149,32 @@ document.getElementById("link_h").href = link_h;
             enabled: true,
             fileName: "traffic_users"
         },
-//         onCellPrepared: function(e) {  
-//             if (DevExpress.devices.current().deviceType === "phone" ) {  
-//                 e.cellElement.css({ 'font-size': '10px' });
-     
-//                 // pivotGridInstance.getDataSource().field(1, { area: 'filter'} );
-//             }  
-// },
+      onCellClick: function(e) {
+        if (e.area == "data") {
+          var pivotGridDataSource = e.component.getDataSource(),
+            rowPathLength = e.cell.rowPath.length,
+            rowPathName = e.cell.rowPath[rowPathLength - 1],
+            popupTitle = (rowPathName ? rowPathName : "Total") + " Drill Down Data";
 
+          drillDownDataSource = pivotGridDataSource.createDrillDownDataSource(e.cell);
+          pivot_popout.option("title", 'Lead Specific Information');
+          pivot_popout.show();
+        }
+      },
       dataSource: {
         retrieveFields: false,
         export: {
           enable: true
         },
-        fields: [{
+        fields: [
+          
+               {
+            caption: "Session Type",
+            dataField: "session_type",
+            area: "row",
+
+          },
+          {
             caption: "Channel Grouping",
             dataField: "channel_grouping",
             area: "row",
@@ -171,20 +184,24 @@ document.getElementById("link_h").href = link_h;
             sortOrder: 'desc',
             allowFiltering: true,
           },
+             {
+            caption: "Source",
+            dataField: "source",
+
+            area: "row",
+            sortBySummaryField: 'Users',
+            sortOrder: 'desc',
+            
+          }, 
                     {
             caption: "Medium",
             dataField: "medium",
-            area: "row"
+            area: "filter"
           },
-          {
-            caption: "Session Type",
-            dataField: "session_type",
-            area: "row",
-
-          }, {
+      {
             caption: "New/Used",
             dataField: "new_used",
-            area: "row"
+            area: "filter"
           },
           {
             caption: "SRP/VDP",
@@ -197,12 +214,7 @@ document.getElementById("link_h").href = link_h;
             area: "filter"
           },
 
-          {
-            caption: "Source",
-            dataField: "source",
-
-            area: "filter"
-          }, {
+       {
             caption: "In-Store",
             dataField: "in_store_flag",
 
@@ -237,6 +249,7 @@ document.getElementById("link_h").href = link_h;
           }, {
             dataField: "new_users",
             caption: "New Users",
+              visible: true,
             area: "data",
             summaryType: "sum",
             format: {
@@ -293,7 +306,7 @@ document.getElementById("link_h").href = link_h;
 
             format: {
               type: "fixedPoint",
-              precision: 2
+              precision: 1
             }
           },
 
@@ -326,47 +339,36 @@ document.getElementById("link_h").href = link_h;
               type: "fixedPoint",
               precision: 2
             }
-          }, {
-            caption: "Avg Session Duration",
-            area: "data",
-            summaryType: "custom",
-            visible: false,
-            calculateSummaryValue: e => {
-              if (e.value('sessions') == 0) {
-                return 0;
-              } else {
-                return e.value('duration') / e.value('sessions');
-
-              }
-
-            },
-
-            format: {
-              type: "fixedPoint",
-              precision: 2
-            }
-          }
-
+          }, 
         ],
         store: summary
-      }
+      },
+          fieldChooser: {
+            enabled: true
+        } 
     }).dxPivotGrid("instance");
 
 
-//   var pivot = $("#pivotGridContainer").dxPivotGrid("instance");
-//                               var ds = pivot.getDataSource();
-        
-//           onCellPrepared: function(e) {  
-//             if (DevExpress.devices.current().deviceType === "phone" ) { 
-//                               // e.cellElement.css({ 'font-size': '10px' });
-                            
-//                               ds.field("Source", { area: "filter" });
-//                               ds.load();
-
-//             }  
-// },
-                
-
+  // var pivot_popout = $("#pivot_popout").dxPivotGridFieldChooser({
+     
+  //   dataSource: pivotGrid.getDataSource(),
+  //     width: 400,
+  //     height: 400,
+  //     closeOnOutsideClick: true,
+  //     position: {
+  //       my: 'center',
+  //       at: 'center',
+  //       of: '#pivot_popout'
+  //     },
+  //     texts: {
+  //           allFields: "All",
+  //           columnFields: "Columns",
+  //           dataFields: "Data",
+  //           rowFields: "Rows",
+  //           filterFields: "Filter"
+  //       },
+  
+  //   }).dxPivotGridFieldChooser("instance");
 
 
   });

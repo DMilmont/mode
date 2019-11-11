@@ -50,6 +50,7 @@ data_open_hours <- data_open_hours %>%
   ungroup() %>%
   filter(total_rows > 1) 
   
+avg <- mean(data$perc_hour_byday)
 
 p <- data %>% 
   ggplot(aes(x = day_week, y = hr_day, fill = perc_hour_byday)) +
@@ -58,6 +59,6 @@ p <- data %>%
   guides(fill=FALSE) + 
   theme(text = element_text(family="Gotham")) +
   theme_minimal() + 
-  scale_fill_gradient2(low = 'blue', mid = 'white', high = 'red') +
+  scale_fill_gradient2(low = 'steelblue', mid = 'white', high = 'red', midpoint = avg) +
   geom_text(aes(label = char_perc_hour)) +
   geom_tile(data = data_open_hours, alpha=0, color = 'black', size = .5)

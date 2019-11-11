@@ -11,6 +11,7 @@
     padding: 0;
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
   }
+
   .fixed-nav-bar a {
     padding: 10px;
     display: inline-block;
@@ -18,14 +19,17 @@
     font-size: 13px;
     color: rgb(78, 77, 77);
   }
+
   .fixed-nav-bar a:hover {
     background-color: #f27802;
     text-decoration: none;
     color: white;
   }
+
   .has-nav {
     padding-top: 3em;
   }
+
   @media (max-width: 767px) {
     .fixed-nav-bar {
       position: fixed;
@@ -36,10 +40,12 @@
       box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
     }
   }
+
   .dx-theme-border-color-as-background-color {
     background-color: #fff !important;
     fill: #fff !important;
   }
+
   * {
     /*font-family: 'Helvetica Neue', 'Segoe UI', Helvetica, Verdana, sans-serif !important;*/
     vertical-align: middle !important;
@@ -93,7 +99,23 @@
       </mode-text>
     </div>
   </div>
-    <div class="row">
+  <div class="row">
+    <div class="col-md-6">
+      <mode-chart id="chart_3dd61888a021" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+    <div class="col-md-6">
+      <mode-chart id="chart_42b2dccebe2c" dataset="dataset" options="chart_options"></mode-chart>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_b349214e-9030-49c5-b070-6438779d9aad" dataset="dataset" options="text_options">
+        <h4>When do you see the most page views? </h4>
+        <p><em>Weekly Usage Rates</em></p>
+      </mode-text>
+    </div>
+  </div>
+  <div class="row">
     <div class="col-md-12">
       <mode-text id="text_ea82726d-3f75-4537-d183-094509322168" dataset="dataset" options="text_options">
         <h4>Online Metrics</h4>
@@ -164,6 +186,11 @@
       <mode-table id="dealer_properties" dataset="dataset" options="table_options"></mode-table>
     </div>
   </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mode-text id="text_c75c763a-02e0-4f43-f7ca-00f71bef64a1" dataset="dataset" options="text_options"></mode-text>
+    </div>
+  </div>
 </div>
 <script>
   var roadsterdx = {
@@ -207,6 +234,33 @@
     var online_metrics_sum = roadsterdx.getDataSource('Online Metrics - Summarized');
     var instore_metrics_sum = roadsterdx.getDataSource('In-Store Metrics - Summarized');
     var order_funnel_bar = roadsterdx.getDataSource('Order Funnel - Bar Chart');
+    var daily_srp = roadsterdx.getDataSource('Online SRP Data');
+    // Generate unique series colors for spline graph
+    var dpids = [];
+    for (var i = 0; i < daily_srp.length; i++) {
+      dpids.push(daily_srp[i]['Dealership']);
+    }
+    var dpids = [...new Set(dpids)];
+    var val_field = []
+    for (var i = 0; i < dpids.length; i++) {
+      val_field.push({
+        valueField: dpids[i]
+      });
+    };
+
+    $('#online_srp').dxChart({
+      palette: 'Harmony Light',
+      dataSource: daily_srp,
+      title: 'Daily Online SRP Visits',
+      commonSeriesSettings: {
+        type: 'date',
+        argumentField: 'date'
+      },
+      series: [
+        val_field
+      ],
+    });
+
     $('#dealer_properties').dxDataGrid({
       dataSource: dealer_attributes,
       onCellPrepared: function(e) {
@@ -270,6 +324,12 @@
           alignment: 'center',
           dataType: 'date',
           headerCellTemplate: $('<p style="color: white">Go-Live Date</p>')
+        },
+        {
+          dataField: 'Marketplace Type',
+          alignment: 'center',
+          dataType: 'date',
+          headerCellTemplate: $('<p style="color: white">Marketplace Type</p>')
         },
       ],
     });
@@ -738,18 +798,26 @@
           $("<div>").dxChart({
             rotated: true,
             size: {
-            height: 300,
-            width: 650
-        },
+              height: 300,
+              width: 700
+            },
             dataSource: order_funnel_bar.filter(function(x) {
               return (x.Dealership == dlr);
             }),
+            legend: {
+              visible: false
+            },
             series: {
-              label: {visible: true},
+              label: {
+                visible: true,
+                format: {
+                  type: 'percent',
+                  precision: 0
+                },
+              },
               argumentField: 'metric',
               valueField: 'value_order_steps',
               type: 'bar',
-              name: 'Steps'
             },
           }).appendTo(container);
         }

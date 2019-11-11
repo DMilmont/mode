@@ -87,6 +87,8 @@
     }
     var Y_Axis = Math.max.apply(Math, Y_value) * 1.03;
 
+
+/// ******** Stack Bars 
     var chart = Highcharts.charts[0];
 
     chart.update({
@@ -131,7 +133,7 @@
         endOnTick: false
       }
     });
-
+ /////********** Add links as Labels
     var chart = Highcharts.charts[0];
     chart.update({
       chart: {
@@ -155,8 +157,7 @@
 
 
       series: [{
-          //      data: series1_Historical,
-          //     zIndex:0,
+      
           colorByPoint: true,
           colors: cat_value,
           dataLabels: {
@@ -184,8 +185,9 @@
       ],
 
     })
+    
+    ///// ********** Add scrollbar if DSM has too many dealers
     var chart = Highcharts.charts[0];
-
     if (data.length >= 30) {
       chart.update({
         xAxis: {

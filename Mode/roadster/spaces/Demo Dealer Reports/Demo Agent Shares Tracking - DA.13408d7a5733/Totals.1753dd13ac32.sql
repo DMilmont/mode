@@ -11,6 +11,7 @@ with agent_detail as (select time_frame
                 ,sum(Click_Check)  as EmailClick
           from fact.zdemo_shares_detail
           where dpid='{{ dpid }}'
+          and  date>='07-07-18'
             GROUP BY 1,2,3,4,5,6
             HAVING COUNT(distinct id)<>0
       ),

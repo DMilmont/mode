@@ -4,7 +4,7 @@ with filter_for_dpids as (
   SELECT DISTINCT CASE WHEN di.dealer_group IS NULL THEN dealer_name ELSE di.dealer_group END dealer_group
   FROM fact.salesforce_dealer_info di
   INNER JOIN public.dealer_partners dp on di.dpid = dp.dpid
-  WHERE di.dpid = '{{ dpid }}' 
+  WHERE di.dpid IN ({{ dpid }})
 ),
 
 base_percentile_data as (
@@ -48,7 +48,7 @@ filter_for_dealer_group  as (
 SELECT DISTINCT di.dpid, dealer_group, dp.tableau_secret
 FROM fact.salesforce_dealer_info di
 LEFT JOIN public.dealer_partners dp ON di.dpid = dp.dpid
-WHERE CASE WHEN dealer_group IS NULL THEN dealer_name ELSE dealer_group END = (SELECT * FROM filter_for_dpids)
+WHERE CASE WHEN dealer_group IS NULL THEN dealer_name ELSE dealer_group END IN (SELECT * FROM filter_for_dpids)
 --AND dealer_group <> dp.name
 ),
 
@@ -75,6 +75,7 @@ SELECT
        properties ->> 'unlock_count_unvalidated' unlock_ct_unval,
        properties ->> 'unlock_count_validated' unlock_ct_val,
        properties ->> 'unlock_count_days' unlock_ct_days, 
+       properties ->> 'marketplace_type' marketplace,
        actual_live_date
 FROM dealer_partner_properties dpp
 LEFT JOIN dealer_partners dp ON dpp.dealer_partner_id = dp.id
@@ -103,5 +104,9 @@ CASE
   WHEN unlock_lead = 'false' THEN 'https://s3.amazonaws.com/expressstoreunlock/base_unlock_resized.png'
   ELSE 'https://s3.amazonaws.com/expressstoreunlock/full_unlock.png'
   END test_img, 
-  actual_live_date::date "Go-Live Date"
+  actual_live_date::date "Go-Live Date",
+  CASE WHEN marketplace = 'centralized' THEN 'Centralized' 
+    WHEN marketplace = 'express' THEN 'Express' 
+    WHEN marketplace = 'delegated' THEN 'Delegated' 
+    ELSE '' END AS "Marketplace Type"
 FROM almost_final

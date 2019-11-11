@@ -6,11 +6,11 @@ ORDER BY dpid
 {% form %}
 
 dpid: 
-  type: select
+  type: multiselect
   default: leifjohnsonford
   options: 
     labels: dpid
     values: dpid
-  description: Select your Dealer
+  description: Select your Dealer(s)
 
 {% endform %}

@@ -451,14 +451,17 @@
     // Add drill down data
     var lead_specific_info = $("#lead_specific_info").dxPopup({
       width: 1050,
-      height: 800,
+      height: 475,
       closeOnOutsideClick: true,
       contentTemplate: function(contentElement) {
         $("<div />")
           .addClass("drill-down1")
           .dxDataGrid({
             width: 1000,
-            height: 700,
+            height: 400,
+            paging: {
+            pageSize: 10
+              },
             columnAutoWidth: true,
             columns: [{
                 dataField: 'timestamp',
@@ -529,15 +532,18 @@
     }).dxPopup("instance");
 
     var prospect_specific_info = $("#prospect_specific_info").dxPopup({
-      width: 950,
-      height: 800,
+      width: 1050,
+      height: 475,
       closeOnOutsideClick: true,
       contentTemplate: function(contentElement) {
         $("<div />")
           .addClass("drill-down2")
           .dxDataGrid({
-            width: 900,
-            height: 700,
+            width: 1000,
+            height: 400,
+            paging: {
+            pageSize: 10
+              },
             columnAutoWidth: true,
             columns: [{
                 dataField: 'dt',
@@ -586,8 +592,8 @@
     }).dxPopup("instance");
 
     var order_specific_info = $("#order_specific_info").dxPopup({
-      width: 950,
-      height: 800,
+      width: 1050,
+      height: 475,
       closeOnOutsideClick: true,
       position: {  
           my: 'center',  
@@ -598,8 +604,8 @@
         $("<div />")
           .addClass("drill-down3")
           .dxDataGrid({
-            width: 900,
-            height: 700,
+            width: 1000,
+            height: 400,
             columnAutoWidth: true,
             columns: [{
                 dataField: 'timestamp',

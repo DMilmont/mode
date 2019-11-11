@@ -24,8 +24,8 @@ SELECT
     to_char(crm.msrp, '999,999') "MSRP",
     to_char(crm.invoice_price, '999,999')  "Invoice Price",
     to_char(crm.cash_price, '999,999') "Purchase Price",
-    to_char(crm.back_end_gross_profit, '999,999.99') "Front Gross",
-    to_char(crm.front_end_gross_profit, '999,999.99') "Back Gross",
+    to_char(crm.front_end_gross_profit, '999,999.99') "Front Gross",
+    to_char(crm.back_end_gross_profit, '999,999.99') "Back Gross",
     to_char(crm.total_gross, '999,999.99') "Total Gross",
     
     to_char(crm.down_payment, '999,999.99') "Down Payment",

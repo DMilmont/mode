@@ -29,13 +29,38 @@ and admin.properties ->> 'status' <> 'Demo'
 and admin.properties ->> 'status' <> 'Prospect'
 and admin.properties ->> 'status' <> 'Terminating'
 and admin.properties ->> 'status' <> 'Cold'
+and admin.properties ->> 'status' <> 'Pending'
 group by 1,2
-)
+),
+pending_dpids as (SELECT distinct 
+                        admin.date::date as date, 
+                        dealer_partner_id,
+                        admin.properties ->> 'status' "Status"
+                      FROM dealer_partner_properties admin
+                      
+                      where admin.properties ->> 'status' is not Null
+                      and admin.properties ->> 'status' ='Pending'
+
+),
+early_pending as (select dealer_partner_id 
+                          ,min(date) as first_pending_date
+                      from pending_dpids      
+                      group by 1
+            )
 
 
---SELECT * FROM active_dealers -- this pulls in the Customer Activity line
---UNION
+
+select * FROM
+(
 SELECT * FROM by_status
-order by "Status" desc, date asc
--- NOTE - this order is important... the most recent "Active Customer Count" needs to be very last record to power the big number
-;
+UNION
+select date 
+      ,case when date-first_pending_date <=30 then 'Pending < 30 Days'
+            when date-first_pending_date <=91 then 'Pending 31 - 91 days'
+            else 'Pending > 91 Days' end as status
+      ,count(1)      
+from pending_dpids pd
+left join early_pending ep on pd.dealer_partner_id=ep.dealer_partner_id
+group by 1,2
+)z
+order by 2 desc

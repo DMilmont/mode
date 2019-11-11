@@ -13,7 +13,8 @@ details as (SELECT medium
       ,prospect_flag
       ,new_used
       ,srp_vdp
-      ,date_local as date
+      ,in_store_flag
+      ,date_local::date as date
       ,sum(case when bounce=true then 1 else 0 end ) as bounce
       ,count(1) as sessions
       ,sum(case when msi.min_session_id is not null then 1 else 0 end) as users
@@ -25,7 +26,7 @@ from report_layer.ga_test_toyotaleg_sessions ga
 LEFT JOIN min_session_id msi on ga.session_id=msi.min_session_id
 WHERE date_local >= '{{ start_date }}'  
 and date_local <= '{{ end_date }}'  
-group by 1,2,3,4,5,6,7,8
+group by 1,2,3,4,5,6,7,8,9
 ),
 detail_breakout as (SELECT 'Day' as type
       ,* 
@@ -40,6 +41,7 @@ select 'Week' as type
       ,prospect_flag
       ,new_used
       ,srp_vdp
+      ,in_store_flag
       ,date_trunc('week',date)
       ,sum(bounce)
       ,sum(sessions)
@@ -49,7 +51,7 @@ select 'Week' as type
       ,sum(duration)
       ,title
 FROM details
-GROUP by 2,3,4,5,6,7,8,9,title
+GROUP by 2,3,4,5,6,7,8,9,10,title
 
 UNION
 select 'Month' as type
@@ -60,6 +62,7 @@ select 'Month' as type
       ,prospect_flag  
       ,new_used
       ,srp_vdp
+      ,in_store_flag
       ,date_trunc('month',date)
       ,sum(bounce)
       ,sum(sessions)
@@ -69,7 +72,7 @@ select 'Month' as type
       ,sum(duration)
       ,title
 FROM details
-GROUP by 2,3,4,5,6,7,8,9,title
+GROUP by 2,3,4,5,6,7,8,9,10,title
 )
 SELECT * 
 FROM detail_breakout
@@ -91,7 +94,7 @@ start_date:
 
 end_date: 
   type: date
-  default: {{ 'now' | date: '%s' | minus: 111600 | date: '%Y-%m-%d' }}
+  default: '2019-07-16'
   description: Data available for previous 3 months
 
 {% endform %}

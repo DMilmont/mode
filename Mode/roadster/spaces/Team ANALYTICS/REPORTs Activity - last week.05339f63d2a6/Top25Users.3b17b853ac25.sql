@@ -1,3 +1,5 @@
+-- Sean's Scheduled run of 'Reports Activity Last Week' Query: Top 25 Users
+
 -- Grab Pageviews from GA
 WITH tGA AS
   (
