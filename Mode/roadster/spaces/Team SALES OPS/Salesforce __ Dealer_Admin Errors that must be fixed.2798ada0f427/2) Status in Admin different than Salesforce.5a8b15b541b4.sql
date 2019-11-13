@@ -1,4 +1,4 @@
--- Returns first 100 rows from public.dealer_partners
+
 SELECT 
   sf.integration_manager as "Integration Manager",
   admin.status as "Admin Status [Please Fix]", 
