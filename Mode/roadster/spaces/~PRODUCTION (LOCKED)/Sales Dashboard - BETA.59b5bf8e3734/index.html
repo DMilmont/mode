@@ -185,7 +185,7 @@
       showBorders: true,
       showColumnGrandTotals: true,
       showRowGrandTotals: false,
-      showRowTotals: false,
+      showRowTotals: true,
       showColumnTotals: false,
       fieldChooser: {
         enabled: true,
@@ -217,7 +217,11 @@
             area: 'row',
             width: 150,
             sortOrder: 'desc',
-            expanded: true
+            expanded: false
+          },
+          {
+            dataField: "Agent",
+            area: "row",
           },
           {
             dataField: 'in_store_flag',
@@ -269,6 +273,10 @@
                 alignment: 'center'
               },
               {
+                dataField: "Agent",
+                alignment: "center"
+              },
+              {
                 dataField: 'Prospect Type',
                 caption: 'Prospect Type',
                 alignment: 'center'
@@ -304,6 +312,8 @@
   var dms = roadsterdx.getDataSource('DMS Type');
   var raw_string = dms[0]['DMS Type'];
   var dms_string = 'Source - ' + raw_string;
+  
+  
   // Display Source String Somewhere
 </script>
 <script>

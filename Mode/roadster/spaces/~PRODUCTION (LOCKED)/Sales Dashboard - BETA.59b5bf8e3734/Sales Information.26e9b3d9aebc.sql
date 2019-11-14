@@ -11,8 +11,10 @@ fs.days_to_close_from_last_lead "Days to Close",
 'https://dealers.roadster.com/' || dpid || '/user_contacts/' || user_contact_dbid  "Link to Lead",
 'Sa' title,
 CASE WHEN ls.in_store = TRUE THEN 'In-Store' ELSE 'Online' END in_store_flag,
-1 exists_now
+1 exists_now, 
+initcap(agent1) as "Agent"
 FROM fact.f_sale fs
+LEFT JOIN crm_records crm ON fs.crm_record_id = crm.id
 LEFT JOIN lead_submitted ls ON fs.last_lead_id = ls.id
 WHERE dpid = '{{ dpid }}'
 AND item_type ILIKE '%matched%'
