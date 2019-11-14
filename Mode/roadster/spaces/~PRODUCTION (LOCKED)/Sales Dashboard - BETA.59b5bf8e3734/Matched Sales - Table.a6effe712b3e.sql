@@ -18,7 +18,7 @@ SELECT (date_trunc('month' :: text,
              WHEN (f_sale.first_email IS NOT NULL) THEN f_sale.first_email
              ELSE f_sale.vin
                END)                                                                      AS ct_matched_sales
-  FROM fact.f_sale
+  FROM fact.f_sale 
   WHERE (f_sale.days_to_close_from_first_lead < (91) :: double precision)
   AND dpid = '{{ dpid }}'
   AND dpsk = '{{ dpsk }}'

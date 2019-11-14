@@ -9,11 +9,9 @@
     font-size: 100%;
     font-family: "Gotham SSm A", "Gotham SSm B", Georgia;
   }
-
   .b {
     text-algin: left !important;
   }
-
   .right-side {
     position: absolute;
     right: 7px;
@@ -21,7 +19,6 @@
     margin-bottom: 40px;
     margin-top: 30px;
   }
-
   .highcharts-grid {
     display: none;
   }
@@ -48,7 +45,7 @@
       <div class="col-md-12">
         <mode-text id="text_ea82726d-3f75-4537-d183-094509322100" dataset="dataset" options="text_options">
           <h4>Prospects by Sale</h4>
-          <p><em>Understand which prospects generate sales</em></p>
+          <p><em>Understand which prospects generate sales. These are prospects tied specifically to your sales data.</em></p>
         </mode-text>
       </div>
     </div>
@@ -66,7 +63,6 @@
     var data = datasets.filter(function(d) {
       return d.queryName == "Sales Information";
     })[0].content;
-
     if (data.length == 0) {
       $('#report_t').empty();
       $('#Sales_vs_Prospect_Type').empty();
@@ -106,16 +102,10 @@
       */
     },
   };
-
-
-
   $(function() {
     var matched_sales = roadsterdx.getDataSource('Matched Sales - Table');
-
     var sales_info = roadsterdx.getDataSource('Sales Information');
-
     var pivot1 = $('#matched_sales').dxPivotGrid({
-
       allowSortingBySummary: true,
       allowFiltering: true,
       showBorders: true,
@@ -158,7 +148,7 @@
           },
           {
             dataField: 'ct_prospects',
-            caption: 'Unique prospects',
+            caption: 'All Unique Customers submitting PII',
             area: 'data',
             summaryType: 'sum',
             alignment: 'center',
@@ -179,19 +169,15 @@
               } else {
                 return e.value('Total Matched Sales (90 Days)') / e.value('ct_prospects');
               }
-
             },
             format: {
               precision: 1,
               type: 'percent'
             },
           },
-
         ],
       },
     }).dxPivotGrid("instance");
-
-
     var drillDownDataSource = {};
     var pivot2 = $('#Sales_vs_Prospect_Type').dxPivotGrid({
       allowSortingBySummary: true,
@@ -238,7 +224,6 @@
             area: 'column',
             expanded: true,
             sortOrder: 'desc'
-
           },
           {
             dataField: 'Prospect Type',
@@ -256,7 +241,6 @@
         ],
       },
     }).dxPivotGrid("instance");
-
     var lead_specific_info = $("#lead_specific_info").dxPopup({
       width: 1050,
       height: 800,
@@ -273,13 +257,11 @@
                 alignment: 'center',
                 dataType: 'date',
                 sortOrder: 'desc'
-
               },
               {
                 dataField: 'VIN',
                 caption: 'VIN',
                 alignment: 'center'
-
               },
               {
                 dataField: 'Customer Email',
@@ -316,14 +298,12 @@
           .updateDimensions();
       }
     }).dxPopup("instance");
-
   })
 </script>
 <script>
   var dms = roadsterdx.getDataSource('DMS Type');
   var raw_string = dms[0]['DMS Type'];
   var dms_string = 'Source - ' + raw_string;
-
   // Display Source String Somewhere
 </script>
 <script>
