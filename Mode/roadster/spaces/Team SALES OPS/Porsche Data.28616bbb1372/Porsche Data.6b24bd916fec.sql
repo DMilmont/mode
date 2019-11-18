@@ -1,3 +1,20 @@
+with base_ids as (
+SELECT
+DISTINCT
+dpid,
+user_id,
+distinct_id
+FROM lead_submitted ls
+LEFT JOIN dealer_partners dp ON ls.dealer_partner_id = dp.id
+LEFT JOIN users u ON ls.user_id = u.id
+WHERE type = 'UnlockInquiry'
+AND dpid IN (SELECT DISTINCT dpid
+                            FROM dealer_partners dp
+                            WHERE primary_make = 'Porsche'
+                              AND dpid NOT ILIKE '%Loeber%'
+                              AND status = 'Live')
+AND ls.timestamp >= '2019-09-01'
+)
 
 SELECT fs.dpid "Dealer",
        (fs.month_year + '1 day'::interval) "Month & Year",
@@ -34,6 +51,7 @@ FROM
      ON ls.dealer_partner_id = dp.id
    WHERE timestamp >= '2019-09-01'
    AND primary_make in ('Porsche')
+   AND user_id IN (SELECT user_id FROM base_ids)
    GROUP BY 1,
             2,
             3) fs
@@ -58,6 +76,7 @@ FROM (
     WHERE primary_make IN ('Porsche')
     AND os.timestamp >= '2019-09-01'
     AND deal_type IS NOT NULL
+    AND user_id IN (SELECT user_id FROM base_ids)
     GROUP BY 1,2,3, 4
 ) t
 GROUP BY 1,2,3
@@ -72,6 +91,7 @@ LEFT JOIN (
   LEFT JOIN dealer_partners dp ON ft.dpid = dp.dpid
   WHERE page_path IN ('/New VDP', '/Used VDP', '/R-online/vdp-used', '/R-online/vdp-new')
   AND dp.primary_make in ('Porsche')
+  AND distinct_id IN (SELECT distinct_id FROM base_ids)
   GROUP BY 1,2,3
 ) vdp_views ON fs.dpid = vdp_views.dpid AND fs.in_store = vdp_views.in_store AND fs.month_year = vdp_views.month_year
 LEFT JOIN (
@@ -99,7 +119,8 @@ LEFT JOIN
         ON ue.dealer_partner_id = dp.id
         WHERE ue.name = 'Deal Built'
           AND timestamp >= '2019-09-01'
-          AND primary_make = 'Porsche' ) t
+          AND primary_make = 'Porsche' 
+          AND user_id IN (SELECT user_id FROM base_ids)) t
    GROUP BY 1,
             2,
             3) p
@@ -129,7 +150,8 @@ LEFT JOIN
               (SELECT dpid
              FROM dealer_partners
              WHERE primary_make = 'Porsche'
-               AND status = 'Live') ) t
+               AND status = 'Live') 
+            AND gs.distinct_id IN (SELECT distinct_id FROM base_ids)) t
    GROUP BY 1,
             2,
             3) ds
@@ -149,6 +171,7 @@ LEFT JOIN
      LEFT JOIN orders o
        ON cc.order_id = o.id
      WHERE timestamp >= '2019-09-01' AND primary_make in ('Porsche')
+     AND user_id IN (SELECT user_id FROM base_ids)
      GROUP BY 1,
               2,
               3) cas
@@ -178,6 +201,7 @@ LEFT JOIN
      LEFT JOIN orders o
        ON oc.order_id = o.id
      WHERE timestamp > '2019-09-01' AND primary_make in ('Porsche')
+     AND user_id IN (SELECT user_id FROM base_ids)
      GROUP BY 1,
               2,
               3) os
@@ -199,7 +223,8 @@ LEFT JOIN
           ON ue.dealer_partner_id = dp.id
           WHERE timestamp >= '2019-09-01'
             AND ue.name = 'Trade-In Valuation'
-            AND primary_make = 'Porsche' ) t
+            AND primary_make = 'Porsche' 
+            AND user_id IN (SELECT user_id FROM base_ids)) t
      GROUP BY 1,
               2,
               3) ti
@@ -230,7 +255,8 @@ LEFT JOIN
           WHERE timestamp >= '2019-09-01'
             AND primary_make = 'Porsche'
             AND ue.name IN ('Service Plan Added',
-                            'Service Plan Removed') ) t
+                            'Service Plan Removed')
+            AND user_id IN (SELECT user_id FROM base_ids)) t
      GROUP BY 1,
               2,
               3
@@ -255,13 +281,14 @@ LEFT JOIN
             ON gp.ga2_session_id = gs.id
             WHERE gp.timestamp >= '2019-09-01'
               AND gs.timestamp >= '2019-09-01'
-              AND page_path = '/modal/accessories-modal'
+              AND page_path IN ( '/modal/accessories-modal', '/R-online/vdp-new/dialog-accessories', '/R-online/vdp-used/dialog-accessories')
               AND property = 'Express Sites'
               AND gs.dpid IN
                 (SELECT dpid
                FROM dealer_partners
                WHERE primary_make = 'Porsche'
-                 AND status = 'Live') ) t
+                 AND status = 'Live') 
+          AND gp.distinct_id IN (SELECT distinct_id FROM base_ids)) t
      GROUP BY 1,
               2,
               3) a
