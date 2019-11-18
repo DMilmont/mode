@@ -1,6 +1,3 @@
--- Returns first 100 rows from fact.f_prospect
-SELECT * FROM fact.f_prospect LIMIT 100;
-
 
 
 with cdk_api as (
@@ -111,6 +108,15 @@ FROM raw_sale_data
 GROUP BY 1,2
 )
 
+, buyer_ratings as (
+SELECT dpid, count(*)
+
+FROM public.rating pr 
+left join public.dealer_partners dp on dp.id = pr.dealer_partner_id
+where timestamp > now() - '91 days'::interval
+group by 1
+)
+
 ,base_order_data as (
     SELECT cohort_date_utc, dpid, item_type, order_step_id, is_in_store
     FROM fact.f_prospect
@@ -157,6 +163,7 @@ DISTINCT
 COALESCE(to_char(rank_no_dup,'000'), 'too new') as "Roadster Online Rank"
 , dd.name as "Dealership"
 , dd.dealer_group as "Dealer Group"
+, dd.dpid as "DPID"
 , dd.status as "SF Status"
 , dd.dp_status as "DA Status"
 , dd.success_manager
@@ -165,6 +172,7 @@ COALESCE(to_char(rank_no_dup,'000'), 'too new') as "Roadster Online Rank"
 , cdk_api
 --, dpp.properties ->> 'crm_vendor' "Dealer Admin CRM"
 , COALESCE(sdd."MATCHED SALE", 0) "Matched Sales"
+, COALESCE(br."count", 0) "Ratings Submitted"
 , COALESCE(sdd."ALL SALES", 0) "All Sales"
 , COALESCE(dt.visitors, 0) as "Dealer Visitors"
 , round(COALESCE((et.online_express_visitors::numeric/dt.visitors::numeric), 0),3) as "Online Express Ratio"
@@ -212,6 +220,7 @@ LEFT JOIN sale_data_daily sdd ON dd.month_year = sdd.month_year AND dd.dpid = sd
 LEFT JOIN pivot_orders_agg poa ON dd.month_year = poa.month_year AND dd.dpid = poa.dpid
 LEFT JOIN in_store_shares iss ON dd.month_year = iss.month_year AND dd.dpid = iss.dpid
 LEFT JOIN in_store_prospects isp ON dd.month_year = isp.month_year AND dd.dpid = isp.dpid
+left join buyer_ratings br on dd.dpid = br.dpid
 LEFT JOIN report_layer.vw_share_open_rate_past_30 sor on dd.month_year=sor.ddate and dd.dpid= sor.dpid
 LEFT JOIN (
   SELECT dpid, rank_no_dup

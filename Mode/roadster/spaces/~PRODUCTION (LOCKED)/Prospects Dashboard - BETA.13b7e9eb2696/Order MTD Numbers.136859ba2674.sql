@@ -9,10 +9,10 @@ with order_status as (
 
 max_order_steps as (
  SELECT os.*
- FROM order_steps os
+ FROM fact.order_steps os
  INNER JOIN (
      SELECT order_id, user_id, max(timestamp) mx
-     FROM order_steps
+     FROM fact.order_steps
      GROUP BY 1, 2
   ) t ON os.order_id = t.order_id AND os.user_id = t.user_id AND os.timestamp = t.mx
 )
